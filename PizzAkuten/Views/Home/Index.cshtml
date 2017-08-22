@@ -1,9 +1,62 @@
-﻿@{
+﻿@model DishCartViewModel
+@{
     ViewData["Title"] = "PizzAkuten";
 }
 
 <div class="container">
     <div class="jumbotron">
-
     </div>
+    <div class="col-md-6">
+        <h1>Välkommen till PizzAkuten!</h1>
+        <p>Pizzerian när du har ett behov av ett akutintag.</p>
+        <p>Vi har pizzor, sallader, pastarätter, kebab och hamburgar på menyn.</p>
+        <p>Beställ nu och vi garanterar leverans inom 40 minuter!</p>
+    </div>
+    @if(Model.CartItemModel != null)
+    {
+
+
+
+    <div>
+        @Html.Partial("_CartPartial", Model.CartItemModel)
+    </div>
+    }
+    @if (Model != null)
+    {
+    <table class="table">
+        <thead>
+            <tr>
+                <th>
+                    @Html.DisplayNameFor(model => model.Dish)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Dish)
+                </th>
+                <th>@Html.DisplayNameFor(model => model.Dish)</th>
+                <th>
+                    Beställ
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model.Dish)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Name)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Price)
+                    </td>
+                    <td>
+                       @Html.DisplayFor(modelItem => item.Category.Name) 
+                    </td>
+                    <td>
+                        <a asp-controller="Order" asp-action="AddToCart" class="glyphicon glyphicon-shopping-cart"></a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+    }
 </div>

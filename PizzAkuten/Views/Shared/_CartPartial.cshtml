@@ -1,0 +1,16 @@
+﻿@model DishCartViewModel
+
+    @if (Model != null)
+    {
+        <div class="col-md-3">
+            @foreach (var dish in Model.CartItemModel)
+            {
+            <div>
+                @dish.Dish.Name, @dish.Quantity
+            </div>
+            }
+
+
+        </div>
+    }
+  

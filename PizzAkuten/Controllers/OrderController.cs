@@ -30,43 +30,44 @@ namespace PizzAkuten.Controllers
             // kolla om det finns en session, om det inte finns skapa en.
             if (GetSession("Cart") == null)
             {
-                var cart = new List<CartItemModel>();
+                var cart = new DishCartViewModel();
                 var tempCart = CreateCart(cart, dish);
 
                 SaveToSession(tempCart);
+                return PartialView("_CartPartial", tempCart);
             }
             else
             {
                 //kolla om maträtten finns i cart
                 var cartFromSession = GetSession("Cart");
-                var tempCart = JsonConvert.DeserializeObject<List<CartItemModel>>(cartFromSession);
-                var dishExists = tempCart.Any(x => x.Dish.DishId == dish.DishId);
+                var tempCart = JsonConvert.DeserializeObject<DishCartViewModel>(cartFromSession);
+                var dishExists = tempCart.CartItemModel.Any(x => x.Dish.DishId == dish.DishId);
 
                 if (dishExists)
                 {
                     //om den finns addera antalet
-                    var tempDish = tempCart.FirstOrDefault(x => x.Dish.DishId == dish.DishId);
+                    var tempDish = tempCart.CartItemModel.FirstOrDefault(x => x.Dish.DishId == dish.DishId);
                     if (tempDish != null)
                     {
                         tempDish.Quantity++;
                     }
 
-                    var index = tempCart.IndexOf(tempCart.First(x => x.Dish.DishId == dish.DishId));
+                    var index = tempCart.CartItemModel.IndexOf(tempCart.CartItemModel.First(x => x.Dish.DishId == dish.DishId));
                     if (index != -1)
                     {
-                        tempCart[index] = tempDish;
+                        tempCart.CartItemModel[index] = tempDish;
                         SaveToSession(tempCart);
                     }
+                    return PartialView("_CartPartial", tempCart);
                 }
                 else
                 {
                     //om den inte finns lägg till den i cart                    
                     var tempSessionCart = CreateCart(tempCart, dish);
                     SaveToSession(tempSessionCart);
+                    return PartialView("_CartPartial", tempCart);
                 }
             }
-
-            return RedirectToAction("Index", "Menu");
 
         }
 
@@ -75,7 +76,7 @@ namespace PizzAkuten.Controllers
             return HttpContext.Session.GetString(sessionName);
         }
 
-        private List<CartItemModel> CreateCart(List<CartItemModel> cart, Dish dish)
+        private DishCartViewModel CreateCart(DishCartViewModel cart, Dish dish)
         {
             var cartItem = new CartItemModel
             {
@@ -83,12 +84,12 @@ namespace PizzAkuten.Controllers
                 Dish = dish
             };
 
-            cart.Add(cartItem);
+            cart.CartItemModel.Add(cartItem);
 
             return cart;
         }
 
-        private void SaveToSession(List<CartItemModel> cart)
+        private void SaveToSession(DishCartViewModel cart)
         {
             HttpContext.Session.SetString("Cart", JsonConvert.SerializeObject(cart));
         }
@@ -103,9 +104,9 @@ namespace PizzAkuten.Controllers
                 return RedirectToAction("Index", "Menu");
             }
             var temp = GetSession("Cart");
-            List<CartItemModel> myShoppingCart = JsonConvert.DeserializeObject<List<CartItemModel>>(temp);
+            DishCartViewModel myShoppingCart = JsonConvert.DeserializeObject<DishCartViewModel>(temp);
 
-            foreach (var item in myShoppingCart)
+            foreach (var item in myShoppingCart.CartItemModel)
             {
                 if (item.Quantity > 1)
                 {
@@ -114,14 +115,14 @@ namespace PizzAkuten.Controllers
             }
             if (User.IsInRole("Premium") && kund.Points == 100)
             {
-                var rabatt = myShoppingCart.Select(x => x.Dish).Min(x => x.Price);
-                ViewBag.Discount = myShoppingCart.Sum(x => x.Dish.Price) - rabatt;
+                var rabatt = myShoppingCart.CartItemModel.Select(x => x.Dish).Min(x => x.Price);
+                ViewBag.Discount = myShoppingCart.CartItemModel.Sum(x => x.Dish.Price) - rabatt;
             }
             else
             {
-                ViewBag.Discount = myShoppingCart.Sum(x => x.Dish.Price) * 0.8;
+                ViewBag.Discount = myShoppingCart.CartItemModel.Sum(x => x.Dish.Price) * 0.8;
             }
-            ViewBag.Sum = myShoppingCart.Sum(x => x.Dish.Price);
+            ViewBag.Sum = myShoppingCart.CartItemModel.Sum(x => x.Dish.Price);
 
 
             return View(myShoppingCart);
@@ -138,7 +139,7 @@ namespace PizzAkuten.Controllers
         public IActionResult ConfirmBuy()
         {
             var temp = GetSession("Cart");
-            var myShoppingCart = JsonConvert.DeserializeObject<List<CartItemModel>>(temp);
+            var myShoppingCart = JsonConvert.DeserializeObject<DishCartViewModel>(temp);
 
             var id = _userManager.GetUserId(User);
             var customer = _context.Users.SingleOrDefault(x => x.Id == id);
@@ -147,46 +148,46 @@ namespace PizzAkuten.Controllers
 
             if (User.IsInRole("Premium") && customer.Points == 100)
             {
-                foreach (var item in myShoppingCart)
+                foreach (var item in myShoppingCart.CartItemModel)
                 {
                     if (item.Quantity > 1)
                     {
                         item.Dish.Price = item.Dish.Price * item.Quantity;
                     }
                 }
-                var rabatt = myShoppingCart.Select(x => x.Dish).Min(x => x.Price);
-                var sum = myShoppingCart.Sum(x => x.Dish.Price);
+                var rabatt = myShoppingCart.CartItemModel.Select(x => x.Dish).Min(x => x.Price);
+                var sum = myShoppingCart.CartItemModel.Sum(x => x.Dish.Price);
                 var total = sum - rabatt;
                 b.TotalPrice = Convert.ToInt32(total);
                 customer.Points = 0;
             }
-            else if (User.IsInRole("Premium") && myShoppingCart.Sum(x => x.Quantity) >= 3)
+            else if (User.IsInRole("Premium") && myShoppingCart.CartItemModel.Sum(x => x.Quantity) >= 3)
             {
-                foreach (var item in myShoppingCart)
+                foreach (var item in myShoppingCart.CartItemModel)
                 {
                     if (item.Quantity > 1)
                     {
                         item.Dish.Price = item.Dish.Price * item.Quantity;
                     }
                 }
-                var sum = myShoppingCart.Sum(x => x.Dish.Price) * 0.8;
+                var sum = myShoppingCart.CartItemModel.Sum(x => x.Dish.Price) * 0.8;
                 b.TotalPrice = Convert.ToInt32(sum);
                 customer.Points = customer.Points + 10;
             }
 
             else
             {
-                foreach (var item in myShoppingCart)
+                foreach (var item in myShoppingCart.CartItemModel)
                 {
                     if (item.Quantity > 1)
                     {
                         item.Dish.Price = item.Dish.Price * item.Quantity;
                     }
                 }
-                b.TotalPrice = myShoppingCart.Sum(x => x.Dish.Price);
+                b.TotalPrice = myShoppingCart.CartItemModel.Sum(x => x.Dish.Price);
             }
 
-            foreach (var item in myShoppingCart)
+            foreach (var item in myShoppingCart.CartItemModel)
             {
                 var bm = new OrderDish();
                 bm.DishId = item.Dish.DishId;
@@ -215,20 +216,20 @@ namespace PizzAkuten.Controllers
         public IActionResult RemoveProduct(int dishId)
         {
             var temp = GetSession("Cart");
-            var cart = JsonConvert.DeserializeObject<List<CartItemModel>>(temp);
+            var cart = JsonConvert.DeserializeObject<DishCartViewModel>(temp);
 
-            var selected = cart.FirstOrDefault(x => x.Dish.DishId.Equals(dishId));
+            var selected = cart.CartItemModel.FirstOrDefault(x => x.Dish.DishId.Equals(dishId));
 
-            cart.Remove(selected);
+            cart.CartItemModel.Remove(selected);
 
             SaveToSession(cart);
             var value = JsonConvert.SerializeObject(cart);
             HttpContext.Session.SetString("Cart", value);
 
             var newtemp = GetSession("Cart");
-            cart = JsonConvert.DeserializeObject<List<CartItemModel>>(newtemp);
+            cart = JsonConvert.DeserializeObject<DishCartViewModel>(newtemp);
 
-            if (cart.Count == 0)
+            if (cart.CartItemModel.Count == 0)
             {
                 return RedirectToAction("Index", "Menu");
             }

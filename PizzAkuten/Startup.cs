@@ -49,6 +49,15 @@ namespace PizzAkuten
             services.AddTransient<IEmailSender, EmailSender>();
             services.AddTransient<UserManager<ApplicationUser>>();
             services.AddTransient<DbInitializer>();
+
+            services.AddDistributedMemoryCache();
+
+            services.AddSession(options =>
+            {
+                // Set a short timeout for easy testing.
+                options.IdleTimeout = TimeSpan.FromSeconds(10);
+                options.CookieHttpOnly = true;
+            });
             services.AddMvc();
         }
 
@@ -67,7 +76,7 @@ namespace PizzAkuten
             }
 
             app.UseStaticFiles();
-
+            app.UseSession();
             app.UseAuthentication();
 
             app.UseMvc(routes =>

@@ -68,18 +68,6 @@ namespace PizzAkuten.Data
                 var kebabDish = new Dish { Name = "KebabTallrik", Price = 89 };
                 var hamburger = new Dish { Name = "Hamburgare 90g m. Pommes", Price = 89 };
 
-                //var capCheese = new DishIngredient { Dish = cappricciosa, Ingredient = cheese };
-                //var capTomatoe = new DishIngredient { Dish = cappricciosa, Ingredient = tomato };
-                //var capHam = new DishIngredient { Dish = cappricciosa, Ingredient = ham };
-                //var capMushroom = new DishIngredient { Dish = cappricciosa, Ingredient = mushroom };
-
-                //var marCheese = new DishIngredient { Dish = margueritha, Ingredient = cheese };
-                //var marTomatoe = new DishIngredient { Dish = margueritha, Ingredient = tomato };
-
-                //var vesCheese = new DishIngredient { Dish = vesuvio, Ingredient = cheese };
-                //var vesTomatoe = new DishIngredient { Dish = vesuvio, Ingredient = tomato };
-                //var vesHam = new DishIngredient { Dish = vesuvio, Ingredient = ham };
-
                 cappricciosa.DishIngredients = new List<DishIngredient> {
                     new DishIngredient{Ingredient = cheese},
                     new DishIngredient{Ingredient = tomato},
@@ -155,22 +143,21 @@ namespace PizzAkuten.Data
                          new DishIngredient{Ingredient = dressing},
                 };
 
-                var categoryList = new List<Category>
-                {
-                    new Category{CategoryId=1, Name="Pizza"},
-                    new Category{CategoryId=2, Name="Sallad"},
-                    new Category{CategoryId=3, Name="Pasta"},
-                    new Category{CategoryId=4, Name="Övrigt"}
-                };
 
-                cappricciosa.CategoryId = 1;
-                vesuvio.CategoryId = 1;
-                margueritha.CategoryId = 1;
-                chickenSalad.CategoryId = 2;
-                kebabSalad.CategoryId = 2;
-                pastaBeef.CategoryId = 3;
-                pastaPork.CategoryId = 3;
-                hamburger.CategoryId = 4;
+                var cpizza = new Category { CategoryId = 1, Name = "Pizza" };
+                var csalad = new Category { CategoryId = 2, Name = "Sallad" };
+                var cpasta = new Category { CategoryId = 3, Name = "Pasta" };
+                var cother = new Category { CategoryId = 4, Name = "Övrigt" };
+               
+
+                cappricciosa.Category = cpizza;
+                vesuvio.Category = cpizza;
+                margueritha.Category = cpizza;
+                chickenSalad.Category = csalad;
+                kebabSalad.Category = csalad;
+                pastaBeef.Category = cpasta;
+                pastaPork.Category = cpasta;
+                hamburger.Category = cother;
 
                 context.AddRange(cappricciosa, margueritha, vesuvio, pastaBeef, pastaPork, kebabSalad, kebabDish, chickenSalad, hamburger);
                 context.SaveChanges();

@@ -7,9 +7,11 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using PizzAkuten.Data;
 using PizzAkuten.Models;
+using Microsoft.AspNetCore.Authorization;
 
 namespace PizzAkuten.Controllers
 {
+    [Authorize(Roles = "admin")]
     public class DishController : Controller
     {
         private readonly ApplicationDbContext _context;
@@ -28,13 +30,14 @@ namespace PizzAkuten.Controllers
         // GET: Dish/Details/5
         public async Task<IActionResult> Details(int? id)
         {
+
             if (id == null)
             {
                 return NotFound();
             }
 
-            var dish = await _context.Dishes
-                .SingleOrDefaultAsync(m => m.Id == id);
+            var dish = await _context.Dishes.Include(d => d.DishIngredients).ThenInclude(di => di.Ingredient)
+                .SingleOrDefaultAsync(m => m.DishId == id);
             if (dish == null)
             {
                 return NotFound();
@@ -73,7 +76,7 @@ namespace PizzAkuten.Controllers
                 return NotFound();
             }
 
-            var dish = await _context.Dishes.SingleOrDefaultAsync(m => m.Id == id);
+            var dish = await _context.Dishes.SingleOrDefaultAsync(m => m.DishId == id);
             if (dish == null)
             {
                 return NotFound();
@@ -88,7 +91,7 @@ namespace PizzAkuten.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("Id,Name,Price")] Dish dish)
         {
-            if (id != dish.Id)
+            if (id != dish.DishId)
             {
                 return NotFound();
             }
@@ -102,7 +105,7 @@ namespace PizzAkuten.Controllers
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!DishExists(dish.Id))
+                    if (!DishExists(dish.DishId))
                     {
                         return NotFound();
                     }
@@ -125,7 +128,7 @@ namespace PizzAkuten.Controllers
             }
 
             var dish = await _context.Dishes
-                .SingleOrDefaultAsync(m => m.Id == id);
+                .SingleOrDefaultAsync(m => m.DishId == id);
             if (dish == null)
             {
                 return NotFound();
@@ -139,7 +142,7 @@ namespace PizzAkuten.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var dish = await _context.Dishes.SingleOrDefaultAsync(m => m.Id == id);
+            var dish = await _context.Dishes.SingleOrDefaultAsync(m => m.DishId == id);
             _context.Dishes.Remove(dish);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
@@ -147,7 +150,7 @@ namespace PizzAkuten.Controllers
 
         private bool DishExists(int id)
         {
-            return _context.Dishes.Any(e => e.Id == id);
+            return _context.Dishes.Any(e => e.DishId == id);
         }
     }
 }

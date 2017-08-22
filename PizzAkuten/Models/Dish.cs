@@ -13,7 +13,14 @@ namespace PizzAkuten.Models
         public string Name { get; set; }
 
         public int Price { get; set; }
+
+        public int CategoryId { get; set; }
+
+        public Category Category { get; set; }
+
         [Display(Name = "Ingredients")]
         public List<DishIngredient> DishIngredients { get; set; }
+        [Display(Name = "Orderrader")]
+        public List<OrderDish> OrderDishes { get; set; }
     }
 }

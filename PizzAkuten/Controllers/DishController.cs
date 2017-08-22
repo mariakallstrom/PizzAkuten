@@ -11,7 +11,7 @@ using Microsoft.AspNetCore.Authorization;
 
 namespace PizzAkuten.Controllers
 {
-    [Authorize(Roles = "admin")]
+    [Authorize(Roles ="admin")]
     public class DishController : Controller
     {
         private readonly ApplicationDbContext _context;

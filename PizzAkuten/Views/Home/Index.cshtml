@@ -1,6 +1,7 @@
-﻿@model DishCartViewModel
+﻿@model List<Dish>
 @{
     ViewData["Title"] = "PizzAkuten";
+
 }
 
 <div class="container">
@@ -12,13 +13,13 @@
         <p>Vi har pizzor, sallader, pastarätter, kebab och hamburgar på menyn.</p>
         <p>Beställ nu och vi garanterar leverans inom 40 minuter!</p>
     </div>
-    @if(Model.CartItemModel != null)
+    @if (Model != null)
     {
 
 
 
     <div>
-        @Html.Partial("_CartPartial", Model.CartItemModel)
+        @{Html.Partial("_CartPartial", Model);}
     </div>
     }
     @if (Model != null)
@@ -27,21 +28,28 @@
         <thead>
             <tr>
                 <th>
-                    @Html.DisplayNameFor(model => model.Dish)
+                    Namn
                 </th>
                 <th>
-                    @Html.DisplayNameFor(model => model.Dish)
+                   Pris
                 </th>
-                <th>@Html.DisplayNameFor(model => model.Dish)</th>
+                <th>
+                   Kategori
+                </th>
                 <th>
                     Beställ
                 </th>
             </tr>
         </thead>
         <tbody>
-            @foreach (var item in Model.Dish)
+            @foreach (var item in Model)
             {
+
+
                 <tr>
+                    <td>
+                        <img src="@item.ImagePath" alt="Alternate Text" />
+                    </td>
                     <td>
                         @Html.DisplayFor(modelItem => item.Name)
                     </td>
@@ -52,7 +60,7 @@
                        @Html.DisplayFor(modelItem => item.Category.Name) 
                     </td>
                     <td>
-                        <a asp-controller="Order" asp-action="AddToCart" class="glyphicon glyphicon-shopping-cart"></a>
+                        <a asp-controller="Order" asp-action="AddToCart" asp-route-dishId="@item.DishId" class="glyphicon glyphicon-shopping-cart"></a>
                     </td>
                 </tr>
             }

@@ -26,9 +26,8 @@ namespace PizzAkuten.Controllers
             {
                 return NotFound();
             }
-            var model = new DishCartViewModel();
-            model.Dish = dishes;
-            return View(model);
+           
+            return View(dishes);
         }
 
         public IActionResult About()

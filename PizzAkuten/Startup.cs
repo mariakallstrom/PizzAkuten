@@ -49,6 +49,7 @@ namespace PizzAkuten
             services.AddTransient<IEmailSender, EmailSender>();
             services.AddTransient<UserManager<ApplicationUser>>();
             services.AddTransient<DbInitializer>();
+            services.AddTransient<OrderService>();
 
             services.AddDistributedMemoryCache();
 

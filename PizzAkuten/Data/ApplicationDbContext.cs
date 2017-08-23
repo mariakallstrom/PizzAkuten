@@ -37,17 +37,7 @@ namespace PizzAkuten.Data
                 .WithMany(i => i.DishIngredients)
                 .HasForeignKey(di => di.IngredientId);
 
-            builder.Entity<OrderDish>().HasKey(od => new { od.DishId, od.OrderId });
-
-            builder.Entity<OrderDish>()
-                .HasOne(od => od.Dish)
-                .WithMany(o => o.OrderDishes)
-                .HasForeignKey(od => od.DishId);
-
-            builder.Entity<OrderDish>()
-                .HasOne(od => od.Order)
-                .WithMany(d => d.OrderDishes)
-                .HasForeignKey(od => od.OrderId);
+            builder.Entity<OrderDish>().HasKey(od => od.OrderId);
 
             base.OnModelCreating(builder);
                 // Customize the ASP.NET Identity model and override the defaults if needed.

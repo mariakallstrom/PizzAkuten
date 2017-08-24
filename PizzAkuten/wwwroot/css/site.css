@@ -10,6 +10,10 @@
     padding-right: 15px;
 }
 
+#cartDiv{
+    border : double;
+    border-color :black;
+}
 /* Carousel */
 .carousel-caption p {
     font-size: 20px;

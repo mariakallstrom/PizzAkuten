@@ -1,11 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using Microsoft.AspNetCore.Mvc;
 using PizzAkuten.Data;
 using PizzAkuten.Models;
-using Newtonsoft.Json;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using PizzAkuten.Extensions;
@@ -25,7 +21,7 @@ namespace PizzAkuten.Services
             _userManager = userManager;
             _httpContextAccessor = httpContextAccessor;
         }
-        public void SetOrderForCurrentSession(int dishId)
+        public OrderDish SetOrderForCurrentSession(int dishId)
         {
             var dish = _context.Dishes.SingleOrDefault(x => x.DishId == dishId);
             // kolla om det finns en session, om det inte finns skapa en.
@@ -36,10 +32,12 @@ namespace PizzAkuten.Services
                 var item = new OrderItem();
                 var itemList = new List<OrderItem>();
                 item.Dish = dish;
+                item.Quantity = 1;
                 itemList.Add(item);
                 cart.OrderItems = itemList;
 
                 _session.SetObjectAsJson("Cart", cart);
+                return GetOrderForCurrentSession(_session);
             }
             else
             {
@@ -60,8 +58,9 @@ namespace PizzAkuten.Services
                     if (index != -1)
                     {
                         cartFromSession.OrderItems[index] = tempDish;
-                        cartFromSession.OrderItems.Add(tempDish);
+                       
                         _session.SetObjectAsJson("Cart", cartFromSession);
+                        return GetOrderForCurrentSession(_session);
                     }
                 }
                 else
@@ -70,10 +69,14 @@ namespace PizzAkuten.Services
                     var cart = new OrderDish();
                     var item = new OrderItem();
                     item.Dish = dish;
+                    item.Quantity = 1;
                     cartFromSession.OrderItems.Add(item);
                     _session.SetObjectAsJson("Cart", cartFromSession);
+                    return GetOrderForCurrentSession(_session);
                 }
             }
+
+            return GetOrderForCurrentSession(_session);
         }
 
         public OrderDish GetOrderForCurrentSession(ISession session)
@@ -85,6 +88,29 @@ namespace PizzAkuten.Services
             }
             return null;
           
+        }
+
+        public OrderDish RemoveItemFromSession(int dishId)
+        {
+            var dish = _context.Dishes.SingleOrDefault(x => x.DishId == dishId);
+            var cartFromSession = _session.GetObjectFromJson<OrderDish>("Cart");
+
+            var orderItem = cartFromSession.OrderItems.SingleOrDefault(x => x.Dish.DishId == dishId);
+
+            if(orderItem != null)
+            {
+                if(orderItem.Quantity > 1)
+                {
+                    cartFromSession.OrderItems.Where(x => x.Dish.DishId == dishId).First().Quantity -=1;
+                    _session.SetObjectAsJson("Cart", cartFromSession);
+                    return GetOrderForCurrentSession(_session);
+                }
+                cartFromSession.OrderItems.Remove(orderItem);
+                _session.SetObjectAsJson("Cart", cartFromSession);
+                return GetOrderForCurrentSession(_session);
+
+            }
+            return GetOrderForCurrentSession(_session);
         }
 
 

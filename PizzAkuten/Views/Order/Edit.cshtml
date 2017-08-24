@@ -1,0 +1,62 @@
+﻿@model PizzAkuten.Models.EditDishViewModel
+
+@{
+    ViewData["Title"] = "Edit";
+}
+
+<h2>Edit</h2>
+
+<h4>Dish</h4>
+<hr />
+<form asp-controller="Order" asp-action="Edit" method="post">
+    <div class="row">
+        <div class="col-md-4">
+            <dl class="dl-horizontal">
+                <dt>
+                    @Html.DisplayNameFor(model => model.Dish.Name)
+                </dt>
+                <dd>
+                    <input asp-for="@Model.Dish.Name" disabled />
+                </dd>
+                <dt>
+                    @Html.DisplayNameFor(model => model.Dish.Price)
+                </dt>
+                <dd>
+                    <input asp-for="@Model.Dish.Price" disabled />
+                </dd>
+                <dt>
+                    @Html.DisplayNameFor(model => model.Dish.DishIngredients)
+                </dt>
+                @foreach (var dish in Model.Dish.DishIngredients)
+            {
+                    <dd>
+                        @dish.Ingredient.Name
+                        <input asp-for="@dish.IngredientId" hidden />
+                    </dd>
+                }
+            </dl>
+            <p>Lägg till extra ingredienser</p>
+
+            @foreach (var ing in Model.Ingredients)
+            {
+                <p>
+                    @ing.Name
+                   
+                        <input type="checkbox" name=" @ing.Name" value="@ing.IngredientId"/>
+                   
+                </p>
+            }
+            <div class="form-group">
+                <input type="submit" value="Save" class="btn btn-default" />
+            </div>
+
+        </div>
+    </div>
+</form>
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+
+
+
+

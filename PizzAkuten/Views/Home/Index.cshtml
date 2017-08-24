@@ -28,6 +28,9 @@
         <thead>
             <tr>
                 <th>
+                    
+                </th>
+                <th>
                     Namn
                 </th>
                 <th>
@@ -61,6 +64,8 @@
                     </td>
                     <td>
                         <a asp-controller="Order" asp-action="AddToCart" asp-route-dishId="@item.DishId" class="glyphicon glyphicon-shopping-cart"></a>
+                        <a asp-controller="Order" asp-action="Details" asp-route-dishId="@item.DishId">Detaljer</a>
+                        <a asp-controller="Order" asp-action="Edit" asp-route-dishId="@item.DishId">Ändra</a>
                     </td>
                 </tr>
             }

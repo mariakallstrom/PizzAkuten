@@ -20,8 +20,9 @@ namespace PizzAkuten.Controllers
         }
         public async Task<IActionResult> Index()
         {
-            var dishes = await _context.Dishes.Include("Category").ToListAsync();
-                
+            var dishes = await _context.Dishes.Include("Category").Include(d => d.DishIngredients).ThenInclude(di => di.Ingredient)
+                .ToListAsync();
+
             if (dishes == null)
             {
                 return NotFound();

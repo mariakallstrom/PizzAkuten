@@ -50,6 +50,7 @@ namespace PizzAkuten
             services.AddTransient<UserManager<ApplicationUser>>();
             services.AddTransient<DbInitializer>();
             services.AddTransient<OrderService>();
+            services.AddTransient<DishService>();
 
             services.AddDistributedMemoryCache();
 

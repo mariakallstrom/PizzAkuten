@@ -9,6 +9,8 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using PizzAkuten.Services;
+using Microsoft.EntityFrameworkCore;
+using System.Threading.Tasks;
 
 namespace PizzAkuten.Controllers
 {
@@ -48,10 +50,49 @@ namespace PizzAkuten.Controllers
             return RedirectToAction("Index", "Home");
         }
 
-        public void MakeOrder()
+        public async Task<IActionResult> Details(int dishId)
         {
-            _service.MakeOrder();
+            if (dishId == 0)
+            {
+                return NotFound();
+            }
+
+            var dish = await _context.Dishes.Include(d => d.DishIngredients).ThenInclude(di => di.Ingredient)
+                .SingleOrDefaultAsync(m => m.DishId == dishId);
+            if (dish == null)
+            {
+                return NotFound();
+            }
+
+            return View(dish);
         }
 
+        public async Task<IActionResult> Edit(int dishId)
+        {
+            if (dishId == 0)
+            {
+                return NotFound();
+            }
+            var ingredients = _context.Ingredients.ToList();
+            var dish = await _context.Dishes.Include(d => d.DishIngredients).ThenInclude(di => di.Ingredient)
+                .SingleOrDefaultAsync(m => m.DishId == dishId);
+
+            var model = new EditDishViewModel();
+            model.Dish = dish;
+            model.Ingredients = ingredients;
+
+            if (dish == null)
+            {
+                return NotFound();
+            }
+
+            return View(model);
+        }
+
+        [HttpPost]
+        public IActionResult Edit(EditDishViewModel model)
+        {
+            return null;
+        }
     }
 }

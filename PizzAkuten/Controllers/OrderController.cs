@@ -48,6 +48,10 @@ namespace PizzAkuten.Controllers
             return RedirectToAction("Index", "Home");
         }
 
+        public void MakeOrder()
+        {
+            _service.MakeOrder();
+        }
 
     }
 }

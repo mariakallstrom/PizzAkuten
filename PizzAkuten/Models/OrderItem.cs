@@ -11,5 +11,7 @@ namespace PizzAkuten.Models
         public Dish Dish { get; set; }
 
         public int Quantity { get; set; }
+
+
     }
 }

@@ -34,6 +34,7 @@ namespace PizzAkuten.Services
                 item.Dish = dish;
                 item.Quantity = 1;
                 itemList.Add(item);
+                cart.TotalPrice = item.Dish.Price;
                 cart.OrderItems = itemList;
 
                 _session.SetObjectAsJson("Cart", cart);
@@ -52,6 +53,7 @@ namespace PizzAkuten.Services
                     if (tempDish != null)
                     {
                         tempDish.Quantity++;
+                        cartFromSession.TotalPrice = tempDish.Dish.Price * tempDish.Quantity;
                     }
 
                     var index = cartFromSession.OrderItems.IndexOf(cartFromSession.OrderItems.First(x => x.Dish.DishId == dish.DishId));
@@ -71,6 +73,7 @@ namespace PizzAkuten.Services
                     item.Dish = dish;
                     item.Quantity = 1;
                     cartFromSession.OrderItems.Add(item);
+                    cartFromSession.TotalPrice = cartFromSession.TotalPrice +=  item.Dish.Price;
                     _session.SetObjectAsJson("Cart", cartFromSession);
                     return GetOrderForCurrentSession(_session);
                 }
@@ -102,10 +105,12 @@ namespace PizzAkuten.Services
                 if(orderItem.Quantity > 1)
                 {
                     cartFromSession.OrderItems.Where(x => x.Dish.DishId == dishId).First().Quantity -=1;
+                    cartFromSession.TotalPrice = cartFromSession.TotalPrice -= dish.Price;
                     _session.SetObjectAsJson("Cart", cartFromSession);
                     return GetOrderForCurrentSession(_session);
                 }
                 cartFromSession.OrderItems.Remove(orderItem);
+                cartFromSession.TotalPrice = cartFromSession.TotalPrice -= dish.Price;
                 _session.SetObjectAsJson("Cart", cartFromSession);
                 return GetOrderForCurrentSession(_session);
 
@@ -113,6 +118,9 @@ namespace PizzAkuten.Services
             return GetOrderForCurrentSession(_session);
         }
 
-
+        public void MakeOrder()
+        {
+            var order = GetOrderForCurrentSession(_session);
+        }
         }
     }

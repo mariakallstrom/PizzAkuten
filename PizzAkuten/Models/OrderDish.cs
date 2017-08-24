@@ -10,5 +10,6 @@ namespace PizzAkuten.Models
         public int OrderId { get; set; }
         public Order Order { get; set; }
         public List<OrderItem> OrderItems { get; set; }
-}
+        public int TotalPrice { get; set; }
+    }
 }

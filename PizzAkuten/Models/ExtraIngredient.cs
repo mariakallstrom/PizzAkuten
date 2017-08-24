@@ -5,10 +5,10 @@ using System.Threading.Tasks;
 
 namespace PizzAkuten.Models
 {
-    public class EditDishViewModel
+    public class ExtraIngredient
     {
-        public Dish EditDish { get; set; }
+        public Ingredient Ingredients { get; set; }
 
-        public List<ExtraIngredient> ExtraIngredients { get; set; }
+        public bool IsChecked { get; set; }
     }
 }

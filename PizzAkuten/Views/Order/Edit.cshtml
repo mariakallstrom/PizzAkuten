@@ -7,52 +7,39 @@
 <h2>Edit</h2>
 
 <h4>Dish</h4>
-<hr />
-<form asp-controller="Order" asp-action="Edit" method="post">
-    <div class="row">
-        <div class="col-md-4">
-            <dl class="dl-horizontal">
-                <dt>
-                    @Html.DisplayNameFor(model => model.Dish.Name)
-                </dt>
-                <dd>
-                    <input asp-for="@Model.Dish.Name" disabled />
-                </dd>
-                <dt>
-                    @Html.DisplayNameFor(model => model.Dish.Price)
-                </dt>
-                <dd>
-                    <input asp-for="@Model.Dish.Price" disabled />
-                </dd>
-                <dt>
-                    @Html.DisplayNameFor(model => model.Dish.DishIngredients)
-                </dt>
-                @foreach (var dish in Model.Dish.DishIngredients)
-            {
-                    <dd>
-                        @dish.Ingredient.Name
-                        <input asp-for="@dish.IngredientId" hidden />
-                    </dd>
-                }
-            </dl>
-            <p>Lägg till extra ingredienser</p>
-
-            @foreach (var ing in Model.Ingredients)
-            {
-                <p>
-                    @ing.Name
-                   
-                        <input type="checkbox" name=" @ing.Name" value="@ing.IngredientId"/>
-                   
-                </p>
-            }
-            <div class="form-group">
-                <input type="submit" value="Save" class="btn btn-default" />
-            </div>
-
-        </div>
+<form asp-action="Edit" asp-controller="Order" method="post">
+    <input type="hidden" asp-for="EditDish.DishId" />
+    <div class="form-group">
+        <label asp-for="EditDish.Name" class="control-label"></label>
+        <input asp-for="EditDish.Name" class="form-control" value="@Model.EditDish.Name" disabled/>
     </div>
+    <div class="form-group">
+        <label asp-for="EditDish.Price" class="control-label"></label>
+        <input asp-for="EditDish.Price" class="form-control" value="@Model.EditDish.Price" disabled/>
+    </div>
+    <label asp-for="EditDish.DishIngredients" class="control-label">Ingredienser</label>
+    <div class="form-group">
+     
+        @foreach (var dish in Model.EditDish.DishIngredients)
+        {
+            <label asp-for="@dish.Ingredient.Name" class="control-label">@dish.Ingredient.Name</label>
+            <input asp-for="@dish.Ingredient.IsChecked" class="form-control" type="checkbox" value="true" />
+
+        }
+    </div>
+    <div class="form-group">
+
+        @foreach (var ing in Model.ExtraIngredients)
+        {
+            <label asp-for="@ing.Ingredients.Name" class="control-label">@ing.Ingredients.Name</label>
+            <input asp-for="@ing.IsChecked" class="form-control" type="checkbox" value=""/>
+        }
+    </div>
+        <div class="form-group">
+            <input type="submit" value="Save" class="btn btn-default" />
+        </div>
 </form>
+
 <div>
     <a asp-action="Index">Back to List</a>
 </div>

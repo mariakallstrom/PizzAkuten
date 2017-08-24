@@ -78,8 +78,18 @@ namespace PizzAkuten.Controllers
                 .SingleOrDefaultAsync(m => m.DishId == dishId);
 
             var model = new EditDishViewModel();
-            model.Dish = dish;
-            model.Ingredients = ingredients;
+       
+            var ingList = new List<ExtraIngredient>();
+
+            foreach (var item in ingredients)
+            {
+                var ing = new ExtraIngredient();
+                item.IsChecked = true;
+                ing.Ingredients = item;
+                ingList.Add(ing);
+            }
+            model.EditDish = dish;
+            model.ExtraIngredients = ingList;
 
             if (dish == null)
             {

@@ -10,6 +10,8 @@ namespace PizzAkuten.Models
         public int IngredientId { get; set; }
         public string Name { get; set; }
 
+
+        public bool IsChecked { get; set; }
         public int Price { get; set; }
         public List<DishIngredient> DishIngredients { get; set; }
     }

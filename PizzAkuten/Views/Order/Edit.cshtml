@@ -35,11 +35,11 @@
 
         @for (int i = 0; i < Model.ExtraIngredients.Count; i++)
         {
-            <label asp-for="@Model.ExtraIngredients[i].Ingredients.Name" class="control-label">@Model.ExtraIngredients[i].Ingredients.Name</label>
-            <label asp-for="@Model.ExtraIngredients[i].Ingredients.Price" class="control-label">@Model.ExtraIngredients[i].Ingredients.Price kr</label>
-            <input asp-for="@Model.ExtraIngredients[i].Ingredients.Name" value="@Model.ExtraIngredients[i].Ingredients.Name" hidden />
-            <input asp-for="@Model.ExtraIngredients[i].Ingredients.Price" value="@Model.ExtraIngredients[i].Ingredients.Price" hidden />
-            <input asp-for="@Model.ExtraIngredients[i].Ingredients.IngredientId"  value="@Model.ExtraIngredients[i].Ingredients.IngredientId" hidden/>
+            <label asp-for="@Model.ExtraIngredients[i].Name" class="control-label">@Model.ExtraIngredients[i].Name</label>
+            <label asp-for="@Model.ExtraIngredients[i].Price" class="control-label">@Model.ExtraIngredients[i].Price kr</label>
+            <input asp-for="@Model.ExtraIngredients[i].Name" value="@Model.ExtraIngredients[i].Name" hidden />
+            <input asp-for="@Model.ExtraIngredients[i].Price" value="@Model.ExtraIngredients[i].Price" hidden />
+            <input asp-for="@Model.ExtraIngredients[i].ExtraIngredientId"  value="@Model.ExtraIngredients[i].ExtraIngredientId" hidden/>
             <input asp-for="@Model.ExtraIngredients[i].IsChecked" type="checkbox" value="true" />
         }
     </div>

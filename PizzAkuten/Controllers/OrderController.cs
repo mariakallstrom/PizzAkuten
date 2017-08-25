@@ -105,5 +105,22 @@ namespace PizzAkuten.Controllers
             };
             return View();
         }
+
+        public IActionResult ViewOrder()
+        {
+           var order =  _service.GetOrder();
+
+            return View(order);
+        }
+
+        public IActionResult ConfirmOrder()
+        {
+            var order = _service.GetOrder();
+            var text = _service.ConfirmOrder(order);
+
+            ViewBag.ThankYou = text;
+
+            return RedirectToAction("ViewOrder", "Order");
+        }
     }
 }

@@ -57,7 +57,7 @@ namespace PizzAkuten.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Name,Price")] Dish dish)
+        public async Task<IActionResult> Create([Bind("DishId,Name,Price")] Dish dish)
         {
             if (ModelState.IsValid)
             {
@@ -89,7 +89,7 @@ namespace PizzAkuten.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Name,Price")] Dish dish)
+        public async Task<IActionResult> Edit(int id, [Bind("DishId,Name,Price")] Dish dish)
         {
             if (id != dish.DishId)
             {

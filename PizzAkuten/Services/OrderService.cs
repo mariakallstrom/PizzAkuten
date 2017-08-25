@@ -5,6 +5,7 @@ using PizzAkuten.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using PizzAkuten.Extensions;
+using System;
 
 namespace PizzAkuten.Services
 {
@@ -120,11 +121,40 @@ namespace PizzAkuten.Services
             return GetOrderForCurrentSession(_session);
         }
 
-        public void MakeOrder()
+        public Order GetOrder()
         {
-            var order = GetOrderForCurrentSession(_session);
+            var orderList = GetOrderForCurrentSession(_session);
+            var order = new Order();
+            order.OrderDate = DateTime.Today;
+            order.OrderDish = orderList;
+            order.TotalPrice = orderList.TotalPrice;
+            return order;
         }
 
+        public string ConfirmOrder(Order order)
+        {
+         
+            _context.Orders.Add(order);
+            _context.SaveChangesAsync();
+            DeleteSpecialDishes(order);
+            return "Tack för din order";
+        }
+
+        public void DeleteSpecialDishes(Order order)
+        {
+            foreach (var item in order.OrderDish.OrderItems)
+            {
+                if(item.OrderDish.Name.Contains("special"))
+                {
+                    var dishes = _context.Dishes.Where(x => x.DishId == item.OrderDish.DishId);
+                    foreach (var dish in dishes)
+                    {
+                        _context.Dishes.Remove(dish);
+                        _context.SaveChangesAsync();
+                    }
+                }
+            }
+        }
         public void AddSpecialDishToCart(EditDishViewModel model)
         {
             //Skapa en ny Special Dish
@@ -140,7 +170,6 @@ namespace PizzAkuten.Services
                 {
                     diList.Add(item);
                 }
-
             }
             //Kolla vilka extra ingredienser som är bockade
             foreach (var item in model.ExtraIngredients.ToList())
@@ -148,25 +177,12 @@ namespace PizzAkuten.Services
                 var di = new DishExtraIngredient();
                 if (item.IsChecked)
                 {
-
                     di.ExtraIngredient = item;
-                    xtraIngPrice = item.Price;
+                    xtraIngPrice = xtraIngPrice + item.Price;
 
                     xDiList.Add(di);
                 }
-
             }
-
-            //var checkList = CheckForSpecialDishInSession();
-
-            //if (checkList != null)
-            //{
-            //    specialDish.DishId = checkList.Last() + 1;
-            //}
-            //else
-            //{
-            //    specialDish.DishId = 90;
-            //}
 
             specialDish.Price = model.EditDish.Price + xtraIngPrice;
             specialDish.DishExtraIngredients = xDiList;
@@ -178,20 +194,6 @@ namespace PizzAkuten.Services
             _context.SaveChangesAsync();
 
             SetOrderForCurrentSession(specialDish.DishId);
-
-
-        }
-
-        public IEnumerable<int> CheckForSpecialDishInSession()
-        {
-            var session = GetOrderForCurrentSession(_session);
-            if (session != null)
-            {
-
-                var checkForSpecialDish = session.OrderItems.Where(x => x.OrderDish.Name.Contains("special")).Select(p => p.OrderDish.DishId);
-                return checkForSpecialDish;
-            }
-            return null;
         }
     }
 }

@@ -1,0 +1,29 @@
+﻿@model Order
+@{
+    ViewData["Title"] = "View";
+}
+
+<h2>Din Order</h2>
+
+@foreach (var item in Model.OrderDish.OrderItems)
+{
+    <div>
+        <label>Namn: </label>  @item.OrderDish.Name
+    </div>
+    <div>
+        <label>Pris: </label> @item.OrderDish.Price
+    </div>
+    <div>
+        <label>Antal: </label>  @item.Quantity
+    </div>
+
+}
+
+<label>Summa: </label>  
+@Model.TotalPrice  
+
+
+<a asp-controller="Order" asp-action="ConfirmOrder">Bekräfta order</a>
+
+
+

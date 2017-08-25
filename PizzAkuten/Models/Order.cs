@@ -13,7 +13,7 @@ namespace PizzAkuten.Models
         public bool Delivered { get; set; }
         public string ApplicationuserId { get; set; }
         public virtual ApplicationUser ApplicationUser { get; set; }
-        public virtual List<OrderDish> OrderDishes { get; set; }
+        public virtual OrderDish OrderDish { get; set; }
 
     }
 }

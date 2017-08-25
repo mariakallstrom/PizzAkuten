@@ -23,6 +23,14 @@ namespace PizzAkuten.Controllers
             var dishes = await _context.Dishes.Include("Category").Include(d => d.DishIngredients).ThenInclude(di => di.Ingredient)
                 .ToListAsync();
 
+            foreach (var item in dishes)
+            {
+                if(item.SpecialDish)
+                {
+                    dishes.Remove(item);
+                }
+            }
+
             if (dishes == null)
             {
                 return NotFound();

@@ -11,10 +11,12 @@
                 @foreach (var dish in cart.OrderItems)
                 {
                     <div>
-                        @dish.Dish.Name, @dish.Quantity st, @dish.Dish.Price kr <a asp-controller="Order" asp-action="RemoveFromCart" asp-route-dishId="@dish.Dish.DishId" class="glyphicon glyphicon-minus"></a>
+                        @dish.Dish.Name, @dish.Quantity st, @dish.Dish.Price kr 
+                        <a asp-controller="Order" asp-action="RemoveFromCart" asp-route-dishId="@dish.Dish.DishId" class="glyphicon glyphicon-minus"></a>
                         <a asp-controller="Order" asp-action="AddToCart" asp-route-dishId="@dish.Dish.DishId" class="glyphicon glyphicon-plus"></a>
                     </div>
                 }
+               
                 <div>
                    Summa:  @cart.TotalPrice
                 </div>

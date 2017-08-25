@@ -102,6 +102,12 @@ namespace PizzAkuten.Controllers
         [HttpPost]
         public IActionResult Edit(EditDishViewModel model)
         {
+            if(model != null)
+            {
+                _service.AddSpecialDishToCart(model);
+
+            };
+
             return null;
         }
     }

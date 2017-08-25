@@ -16,6 +16,8 @@ namespace PizzAkuten.Models
 
         public string ImagePath { get; set; }
 
+        public bool SpecialDish { get; set; }
+
         public int CategoryId { get; set; }
 
         public Category Category { get; set; }

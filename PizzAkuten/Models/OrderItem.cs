@@ -9,7 +9,7 @@ namespace PizzAkuten.Models
     {
         public int OrderItemId { get; set; }
         public Dish Dish { get; set; }
-
+        public bool SpecialDish { get; set; }
         public int Quantity { get; set; }
 
 

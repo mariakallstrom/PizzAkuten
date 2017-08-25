@@ -122,5 +122,73 @@ namespace PizzAkuten.Services
         {
             var order = GetOrderForCurrentSession(_session);
         }
+
+        public void AddSpecialDishToCart(EditDishViewModel model)
+        {
+            var specialDish = new Dish();
+            var diList = new List<DishIngredient>();
+            var xtraIngPrice = 0;
+
+            foreach (var item in model.EditDish.DishIngredients)
+            {
+                var di = new DishIngredient();
+                if (item.Ingredient.IsChecked)
+                {
+                    di = item;
+                    di.Ingredient.Price = item.Ingredient.Price;
+                    di.Ingredient.Name = item.Ingredient.Name;
+                    diList.Add(di);
+                }
+
+            }
+
+            foreach (var item in model.ExtraIngredients)
+            {
+                var di = new DishIngredient();
+                if (item.IsChecked)
+                {
+
+                    di.Ingredient = item.Ingredients;
+                    di.Ingredient.Price = item.Ingredients.Price;
+                    xtraIngPrice = xtraIngPrice + item.Ingredients.Price;
+                    di.Ingredient.Name = item.Ingredients.Name;
+                    diList.Add(di);
+                }
+
+            }
+
+            //var checkList = CheckForSpecialDishInSession();
+
+            //if(checkList != null)
+            //{
+            //    specialDish.DishId = checkList.Last() + 1;
+            //}
+            //else
+            //{
+            //    specialDish.DishId = 90;
+            //}
+
+            specialDish.Price = model.EditDish.Price + xtraIngPrice;
+            specialDish.DishIngredients = diList;
+            specialDish.Name = model.EditDish.Name + " special";
+            specialDish.SpecialDish = true;
+            _context.Dishes.Add(specialDish);
+            _context.SaveChanges();
+            SetOrderForCurrentSession(specialDish.DishId);
+
+
+        }
+
+        //public IEnumerable<int> CheckForSpecialDishInSession()
+        //{
+        //    var session = GetOrderForCurrentSession(_session);
+        //    if (session != null)
+        //    {
+             
+        //        var checkForSpecialDish = session.OrderItems.Where(x => x.Dish.Name.Contains("special")).Select(p=>p.Dish.DishId);
+        //        return checkForSpecialDish;
+        //    }
+        //    return null;
+        //}
         }
     }

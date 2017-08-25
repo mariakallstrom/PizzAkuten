@@ -18,8 +18,11 @@ namespace PizzAkuten.Data
 
         public DbSet<Dish> Dishes { get; set; }
         public DbSet<Category> Categories { get; set; }
+
+        public DbSet<ExtraIngredient> ExtraIngredients { get; set; }
+        public DbSet<DishExtraIngredient> DishExtraIngredients { get; set; }
         public DbSet<Ingredient> Ingredients { get; set; }
-        public DbSet<DishIngredient> DishIngredtients { get; set; }
+        public DbSet<DishIngredient> DishIngredients { get; set; }
         public DbSet<Order> Orders { get; set; }
         public DbSet<OrderDish> OrderDishes { get; set; }
 
@@ -36,6 +39,18 @@ namespace PizzAkuten.Data
                 .HasOne(di => di.Ingredient)
                 .WithMany(i => i.DishIngredients)
                 .HasForeignKey(di => di.IngredientId);
+
+            builder.Entity<DishExtraIngredient>().HasKey(di => new { di.DishId, di.ExtraIngredientId });
+
+            builder.Entity<DishExtraIngredient>()
+                .HasOne(di => di.Dish)
+                .WithMany(d => d.DishExtraIngredients)
+                .HasForeignKey(di => di.DishId);
+
+            builder.Entity<DishExtraIngredient>()
+                .HasOne(di => di.ExtraIngredient)
+                .WithMany(i => i.DishExtraIngredients)
+                .HasForeignKey(di => di.ExtraIngredientId);
 
             builder.Entity<OrderDish>().HasKey(od => od.OrderId);
 

@@ -123,39 +123,39 @@ namespace PizzAkuten.Services
             var order = GetOrderForCurrentSession(_session);
         }
 
-        public void AddSpecialDishToCart(EditDishViewModel model)
-        {
-            var specialDish = new Dish();
-            var diList = new List<DishIngredient>();
-            var xtraIngPrice = 0;
+        //public void AddSpecialDishToCart(EditDishViewModel model)
+        //{
+        //    var specialDish = new Dish();
+        //    var diList = new List<DishIngredient>();
+        //    var xtraIngPrice = 0;
 
-            foreach (var item in model.EditDish.DishIngredients)
-            {
-                var di = new DishIngredient();
-                if (item.Ingredient.IsChecked)
-                {
-                    di = item;
-                    di.Ingredient.Price = item.Ingredient.Price;
-                    di.Ingredient.Name = item.Ingredient.Name;
-                    diList.Add(di);
-                }
+        //    foreach (var item in model.EditDish.DishIngredients)
+        //    {
+        //        var di = new DishIngredient();
+        //        if (item.Ingredient.IsChecked)
+        //        {
+        //            di = item;
+        //            di.Ingredient.Price = item.Ingredient.Price;
+        //            di.Ingredient.Name = item.Ingredient.Name;
+        //            diList.Add(di);
+        //        }
 
-            }
+        //    }
 
-            foreach (var item in model.ExtraIngredients)
-            {
-                var di = new DishIngredient();
-                if (item.IsChecked)
-                {
+        //    foreach (var item in model.ExtraIngredients)
+        //    {
+        //        var di = new DishIngredient();
+        //        if (item.IsChecked)
+        //        {
 
-                    di.Ingredient = item.Ingredients;
-                    di.Ingredient.Price = item.Ingredients.Price;
-                    xtraIngPrice = xtraIngPrice + item.Ingredients.Price;
-                    di.Ingredient.Name = item.Ingredients.Name;
-                    diList.Add(di);
-                }
+        //            di.Ingredient = item.;
+        //            di.Ingredient.Price = item.Ingredients.Price;
+        //            xtraIngPrice = xtraIngPrice + item.Ingredients.Price;
+        //            di.Ingredient.Name = item.Ingredients.Name;
+        //            diList.Add(di);
+        //        }
 
-            }
+        //    }
 
             //var checkList = CheckForSpecialDishInSession();
 

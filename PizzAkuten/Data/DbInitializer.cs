@@ -59,6 +59,25 @@ namespace PizzAkuten.Data
                 var dressing = new Ingredient { Name = "Dressing", Price = 10 };
                 var onion = new Ingredient { Name = "Lök", Price = 5 };
 
+                var xcheese = new ExtraIngredient { Name = "Cheese", Price = 5 };
+                var xham = new ExtraIngredient { Name = "Ham", Price = 5 };
+                var xtomato = new ExtraIngredient { Name = "Tomato", Price = 5 };
+                var xmushroom = new ExtraIngredient { Name = "Mushroom", Price = 5 };
+                var xkebab = new ExtraIngredient { Name = "Kebab", Price = 10 };
+                var xpasta = new ExtraIngredient { Name = "Pasta", Price = 5 };
+                var xtuna = new ExtraIngredient { Name = "Tonfisk", Price = 5 };
+                var xsalad = new ExtraIngredient { Name = "Sallad", Price = 5 };
+                var xchicken = new ExtraIngredient { Name = "Chicken", Price = 10 };
+                var xpork = new ExtraIngredient { Name = "Fläskfilé", Price = 10 };
+                var xbeef = new ExtraIngredient { Name = "Oxfilé", Price = 10 };
+                var xcucumber = new ExtraIngredient { Name = "Gurka", Price = 5 };
+                var xpaprika = new ExtraIngredient { Name = "Paprika", Price = 5 };
+                var xananas = new ExtraIngredient { Name = "Ananas", Price = 5 };
+                var xbanana = new ExtraIngredient { Name = "Banana", Price = 5 };
+                var xbread = new ExtraIngredient { Name = "Bröd", Price = 5 };
+                var xpotatoe = new ExtraIngredient { Name = "Potatis", Price = 15 };
+                var xdressing = new ExtraIngredient { Name = "Dressing", Price = 10 };
+                var xonion = new ExtraIngredient { Name = "Lök", Price = 5 };
 
                 var capricciosa = new Dish { Name = "Cappricciosa", Price = 89, ImagePath = "images/pizza.jpg"};
                 var margueritha = new Dish { Name = "Margaritha", Price = 79, ImagePath = "images/pizza.jpg" };

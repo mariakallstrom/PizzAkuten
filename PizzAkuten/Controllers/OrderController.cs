@@ -78,18 +78,11 @@ namespace PizzAkuten.Controllers
                 .SingleOrDefaultAsync(m => m.DishId == dishId);
 
             var model = new EditDishViewModel();
-       
-            var ingList = new List<ExtraIngredient>();
 
-            foreach (var item in ingredients)
-            {
-                var ing = new ExtraIngredient();
-                item.IsChecked = true;
-                ing.Ingredients = item;
-                ingList.Add(ing);
-            }
+            var extraIngredients = _context.ExtraIngredients.ToList();
+
             model.EditDish = dish;
-            model.ExtraIngredients = ingList;
+            model.ExtraIngredients = extraIngredients;
 
             if (dish == null)
             {
@@ -102,11 +95,11 @@ namespace PizzAkuten.Controllers
         [HttpPost]
         public IActionResult Edit(EditDishViewModel model)
         {
-            if(model != null)
-            {
-                _service.AddSpecialDishToCart(model);
+            //if(model != null)
+            //{
+            //    _service.AddSpecialDishToCart(model);
 
-            };
+            //};
 
             return null;
         }

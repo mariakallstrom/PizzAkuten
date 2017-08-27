@@ -1,5 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
+using System.IO;
+using System.Collections;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
@@ -8,6 +9,12 @@ using Microsoft.EntityFrameworkCore;
 using PizzAkuten.Data;
 using PizzAkuten.Models;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
+using PizzAkuten.Extensions;
+using Microsoft.AspNetCore.Hosting;
+using System.Net.Http.Headers;
+using PizzAkuten.Services;
+using System.Collections.Generic;
 
 namespace PizzAkuten.Controllers
 {
@@ -15,16 +22,21 @@ namespace PizzAkuten.Controllers
     public class DishController : Controller
     {
         private readonly ApplicationDbContext _context;
+        private readonly IHostingEnvironment _hostingEnvironment;
+        private readonly DishService _service;
 
-        public DishController(ApplicationDbContext context)
+        public DishController(ApplicationDbContext context, IHostingEnvironment environment, DishService service)
         {
             _context = context;
+            _hostingEnvironment = environment;
+            _service = service;
         }
 
         // GET: Dish
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Dishes.ToListAsync());
+           
+            return View(await _context.Dishes.Include(c=>c.Category).Include(d=>d.DishIngredients).ToListAsync());
         }
 
         // GET: Dish/Details/5
@@ -49,7 +61,18 @@ namespace PizzAkuten.Controllers
         // GET: Dish/Create
         public IActionResult Create()
         {
-            return View();
+            var model = new AdminDishViewModel();
+            var categories = _context.Categories.ToList();
+            model.SelectCategoryList = new List<SelectListItem>();
+
+            foreach (var item in categories)
+            {
+                var category = new SelectListItem { Text = item.Name, Value = item.CategoryId.ToString() };
+                model.SelectCategoryList.Add(category);
+            }
+            model.Ingredients = _context.Ingredients.ToList();
+
+            return View(model);
         }
 
         // POST: Dish/Create
@@ -57,15 +80,28 @@ namespace PizzAkuten.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("DishId,Name,Price")] Dish dish)
+        public async Task<IActionResult> Create([Bind("DishId,Name,Price, CategoryId, Ingredients, ImageFile, Ingredients")] AdminDishViewModel dish, IFormFile file)
         {
+            var upload = Path.Combine(_hostingEnvironment.WebRootPath, "images");
+
+            if (!_service.CheckIfImageExistsInImageFolder(file))
+            {
+                if (file.Length > 0)
+                {
+                    var fileStream = new FileStream(Path.Combine(upload, file.FileName), FileMode.Create);
+                    await file.CopyToAsync(fileStream);
+                }
+            }
+               
+            dish.ImagePath = "images/" + file.FileName;
             if (ModelState.IsValid)
             {
-                _context.Add(dish);
-                await _context.SaveChangesAsync();
+                _service.SaveDishToDatabase(dish);
                 return RedirectToAction(nameof(Index));
+              
+           
             }
-            return View(dish);
+            return View();
         }
 
         // GET: Dish/Edit/5
@@ -77,11 +113,22 @@ namespace PizzAkuten.Controllers
             }
 
             var dish = await _context.Dishes.SingleOrDefaultAsync(m => m.DishId == id);
+            var editDish = new AdminDishViewModel
+            {
+                Name = dish.Name,
+                Price = dish.Price,
+                ImagePath = dish.ImagePath,
+                Category = dish.Category,
+                DishIngredients = dish.DishIngredients,
+                DishId = dish.DishId,
+                CategoryId = dish.CategoryId
+
+            };
             if (dish == null)
             {
                 return NotFound();
             }
-            return View(dish);
+            return View(editDish);
         }
 
         // POST: Dish/Edit/5

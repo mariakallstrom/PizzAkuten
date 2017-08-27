@@ -36,10 +36,8 @@ namespace PizzAkuten.Data
                 var roleResult = roleManager.CreateAsync(adminRole).Result;
                 userManager.AddToRoleAsync(adminUser, adminRole.Name);
             }
-
-            if (context.Dishes.ToList().Count == 0)
-            {
-                var cheese = new Ingredient { Name = "Cheese", Price=5 };
+         
+                var cheese = new Ingredient { Name = "Cheese", Price = 5 };
                 var ham = new Ingredient { Name = "Ham", Price = 5 };
                 var tomato = new Ingredient { Name = "Tomato", Price = 5 };
                 var mushroom = new Ingredient { Name = "Mushroom", Price = 5 };
@@ -58,10 +56,11 @@ namespace PizzAkuten.Data
                 var potatoe = new Ingredient { Name = "Potatis", Price = 15 };
                 var dressing = new Ingredient { Name = "Dressing", Price = 10 };
                 var onion = new Ingredient { Name = "Lök", Price = 5 };
+            context.AddRange(cheese, ham, tomato, mushroom, kebab, pasta, tuna, salad, chicken, pork, beef, cucumber, paprika, ananas, banana, bread, potatoe, dressing, onion);
+            context.SaveChanges();
 
-               
-               
-
+            if (context.Dishes.ToList().Count == 0)
+            {
                 var capricciosa = new Dish { Name = "Cappricciosa", Price = 89, ImagePath = "images/pizza.jpg"};
                 var margueritha = new Dish { Name = "Margaritha", Price = 79, ImagePath = "images/pizza.jpg" };
                 var vesuvio = new Dish { Name = "Vesuvio", Price = 79, ImagePath = "images/pizza.jpg" };

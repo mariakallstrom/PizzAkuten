@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace PizzAkuten.Extensions
 {
-    public static class LoadImageExtension
+    public static class ImageExtension
     {
         public static string GetPicture(this Dish dish)
         {

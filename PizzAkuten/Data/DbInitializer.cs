@@ -61,15 +61,15 @@ namespace PizzAkuten.Data
 
             if (context.Dishes.ToList().Count == 0)
             {
-                var capricciosa = new Dish { Name = "Cappricciosa", Price = 89, ImagePath = "images/pizza.jpg"};
-                var margueritha = new Dish { Name = "Margaritha", Price = 79, ImagePath = "images/pizza.jpg" };
-                var vesuvio = new Dish { Name = "Vesuvio", Price = 79, ImagePath = "images/pizza.jpg" };
-                var pastaPork = new Dish { Name = "Pasta med Fläskfilé", Price = 89, ImagePath = "images/pasta.jpg" };
-                var pastaBeef = new Dish { Name = "Pasta med Oxfilé", Price = 99, ImagePath = "images/pasta.jpg" };
-                var chickenSalad = new Dish { Name = "KycklingSallad", Price = 79, ImagePath = "images/sallad.jpg" };
-                var kebabSalad = new Dish { Name = "Kebabsallad", Price = 79, ImagePath = "images/sallad.jpg" };
-                var kebabDish = new Dish { Name = "KebabTallrik", Price = 89, ImagePath = "images/kebab.jpg" };
-                var hamburger = new Dish { Name = "Hamburgare 90g m. Pommes", Price = 89, ImagePath = "images/hamburgare.jpg" };
+                var capricciosa = new Dish { Name = "Cappricciosa", Price = 89, ImagePath = "/images/pizza.jpg"};
+                var margueritha = new Dish { Name = "Margaritha", Price = 79, ImagePath = "/images/pizza.jpg" };
+                var vesuvio = new Dish { Name = "Vesuvio", Price = 79, ImagePath = "/images/pizza.jpg" };
+                var pastaPork = new Dish { Name = "Pasta med Fläskfilé", Price = 89, ImagePath = "/images/pasta.jpg" };
+                var pastaBeef = new Dish { Name = "Pasta med Oxfilé", Price = 99, ImagePath = "/images/pasta.jpg" };
+                var chickenSalad = new Dish { Name = "KycklingSallad", Price = 79, ImagePath = "/images/sallad.jpg" };
+                var kebabSalad = new Dish { Name = "Kebabsallad", Price = 79, ImagePath = "/images/sallad.jpg" };
+                var kebabDish = new Dish { Name = "KebabTallrik", Price = 89, ImagePath = "/images/kebab.jpg" };
+                var hamburger = new Dish { Name = "Hamburgare 90g m. Pommes", Price = 89, ImagePath = "/images/hamburgare.jpg" };
 
                 capricciosa.DishIngredients = new List<DishIngredient> {
                     new DishIngredient{Ingredient = cheese},

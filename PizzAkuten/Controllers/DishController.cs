@@ -80,26 +80,28 @@ namespace PizzAkuten.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("DishId,Name,Price, CategoryId, Ingredients, ImageFile, Ingredients")] AdminDishViewModel dish, IFormFile file)
+        public async Task<IActionResult> Create([Bind("DishId,Name,Price, CategoryId, ImageFile, Ingredients")] AdminDishViewModel dish, IFormFile file)
         {
-            var upload = Path.Combine(_hostingEnvironment.WebRootPath, "images");
-
-            if (!_service.CheckIfImageExistsInImageFolder(file))
+            if(file != null)
             {
-                if (file.Length > 0)
+                var upload = Path.Combine(_hostingEnvironment.WebRootPath, "images");
+
+                if (!_service.CheckIfImageExistsInImageFolder(file))
                 {
-                    var fileStream = new FileStream(Path.Combine(upload, file.FileName), FileMode.Create);
-                    await file.CopyToAsync(fileStream);
+                    if (file.Length > 0)
+                    {
+                        var fileStream = new FileStream(Path.Combine(upload, file.FileName), FileMode.Create);
+                        await file.CopyToAsync(fileStream);
+                    }
                 }
+
+                dish.ImagePath = "/images/" + file.FileName;
             }
-               
-            dish.ImagePath = "images/" + file.FileName;
+         
             if (ModelState.IsValid)
             {
                 _service.SaveDishToDatabase(dish);
                 return RedirectToAction(nameof(Index));
-              
-           
             }
             return View();
         }
@@ -112,18 +114,34 @@ namespace PizzAkuten.Controllers
                 return NotFound();
             }
 
-            var dish = await _context.Dishes.SingleOrDefaultAsync(m => m.DishId == id);
-            var editDish = new AdminDishViewModel
-            {
-                Name = dish.Name,
-                Price = dish.Price,
-                ImagePath = dish.ImagePath,
-                Category = dish.Category,
-                DishIngredients = dish.DishIngredients,
-                DishId = dish.DishId,
-                CategoryId = dish.CategoryId
+            var dish = await _context.Dishes.Include(c=>c.Category).Include(d => d.DishIngredients).ThenInclude(di => di.Ingredient)
+              .SingleOrDefaultAsync(m => m.DishId == id);
+            var editDish = new AdminDishViewModel();
+            editDish.DishId = dish.DishId;
+            editDish.Name = dish.Name;
+            editDish.Price = dish.Price;
+            editDish.Category = dish.Category;
+            editDish.DishIngredients = dish.DishIngredients;
+            editDish.ImagePath = dish.ImagePath;
 
-            };
+            var ingredients = _context.Ingredients.ToList();
+            editDish.Ingredients = ingredients;
+
+            foreach (var item in dish.DishIngredients)
+            {
+                item.Ingredient.IsChecked = true;
+            }
+
+            var categories = _context.Categories.ToList();
+            editDish.SelectCategoryList = new List<SelectListItem>();
+
+            foreach (var item in categories)
+            {
+                var category = new SelectListItem { Text = item.Name, Value = item.CategoryId.ToString() };
+                editDish.SelectCategoryList.Add(category);
+               
+            }
+           
             if (dish == null)
             {
                 return NotFound();
@@ -136,34 +154,31 @@ namespace PizzAkuten.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("DishId,Name,Price")] Dish dish)
+        public async Task<IActionResult> Edit([Bind("DishId,Name,Price, CategoryId, ImageFile, Ingredients")] AdminDishViewModel dish, IFormFile file)
         {
-            if (id != dish.DishId)
+            if (dish == null)
             {
                 return NotFound();
             }
-
-            if (ModelState.IsValid)
+            if (file != null)
             {
-                try
+                var upload = Path.Combine(_hostingEnvironment.WebRootPath, "images");
+
+                if (!_service.CheckIfImageExistsInImageFolder(file))
                 {
-                    _context.Update(dish);
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!DishExists(dish.DishId))
+                    if (file.Length > 0)
                     {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
+                        var fileStream = new FileStream(Path.Combine(upload, file.FileName), FileMode.Create);
+                        await file.CopyToAsync(fileStream);
                     }
                 }
-                return RedirectToAction(nameof(Index));
+
+                dish.ImagePath = "/images/" + file.FileName;
             }
-            return View(dish);
+            _service.EditDish(dish);
+
+            return RedirectToAction(nameof(Index));
+            
         }
 
         // GET: Dish/Delete/5

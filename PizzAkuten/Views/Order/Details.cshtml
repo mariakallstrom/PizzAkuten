@@ -25,6 +25,12 @@
         <dt>
             @Html.DisplayNameFor(model => model.DishIngredients)
         </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Category)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.Category.Name)
+        </dt>
         @foreach (var dish in Model.DishIngredients)
         {
             <dd>

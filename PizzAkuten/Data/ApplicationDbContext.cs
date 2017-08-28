@@ -22,7 +22,7 @@ namespace PizzAkuten.Data
         public DbSet<ExtraIngredient> ExtraIngredients { get; set; }
         public DbSet<DishExtraIngredient> DishExtraIngredients { get; set; }
         public DbSet<Ingredient> Ingredients { get; set; }
-        public DbSet<DishIngredient> DishIngredients { get; set; }
+        public DbSet<DishIngredient> DishIngredient { get; set; }
         public DbSet<Order> Orders { get; set; }
         public DbSet<OrderDish> OrderDishes { get; set; }
 

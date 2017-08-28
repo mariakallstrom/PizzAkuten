@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using PizzAkuten.Extensions;
 using System;
+using System.Security.Claims;
 
 namespace PizzAkuten.Services
 {
@@ -56,7 +57,7 @@ namespace PizzAkuten.Services
                     if (tempDish != null)
                     {
                         tempDish.Quantity++;
-                        cartFromSession.TotalPrice = tempDish.OrderDish.Price * tempDish.Quantity;
+                        cartFromSession.TotalPrice = cartFromSession.TotalPrice + tempDish.OrderDish.Price;
                     }
 
                     var index = cartFromSession.OrderItems.IndexOf(cartFromSession.OrderItems.First(x => x.OrderDish.DishId == dish.DishId));
@@ -76,7 +77,7 @@ namespace PizzAkuten.Services
                     item.OrderDish = dish;
                     item.Quantity = 1;
                     cartFromSession.OrderItems.Add(item);
-                    cartFromSession.TotalPrice = cartFromSession.TotalPrice +=  item.OrderDish.Price;
+                    cartFromSession.TotalPrice = cartFromSession.TotalPrice + item.OrderDish.Price;
                     _session.SetObjectAsJson("Cart", cartFromSession);
                     return GetOrderForCurrentSession(_session);
                 }
@@ -133,10 +134,10 @@ namespace PizzAkuten.Services
 
         public string ConfirmOrder(Order order)
         {
-         
             _context.Orders.Add(order);
-            _context.SaveChangesAsync();
+            _context.SaveChanges();
             DeleteSpecialDishes(order);
+            _session.Remove("Cart");
             return "Tack för din order";
         }
 

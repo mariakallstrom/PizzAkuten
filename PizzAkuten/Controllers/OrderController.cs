@@ -1,16 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Linq;
 using Microsoft.AspNetCore.Mvc;
 using PizzAkuten.Data;
 using PizzAkuten.Models;
-using Newtonsoft.Json;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using PizzAkuten.Services;
 using Microsoft.EntityFrameworkCore;
 using System.Threading.Tasks;
+using System.Security.Claims;
 
 namespace PizzAkuten.Controllers
 {
@@ -26,6 +23,12 @@ namespace PizzAkuten.Controllers
             _context = context;
             _userManager = userManager;
             _service = service;
+        }
+        [Authorize]
+        public IActionResult Index()
+        {
+
+            return View(_context.Orders.ToList());
         }
         [AllowAnonymous]
         public IActionResult AddToCart(int dishId)
@@ -116,11 +119,20 @@ namespace PizzAkuten.Controllers
         public IActionResult ConfirmOrder()
         {
             var order = _service.GetOrder();
-            var text = _service.ConfirmOrder(order);
+            ClaimsPrincipal currentUser = this.User;
+            if(currentUser != null)
+            {
+                var currentUserID = currentUser.FindFirst(ClaimTypes.NameIdentifier).Value;
+                order.ApplicationuserId = currentUserID;
+                var text = _service.ConfirmOrder(order);
 
-            ViewBag.ThankYou = text;
+                ViewBag.ThankYou = text;
 
-            return RedirectToAction("ViewOrder", "Order");
+                return RedirectToAction("ViewOrder", "Order");
+            }
+            return RedirectToAction("ViewOrder");
+          
         }
+
     }
 }

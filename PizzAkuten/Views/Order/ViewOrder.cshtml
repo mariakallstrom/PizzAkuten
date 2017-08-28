@@ -1,4 +1,6 @@
 ﻿@model Order
+@inject SignInManager<ApplicationUser> SignInManager
+@inject UserManager<ApplicationUser> UserManager
 @{
     ViewData["Title"] = "View";
 }
@@ -25,5 +27,10 @@
 
 <a asp-controller="Order" asp-action="ConfirmOrder">Bekräfta order</a>
 
-
+@if (!SignInManager.IsSignedIn(User))
+{
+    <div>
+        @Html.Partial("_NonUsersAddressFormParial");
+    </div>
+}
 

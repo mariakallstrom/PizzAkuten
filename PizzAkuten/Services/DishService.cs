@@ -81,42 +81,50 @@ namespace PizzAkuten.Services
 
         public Dish EditDish(AdminDishViewModel dish)
         {
-            var dishToUpdate =  _context.Dishes.Include(c=>c.Category).SingleOrDefault(m => m.DishId == dish.DishId);
-            var dishToUpdateDishIngredients = _context.DishIngredient.Where(x => x.DishId == dish.DishId).ToList();
+            var dishToUpdate = _context.Dishes.FirstOrDefault(m => m.DishId == dish.DishId);
+            var dishToUpdateDishIngredients = _context.DishIngredients.Where(x => x.DishId == dish.DishId).ToList();
 
             foreach (var item in dish.Ingredients)
             {
-                if(item.IsChecked == true)
+                if (item.IsChecked == true)
                 {
                     //find ingrediens in DishIngredinens
-                    var findIng = dishToUpdateDishIngredients.FirstOrDefault(x=>x.IngredientId == item.IngredientId);
-                        if(findIng == null )
+                    var findIng = dishToUpdateDishIngredients.FirstOrDefault(x => x.IngredientId == item.IngredientId);
+                    if (findIng == null)
                     {
-                        var ing = _context.DishIngredient.FirstOrDefault(x => x.Ingredient == item);
+                        var ing = _context.DishIngredients.FirstOrDefault(x => x.Ingredient == item);
+                        ing.Dish = dishToUpdate;
+                        ing.Ingredient = _context.Ingredients.FirstOrDefault(x => x.IngredientId == item.IngredientId);
+                        _context.DishIngredients.Add(ing);
+                        _context.SaveChanges();
                     }
-                    
+
                 }
-                if(item.IsChecked == false)
+                if (item.IsChecked == false)
                 {
                     var findIng = dishToUpdateDishIngredients.FirstOrDefault(x => x.IngredientId == item.IngredientId);
                     if (findIng != null)
                     {
-                        var ing = _context.DishIngredient.FirstOrDefault(x => x.Ingredient == item);
-                        dishToUpdate.DishIngredients.Remove(ing);
+                        var ing = _context.DishIngredients.FirstOrDefault(x => x.Ingredient == item);
+                        ing.Dish = dishToUpdate;
+                        ing.Ingredient = _context.Ingredients.FirstOrDefault(x => x.IngredientId == item.IngredientId);
+                        _context.DishIngredients.Remove(ing);
+                        _context.SaveChanges();
                     }
 
                 }
             }
 
+       
             dishToUpdate.Price = dish.Price;
             dishToUpdate.Name = dish.Name;
             dishToUpdate.ImagePath = dish.ImagePath;
             dishToUpdate.Category = dish.Category;
 
-
             _context.Update(dishToUpdate);
             _context.SaveChanges();
             return dishToUpdate;
         }
+
     }
 }

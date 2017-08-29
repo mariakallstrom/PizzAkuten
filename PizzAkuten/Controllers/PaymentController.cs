@@ -17,13 +17,13 @@ namespace PizzAkuten.Controllers
     {
         private readonly ApplicationDbContext _context;
         private readonly OrderService _orderservice;
-     
+        private readonly IEmailSender _emailservice;
 
-        public PaymentController(ApplicationDbContext context, OrderService orderservice)
+        public PaymentController(ApplicationDbContext context, OrderService orderservice, IEmailSender emailservice)
         {
             _context = context;
             _orderservice = orderservice;
-          
+            _emailservice = emailservice;
         }
 
         [Authorize(Roles ="admin")]
@@ -89,6 +89,9 @@ namespace PizzAkuten.Controllers
 
         public IActionResult SavePayment(IFormCollection form)
         {
+
+            var paymentChoize = form["creditCardRadio"];
+
             var model = new Payment();
             if(String.IsNullOrEmpty(form["NonAccountUserId"]))
             {
@@ -99,14 +102,19 @@ namespace PizzAkuten.Controllers
                 model.NonAccountUserId = Convert.ToInt32(form["NonAccountUserId"]);
             }
           
-            model.Month = Convert.ToInt32(form["Month"]);
-            model.CardNumber = form["CardNumber"];
-            model.Cvv = Convert.ToInt32(form["Cvv"]);
-            model.Year = Convert.ToInt32(form["Year"]);
+            if(paymentChoize != 3)
+            {
+                model.Month = Convert.ToInt32(form["Month"]);
+                model.CardNumber = form["CardNumber"];
+                model.Cvv = Convert.ToInt32(form["Cvv"]);
+                model.Year = Convert.ToInt32(form["Year"]);
+            }
+        
             model.OrderId = Convert.ToInt32(form["OrderId"]);
             _context.Payment.Add(model);
             _context.SaveChanges();
-          
+            var order = _context.Orders.Find(model.OrderId);
+            _emailservice.SendOrderConfirmToUser(order);
             return RedirectToAction("ThankForOrdering");
         }
 

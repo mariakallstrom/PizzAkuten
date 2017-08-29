@@ -10,9 +10,14 @@
     padding-right: 15px;
 }
 
-#cartDiv{
-    border : double;
-    border-color :black;
+.cardImage{
+    width:120px;
+    height:80px;
+} 
+
+#cartDiv {
+    border: double;
+    border-color: black;
 }
 /* Carousel */
 .carousel-caption p {
@@ -36,6 +41,7 @@
     width:1000px;
   
 }
+
 /* Hide/rearrange for smaller screens */
 @media screen and (max-width: 767px) {
     /* Hide captions */

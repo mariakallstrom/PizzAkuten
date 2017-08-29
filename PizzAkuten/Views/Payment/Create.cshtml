@@ -1,48 +1,67 @@
 ﻿@model PizzAkuten.Models.Payment
 @inject SignInManager<ApplicationUser> SignInManager
 @inject UserManager<ApplicationUser> UserManager
-@{
-    ViewData["Title"] = "Create";
-}
 
-<h2>Create</h2>
 
-<h4>Payment</h4>
+
+<br />
+<h4>Betalning</h4>
 <hr />
 <div class="row">
     <div class="col-md-4">
+        <div>
+            <p>Välj betalningmetod</p>
+        </div>
+  
+   <br />
         <form asp-action="SavePayment">
-            <input name="NonAccountUserId" hidden value="@ViewBag.NonAccountUserId"/>
-            @if(SignInManager.IsSignedIn(User))
-         {
+            <div>
+                <img class="cardImage" src="~/images/VisaCard.png" alt="Alternate Text" />
+                <input id="visa" class="paymentMethod" name="creditCardRadio" value="1" type="radio" />
+            </div>
+            <div>
+                <img class="cardImage" src="~/images/MasterCard.png" alt="Alternate Text" />
+                <input id="master" class="paymentMethod" name="creditCardRadio" value="2" type="radio" />
+            </div>
+            <div>
+                <img class="cardImage" src="~/images/Swish.jpg" alt="Alternate Text" />
+                <input id="swish" class="paymentMethod" name="creditCardRadio" value="3" type="radio" />
+            </div>
 
-            <input name="UserId" hidden value="@UserManager.FindByIdAsync(SignInManager.Context.User.Identity.Name)" />
-         }
-          
-            <input name="OrderId" hidden value="@ViewBag.OrderId" />
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <div class="form-group">
-                <label asp-for="CardNumber" class="control-label"></label>
-                <input asp-for="CardNumber" class="form-control" />
-                <span asp-validation-for="CardNumber" class="text-danger"></span>
+            <div class="hidden" id="creditCardForm">
+                <input name="NonAccountUserId" hidden value="@ViewBag.NonAccountUserId" />
+                @if (SignInManager.IsSignedIn(User))
+                {
+
+                    <input name="UserId" hidden value="@UserManager.FindByIdAsync(SignInManager.Context.User.Identity.Name)" />
+                }
+
+                <input name="OrderId" hidden value="@ViewBag.OrderId" />
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <div class="form-group">
+                    <label asp-for="CardNumber" class="control-label"></label>
+                    <input asp-for="CardNumber" class="form-control" />
+                    <span asp-validation-for="CardNumber" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Cvv" class="control-label"></label>
+                    <input asp-for="Cvv" class="form-control" />
+                    <span asp-validation-for="Cvv" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Year" class="control-label"></label>
+                    <input asp-for="Year" class="form-control" />
+                    <span asp-validation-for="Year" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Month" class="control-label"></label>
+                    <input asp-for="Month" class="form-control" />
+                    <span asp-validation-for="Month" class="text-danger"></span>
+                </div>
             </div>
+            <br />
             <div class="form-group">
-                <label asp-for="Cvv" class="control-label"></label>
-                <input asp-for="Cvv" class="form-control" />
-                <span asp-validation-for="Cvv" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Year" class="control-label"></label>
-                <input asp-for="Year" class="form-control" />
-                <span asp-validation-for="Year" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Month" class="control-label"></label>
-                <input asp-for="Month" class="form-control" />
-                <span asp-validation-for="Month" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <input type="submit" value="SavePayment" class="btn btn-default" />
+                <input type="submit" value="Betala" class="btn btn-default" />
             </div>
         </form>
     </div>

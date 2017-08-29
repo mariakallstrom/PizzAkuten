@@ -9,16 +9,19 @@ using PizzAkuten.Data;
 using PizzAkuten.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
+using PizzAkuten.Services;
 
 namespace PizzAkuten.Controllers
 {
     public class PaymentController : Controller
     {
         private readonly ApplicationDbContext _context;
+        private readonly OrderService _orderservice;
 
-        public PaymentController(ApplicationDbContext context)
+        public PaymentController(ApplicationDbContext context, OrderService orderservice)
         {
             _context = context;
+            _orderservice = orderservice;
         }
 
         [Authorize(Roles ="admin")]
@@ -49,6 +52,7 @@ namespace PizzAkuten.Controllers
         // GET: Payment/Create
         public IActionResult Create()
         {
+            ViewBag.OrderId = _orderservice.GetOrder().OrderId;
             return View();
         }
 
@@ -59,20 +63,24 @@ namespace PizzAkuten.Controllers
         [ValidateAntiForgeryToken]
         public IActionResult Create(IFormCollection form)
         {
-            var model = new NonAccountUser();
-            model.FirstName = form["FirstName"];
-            model.LastName = form["LastName"];
-            model.Street = form["Street"];
-            model.ZipCode = Convert.ToInt32(form["ZipCode"]);
-            model.Phone = form["Phone"];
-            model.Email = form["Email"];
-            model.City = form["City"];
-            model.OrderId = Convert.ToInt32(form["OrderId"]);
-            _context.NonAccountUsers.Add(model);
-            _context.SaveChanges();
-            var user = _context.NonAccountUsers.Last();
-            ViewBag.NonAccountUserId = user.Id;
-            ViewBag.OrderId = user.OrderId;
+            if(form != null)
+            {
+                var model = new NonAccountUser();
+                model.FirstName = form["FirstName"];
+                model.LastName = form["LastName"];
+                model.Street = form["Street"];
+                model.ZipCode = Convert.ToInt32(form["ZipCode"]);
+                model.Phone = form["Phone"];
+                model.Email = form["Email"];
+                model.City = form["City"];
+                model.OrderId = Convert.ToInt32(form["OrderId"]);
+                _context.NonAccountUsers.Add(model);
+                _context.SaveChanges();
+                var user = _context.NonAccountUsers.Last();
+                ViewBag.NonAccountUserId = user.Id;
+                ViewBag.OrderId = user.OrderId;
+            };
+           
 
             return View();
         }
@@ -80,7 +88,15 @@ namespace PizzAkuten.Controllers
         public IActionResult SavePayment(IFormCollection form)
         {
             var model = new Payment();
-            model.NonAccountUserId = Convert.ToInt32(form["UserId"]);
+            if(String.IsNullOrEmpty(form["NonAccountUserId"]))
+            {
+                model.ApplicationuserId = form["UserId"];
+            }
+            else
+            {
+                model.NonAccountUserId = Convert.ToInt32(form["NonAccountUserId"]);
+            }
+          
             model.Month = Convert.ToInt32(form["Month"]);
             model.CardNumber = form["CardNumber"];
             model.Cvv = Convert.ToInt32(form["Cvv"]);
@@ -88,14 +104,15 @@ namespace PizzAkuten.Controllers
             model.OrderId = Convert.ToInt32(form["OrderId"]);
             _context.Payment.Add(model);
             _context.SaveChanges();
-
+            
             return RedirectToAction("ThankForOrdering");
         }
 
         public IActionResult ThankForOrdering()
         {
+            _orderservice.DeleteSession();
             ViewBag.ThankYou = "Tack för Din Order!";
-
+            
             return View();
         }
 

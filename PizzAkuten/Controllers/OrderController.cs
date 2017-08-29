@@ -126,7 +126,7 @@ namespace PizzAkuten.Controllers
                 var currentUser = User;
                 order.ApplicationUser = await _userManager.FindByNameAsync(User.Identity.Name);
 
-                ViewBag.Order = _service.SaveOrderToDataBase(order);
+                _service.SaveOrderToDataBase(order);
 
 
                 return RedirectToAction("Create", "Payment");

@@ -24,17 +24,20 @@ namespace PizzAkuten.Controllers
         private readonly SignInManager<ApplicationUser> _signInManager;
         private readonly IEmailSender _emailSender;
         private readonly ILogger _logger;
+        private readonly OrderService _orderservice;
 
         public AccountController(
             UserManager<ApplicationUser> userManager,
             SignInManager<ApplicationUser> signInManager,
             IEmailSender emailSender,
-            ILogger<AccountController> logger)
+            ILogger<AccountController> logger,
+             OrderService orderservice)
         {
             _userManager = userManager;
             _signInManager = signInManager;
             _emailSender = emailSender;
             _logger = logger;
+            _orderservice = orderservice;
         }
 
         [TempData]
@@ -47,6 +50,7 @@ namespace PizzAkuten.Controllers
             // Clear the existing external cookie to ensure a clean login process
            
             await HttpContext.SignOutAsync(IdentityConstants.ExternalScheme);
+            _orderservice.DeleteSession();
 
             ViewData["ReturnUrl"] = returnUrl;
             return View();

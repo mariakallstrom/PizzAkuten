@@ -214,5 +214,10 @@ namespace PizzAkuten.Services
 
             SetOrderForCurrentSession(specialDish.DishId);
         }
+
+        public void DeleteSession()
+        {
+            _session.Remove("Cart");
+        }
     }
 }

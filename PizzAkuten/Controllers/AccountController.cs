@@ -50,7 +50,7 @@ namespace PizzAkuten.Controllers
             // Clear the existing external cookie to ensure a clean login process
            
             await HttpContext.SignOutAsync(IdentityConstants.ExternalScheme);
-            _orderservice.DeleteSession();
+         
 
             ViewData["ReturnUrl"] = returnUrl;
             return View();
@@ -252,6 +252,7 @@ namespace PizzAkuten.Controllers
         {
             await _signInManager.SignOutAsync();
             _logger.LogInformation("User logged out.");
+            _orderservice.DeleteSession();
             return RedirectToAction(nameof(HomeController.Index), "Home");
         }
 

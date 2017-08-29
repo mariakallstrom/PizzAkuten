@@ -24,12 +24,17 @@ namespace PizzAkuten.Controllers
         private readonly ApplicationDbContext _context;
         private readonly IHostingEnvironment _hostingEnvironment;
         private readonly DishService _service;
+    
 
-        public DishController(ApplicationDbContext context, IHostingEnvironment environment, DishService service)
+        public DishController(IHostingEnvironment environment, DishService service)
         {
-            _context = context;
             _hostingEnvironment = environment;
             _service = service;
+        }
+
+        public DishController(ApplicationDbContext context)
+        {
+            _context = context;
         }
 
         // GET: Dish

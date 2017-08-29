@@ -17,11 +17,13 @@ namespace PizzAkuten.Controllers
     {
         private readonly ApplicationDbContext _context;
         private readonly OrderService _orderservice;
+     
 
         public PaymentController(ApplicationDbContext context, OrderService orderservice)
         {
             _context = context;
             _orderservice = orderservice;
+          
         }
 
         [Authorize(Roles ="admin")]
@@ -104,15 +106,15 @@ namespace PizzAkuten.Controllers
             model.OrderId = Convert.ToInt32(form["OrderId"]);
             _context.Payment.Add(model);
             _context.SaveChanges();
-            
+          
             return RedirectToAction("ThankForOrdering");
         }
 
         public IActionResult ThankForOrdering()
         {
             _orderservice.DeleteSession();
-            ViewBag.ThankYou = "Tack för Din Order!";
-            
+            ViewBag.ThankYou = "Tack för Din Order! En bekräftelse har nu skickats till din email";
+     
             return View();
         }
 

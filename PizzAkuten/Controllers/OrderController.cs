@@ -19,13 +19,15 @@ namespace PizzAkuten.Controllers
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly SignInManager<ApplicationUser> _signInManager;
         private readonly OrderService _service;
+        private readonly IEmailSender _emailservice;
 
-        public OrderController(ApplicationDbContext context, UserManager<ApplicationUser> userManager, OrderService service, SignInManager<ApplicationUser> signInManager)
+        public OrderController(ApplicationDbContext context, UserManager<ApplicationUser> userManager, OrderService service, SignInManager<ApplicationUser> signInManager, IEmailSender emailservice)
         {
             _context = context;
             _userManager = userManager;
             _service = service;
             _signInManager = signInManager;
+            _emailservice = emailservice;
         }
         [Authorize]
         public IActionResult Index()
@@ -127,13 +129,13 @@ namespace PizzAkuten.Controllers
                 order.ApplicationUser = await _userManager.FindByNameAsync(User.Identity.Name);
 
                 _service.SaveOrderToDataBase(order);
-
+                _emailservice.SendOrderConfirmToUser(order);
 
                 return RedirectToAction("Create", "Payment");
             }
           
             var savedOrder = _service.SaveOrderToDataBase(order);
-
+            _emailservice.SendOrderConfirmToUser(order);
             return View(savedOrder);
 
         }

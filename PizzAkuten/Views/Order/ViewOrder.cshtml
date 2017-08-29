@@ -9,6 +9,7 @@
 
 @foreach (var item in Model.OrderDish.OrderItems)
 {
+ 
     <div>
         <label>Namn: </label>  @item.OrderDish.Name
     </div>
@@ -27,10 +28,5 @@
 
 <a asp-controller="Order" asp-action="ConfirmOrder">Bekräfta order</a>
 
-@if (!SignInManager.IsSignedIn(User))
-{
-    <div>
-        @Html.Partial("_NonUsersAddressFormParial");
-    </div>
-}
+
 

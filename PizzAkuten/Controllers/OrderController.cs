@@ -8,6 +8,7 @@ using PizzAkuten.Services;
 using Microsoft.EntityFrameworkCore;
 using System.Threading.Tasks;
 using System.Security.Claims;
+using Microsoft.AspNetCore.Http;
 
 namespace PizzAkuten.Controllers
 {
@@ -16,13 +17,15 @@ namespace PizzAkuten.Controllers
 
         private readonly ApplicationDbContext _context;
         private readonly UserManager<ApplicationUser> _userManager;
+        private readonly SignInManager<ApplicationUser> _signInManager;
         private readonly OrderService _service;
 
-        public OrderController(ApplicationDbContext context, UserManager<ApplicationUser> userManager, OrderService service)
+        public OrderController(ApplicationDbContext context, UserManager<ApplicationUser> userManager, OrderService service, SignInManager<ApplicationUser> signInManager)
         {
             _context = context;
             _userManager = userManager;
             _service = service;
+            _signInManager = signInManager;
         }
         [Authorize]
         public IActionResult Index()
@@ -115,24 +118,26 @@ namespace PizzAkuten.Controllers
 
             return View(order);
         }
-
-        public IActionResult ConfirmOrder()
+        public async Task<IActionResult> ConfirmOrder()
         {
             var order = _service.GetOrder();
-            ClaimsPrincipal currentUser = this.User;
-            if(currentUser != null)
+            if(_signInManager.IsSignedIn(User))
             {
-                var currentUserID = currentUser.FindFirst(ClaimTypes.NameIdentifier).Value;
-                order.ApplicationuserId = currentUserID;
-                var text = _service.ConfirmOrder(order);
+                var currentUser = User;
+                order.ApplicationUser = await _userManager.FindByNameAsync(User.Identity.Name);
 
-                ViewBag.ThankYou = text;
+                ViewBag.Order = _service.SaveOrderToDataBase(order);
 
-                return RedirectToAction("ViewOrder", "Order");
+
+                return RedirectToAction("Create", "Payment");
             }
-            return RedirectToAction("ViewOrder");
           
+            var savedOrder = _service.SaveOrderToDataBase(order);
+
+            return View(savedOrder);
+
         }
+ 
 
     }
 }

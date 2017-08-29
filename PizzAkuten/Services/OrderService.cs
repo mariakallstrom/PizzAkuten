@@ -126,19 +126,37 @@ namespace PizzAkuten.Services
         {
             var orderList = GetOrderForCurrentSession(_session);
             var order = new Order();
+            var orderDish = new OrderDish();
+            var orderItemlist = new List<OrderItem>();
+
+            foreach (var item in orderList.OrderItems)
+            {
+                var orderItem = new OrderItem();
+                var dish = _context.Dishes.FirstOrDefault(x => x.DishId == item.OrderDish.DishId);
+                orderItem.OrderDish = dish;
+                orderItem.Quantity = item.Quantity;
+                
+                orderItemlist.Add(orderItem);
+                
+
+
+            }
+          
+            orderDish.OrderItems = orderItemlist;
+            order.OrderDish = orderDish;
+
             order.OrderDate = DateTime.Today;
-            order.OrderDish = orderList;
             order.TotalPrice = orderList.TotalPrice;
             return order;
         }
 
-        public string ConfirmOrder(Order order)
+        public Order SaveOrderToDataBase(Order order)
         {
-            _context.Orders.Add(order);
+            _context.Add(order);
             _context.SaveChanges();
-            DeleteSpecialDishes(order);
-            _session.Remove("Cart");
-            return "Tack för din order";
+            var newOrder = _context.Orders.Last();
+
+            return newOrder;
         }
 
         public void DeleteSpecialDishes(Order order)

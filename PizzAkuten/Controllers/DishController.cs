@@ -74,14 +74,14 @@ namespace PizzAkuten.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(IFormCollection form)
         {
-         
-
-            if (ModelState.IsValid)
+            if (form == null)
             {
-                await _service.SaveDishToDatabase(form);
-                return RedirectToAction(nameof(Index));
+                return NotFound();
             }
-            return View();
+
+            _service.SaveDishToDatabase(form);
+            return RedirectToAction(nameof(Index));
+           
         }
 
         // GET: Dish/Edit/5
@@ -114,31 +114,8 @@ namespace PizzAkuten.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(IFormCollection form)
         {
-
             _service.EditDish(form);
-            //if (dish == null)
-            //{
-            //    return NotFound();
-            //}
-            //if (file != null)
-            //{
-            //    var upload = Path.Combine(_hostingEnvironment.WebRootPath, "images");
-
-            //    if (!_service.CheckIfImageExistsInImageFolder(file))
-            //    {
-            //        if (file.Length > 0)
-            //        {
-            //            var fileStream = new FileStream(Path.Combine(upload, file.FileName), FileMode.Create);
-            //            await file.CopyToAsync(fileStream);
-            //        }
-            //    }
-
-            //    dish.ImagePath = "/images/" + file.FileName;
-            //}
-            //_service.EditDish(dish);
-
             return RedirectToAction(nameof(Index));
-            
         }
 
         // GET: Dish/Delete/5

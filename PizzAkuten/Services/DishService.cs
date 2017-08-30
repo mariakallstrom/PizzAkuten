@@ -53,32 +53,19 @@ namespace PizzAkuten.Services
             return false;
         }
 
-        public async Task<Dish> SaveDishToDatabase(IFormCollection form)
+        public Dish SaveDishToDatabase(IFormCollection form)
         {
             var dish = new Dish();
             var file = form.Files[0];
 
-            if (file != null)
-            {
-                var upload = Path.Combine(_hostingEnvironment.WebRootPath, "images");
+            dish.ImagePath = GetImagePath(file);
 
-                if (!CheckIfImageExistsInImageFolder(file))
-                {
-                    if (file.Length > 0)
-                    {
-                        var fileStream = new FileStream(Path.Combine(upload, file.FileName), FileMode.Create);
-                        await file.CopyToAsync(fileStream);
-                    }
-                }
-
-                dish.ImagePath = "/images/" + file.FileName;
-            }
             dish.Name = form["Name"];
             dish.Price = Convert.ToInt32(form["Price"]);
 
             dish.Category = _context.Categories.SingleOrDefault(x => x.CategoryId == Convert.ToInt32(form["CategoryId"]));
 
-           
+
             var allIngredients = _context.Ingredients.ToList();
 
             var keys = form.Keys.FirstOrDefault(k => k.Contains("Checked-"));
@@ -106,21 +93,8 @@ namespace PizzAkuten.Services
 
             var file = form.Files[0];
 
-            if (file != null)
-            {
-                var upload = Path.Combine(_hostingEnvironment.WebRootPath, "images");
+            dish.ImagePath = GetImagePath(file);
 
-                if (!CheckIfImageExistsInImageFolder(file))
-                {
-                    if (file.Length > 0)
-                    {
-                        var fileStream = new FileStream(Path.Combine(upload, file.FileName), FileMode.Create);
-                         file.CopyToAsync(fileStream);
-                    }
-                }
-
-                dish.ImagePath = "/images/" + file.FileName;
-            }
             dish.Name = form["Name"];
             dish.Price = Convert.ToInt32(form["Price"]);
 
@@ -166,39 +140,27 @@ namespace PizzAkuten.Services
             _context.SaveChanges();
             return dish;
 
-            //foreach (var item in checkedIngredients)
-            //{
-            //    if (item == true)
-            //    {
-            //        //find ingrediens in DishIngredinens
-            //        var findIng = dishToUpdateDishIngredients.FirstOrDefault(x => x.IngredientId == item.IngredientId);
-            //        if (findIng == null)
-            //        {
-            //            var ing = _context.DishIngredients.FirstOrDefault(x => x.Ingredient == item);
-            //            ing.Dish = dish;
-            //            ing.Ingredient = _context.Ingredients.FirstOrDefault(x => x.IngredientId == item.IngredientId);
-            //            _context.DishIngredients.Add(ing);
-            //            _context.SaveChanges();
-            //        }
+        }
 
-            //    }
-            //    if (item.IsChecked == false)
-            //    {
-            //        var findIng = dishToUpdateDishIngredients.FirstOrDefault(x => x.IngredientId == item.IngredientId);
-            //        if (findIng != null)
-            //        {
-            //            var ing = _context.DishIngredients.FirstOrDefault(x => x.Ingredient == item);
-            //            ing.Dish = dish;
-            //            ing.Ingredient = _context.Ingredients.FirstOrDefault(x => x.IngredientId == item.IngredientId);
-            //            _context.DishIngredients.Remove(ing);
-            //            _context.SaveChanges();
-            //        }
+        public string GetImagePath(IFormFile file)
+        {
 
-            //    }
-            //}
+            if (file != null)
+            {
+                var upload = Path.Combine(_hostingEnvironment.WebRootPath, "images");
 
+                if (!CheckIfImageExistsInImageFolder(file))
+                {
+                    if (file.Length > 0)
+                    {
+                        var fileStream = new FileStream(Path.Combine(upload, file.FileName), FileMode.Create);
+                        file.CopyToAsync(fileStream);
+                    }
+                }
 
-
+               return "/images/" + file.FileName;
+            }
+            return "Finns inte";
         }
 
     }

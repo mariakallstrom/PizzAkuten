@@ -26,16 +26,14 @@ namespace PizzAkuten.Controllers
         private readonly DishService _service;
     
 
-        public DishController(IHostingEnvironment environment, DishService service)
+        public DishController(IHostingEnvironment environment, DishService service, ApplicationDbContext context)
         {
             _hostingEnvironment = environment;
             _service = service;
-        }
-
-        public DishController(ApplicationDbContext context)
-        {
             _context = context;
         }
+
+   
 
         // GET: Dish
         public async Task<IActionResult> Index()
@@ -66,18 +64,7 @@ namespace PizzAkuten.Controllers
         // GET: Dish/Create
         public IActionResult Create()
         {
-            var model = new AdminDishViewModel();
-            var categories = _context.Categories.ToList();
-            model.SelectCategoryList = new List<SelectListItem>();
-
-            foreach (var item in categories)
-            {
-                var category = new SelectListItem { Text = item.Name, Value = item.CategoryId.ToString() };
-                model.SelectCategoryList.Add(category);
-            }
-            model.Ingredients = _context.Ingredients.ToList();
-
-            return View(model);
+            return View();
         }
 
         // POST: Dish/Create
@@ -85,27 +72,13 @@ namespace PizzAkuten.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("DishId,Name,Price, CategoryId, ImageFile, Ingredients")] AdminDishViewModel dish, IFormFile file)
+        public async Task<IActionResult> Create(IFormCollection form)
         {
-            if(file != null)
-            {
-                var upload = Path.Combine(_hostingEnvironment.WebRootPath, "images");
-
-                if (!_service.CheckIfImageExistsInImageFolder(file))
-                {
-                    if (file.Length > 0)
-                    {
-                        var fileStream = new FileStream(Path.Combine(upload, file.FileName), FileMode.Create);
-                        await file.CopyToAsync(fileStream);
-                    }
-                }
-
-                dish.ImagePath = "/images/" + file.FileName;
-            }
          
+
             if (ModelState.IsValid)
             {
-                _service.SaveDishToDatabase(dish);
+                await _service.SaveDishToDatabase(form);
                 return RedirectToAction(nameof(Index));
             }
             return View();
@@ -159,28 +132,28 @@ namespace PizzAkuten.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit([Bind("DishId,Name,Price, CategoryId, ImageFile, Ingredients")] AdminDishViewModel dish, IFormFile file)
+        public async Task<IActionResult> Edit([Bind("DishId,Name,Price, CategoryId, ImageFile, Ingredients")] IFormCollection form, IFormFile file)
         {
-            if (dish == null)
-            {
-                return NotFound();
-            }
-            if (file != null)
-            {
-                var upload = Path.Combine(_hostingEnvironment.WebRootPath, "images");
+            //if (dish == null)
+            //{
+            //    return NotFound();
+            //}
+            //if (file != null)
+            //{
+            //    var upload = Path.Combine(_hostingEnvironment.WebRootPath, "images");
 
-                if (!_service.CheckIfImageExistsInImageFolder(file))
-                {
-                    if (file.Length > 0)
-                    {
-                        var fileStream = new FileStream(Path.Combine(upload, file.FileName), FileMode.Create);
-                        await file.CopyToAsync(fileStream);
-                    }
-                }
+            //    if (!_service.CheckIfImageExistsInImageFolder(file))
+            //    {
+            //        if (file.Length > 0)
+            //        {
+            //            var fileStream = new FileStream(Path.Combine(upload, file.FileName), FileMode.Create);
+            //            await file.CopyToAsync(fileStream);
+            //        }
+            //    }
 
-                dish.ImagePath = "/images/" + file.FileName;
-            }
-            _service.EditDish(dish);
+            //    dish.ImagePath = "/images/" + file.FileName;
+            //}
+            //_service.EditDish(dish);
 
             return RedirectToAction(nameof(Index));
             

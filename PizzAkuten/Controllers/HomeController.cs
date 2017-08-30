@@ -18,25 +18,9 @@ namespace PizzAkuten.Controllers
         {
             _context = context;
         }
-        public async Task<IActionResult> Index()
+        public IActionResult Index()
         {
-            var dishes = await _context.Dishes.Include("Category").Include(d => d.DishIngredients).ThenInclude(di => di.Ingredient)
-                .ToListAsync();
-
-            foreach (var item in dishes)
-            {
-                if(item.SpecialDish)
-                {
-                    dishes.Remove(item);
-                }
-            }
-
-            if (dishes == null)
-            {
-                return NotFound();
-            }
-           
-            return View(dishes);
+            return View();
         }
 
         public IActionResult About()

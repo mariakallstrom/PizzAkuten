@@ -54,7 +54,7 @@ namespace PizzAkuten.Controllers
         // GET: Payment/Create
         public IActionResult Create()
         {
-            ViewBag.OrderId = _orderservice.GetOrder().OrderId;
+            ViewBag.OrderId = _context.Orders.LastOrDefault().OrderId;
             return View();
         }
 
@@ -90,7 +90,7 @@ namespace PizzAkuten.Controllers
         public IActionResult SavePayment(IFormCollection form)
         {
 
-            var paymentChoize = form["creditCardRadio"];
+            var paymentChoize = Convert.ToInt32(form["creditCardRadio"]);
 
             var model = new Payment();
             if(String.IsNullOrEmpty(form["NonAccountUserId"]))
@@ -113,7 +113,8 @@ namespace PizzAkuten.Controllers
             model.OrderId = Convert.ToInt32(form["OrderId"]);
             _context.Payment.Add(model);
             _context.SaveChanges();
-            var order = _context.Orders.Find(model.OrderId);
+            var order = _context.Orders.Include(i=>i.OrderDish.OrderItems).ThenInclude(p=>p.OrderDish).FirstOrDefault(x=>x.OrderId==model.OrderId);
+           //order.orderdish.orderitems.orderitem.name är null
             _emailservice.SendOrderConfirmToUser(order);
             return RedirectToAction("ThankForOrdering");
         }

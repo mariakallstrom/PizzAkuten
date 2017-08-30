@@ -23,7 +23,7 @@ namespace PizzAkuten.Services
         }
         public List<Ingredient> GetAllIngredients()
         {
-            return _context.Ingredients.ToList();
+            return _context.Ingredients.OrderBy(x=>x.Name).ToList();
         }
 
         public bool CheckIfImageExistsInImageFolder(IFormFile file)

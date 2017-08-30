@@ -81,7 +81,7 @@ namespace PizzAkuten.Controllers
             {
                 return NotFound();
             }
-            var ingredients = _context.Ingredients.ToList();
+            var ingredients = _context.Ingredients.OrderBy(x=>x.Name).ToList();
             var dish = await _context.Dishes.Include(d => d.DishIngredients).ThenInclude(di => di.Ingredient)
                 .SingleOrDefaultAsync(m => m.DishId == dishId);
 
@@ -127,7 +127,6 @@ namespace PizzAkuten.Controllers
             {
                 var currentUser = User;
                 order.ApplicationUser = await _userManager.FindByNameAsync(User.Identity.Name);
-
                 _service.SaveOrderToDataBase(order);
               
 

@@ -137,8 +137,6 @@ namespace PizzAkuten.Services
                 orderItem.Quantity = item.Quantity;
                 
                 orderItemlist.Add(orderItem);
-                
-
 
             }
           

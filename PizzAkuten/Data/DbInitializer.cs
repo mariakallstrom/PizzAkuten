@@ -14,7 +14,7 @@ namespace PizzAkuten.Data
         public static void Initialize(ApplicationDbContext context, UserManager<ApplicationUser> userManager, RoleManager<IdentityRole> roleManager)
         {
             var aUser = new ApplicationUser();
-            aUser.UserName = "Student";
+            aUser.UserName = "student@test.se";
             aUser.Email = "student@test.se";
             var result = userManager.CreateAsync(aUser, "Passw0rd").Result;
 
@@ -26,7 +26,7 @@ namespace PizzAkuten.Data
             }
 
             var adminUser = new ApplicationUser();
-            adminUser.UserName = "Admin";
+            adminUser.UserName = "admin@test.se";
             adminUser.Email = "admin@test.se";
             var adminResult = userManager.CreateAsync(adminUser, "Admin0").Result;
 

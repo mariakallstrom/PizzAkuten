@@ -93,6 +93,9 @@ namespace PizzAkuten.Services
                         if(findIng == null )
                     {
                         var ing = _context.DishIngredient.FirstOrDefault(x => x.Ingredient == item);
+                        dishToUpdate.DishIngredients.Add(ing);
+                       
+                        
                     }
                     
                 }
@@ -103,6 +106,8 @@ namespace PizzAkuten.Services
                     {
                         var ing = _context.DishIngredient.FirstOrDefault(x => x.Ingredient == item);
                         dishToUpdate.DishIngredients.Remove(ing);
+                        
+                        
                     }
 
                 }
@@ -112,7 +117,6 @@ namespace PizzAkuten.Services
             dishToUpdate.Name = dish.Name;
             dishToUpdate.ImagePath = dish.ImagePath;
             dishToUpdate.Category = dish.Category;
-
 
             _context.Update(dishToUpdate);
             _context.SaveChanges();

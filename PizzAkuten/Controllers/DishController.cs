@@ -94,37 +94,17 @@ namespace PizzAkuten.Controllers
 
             var dish = await _context.Dishes.Include(c=>c.Category).Include(d => d.DishIngredients).ThenInclude(di => di.Ingredient)
               .SingleOrDefaultAsync(m => m.DishId == DishId);
-            var editDish = new AdminDishViewModel();
-            editDish.DishId = dish.DishId;
-            editDish.Name = dish.Name;
-            editDish.Price = dish.Price;
-            editDish.Category = dish.Category;
-            editDish.DishIngredients = dish.DishIngredients;
-            editDish.ImagePath = dish.ImagePath;
-
-            var ingredients = _context.Ingredients.ToList();
-            editDish.Ingredients = ingredients;
-
+ 
             foreach (var item in dish.DishIngredients)
             {
                 item.Ingredient.IsChecked = true;
-            }
-
-            var categories = _context.Categories.ToList();
-            editDish.SelectCategoryList = new List<SelectListItem>();
-
-            foreach (var item in categories)
-            {
-                var category = new SelectListItem { Text = item.Name, Value = item.CategoryId.ToString() };
-                editDish.SelectCategoryList.Add(category);
-               
             }
            
             if (dish == null)
             {
                 return NotFound();
             }
-            return View(editDish);
+            return View(dish);
         }
 
         // POST: Dish/Edit/5
@@ -132,8 +112,10 @@ namespace PizzAkuten.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit([Bind("DishId,Name,Price, CategoryId, ImageFile, Ingredients")] IFormCollection form, IFormFile file)
+        public async Task<IActionResult> Edit(IFormCollection form)
         {
+
+            _service.EditDish(form);
             //if (dish == null)
             //{
             //    return NotFound();

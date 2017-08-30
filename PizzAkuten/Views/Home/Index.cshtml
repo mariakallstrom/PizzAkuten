@@ -63,9 +63,19 @@
                        @Html.DisplayFor(modelItem => item.Category.Name) 
                     </td>
                     <td>
-                        <a asp-controller="Order" asp-action="AddToCart" asp-route-dishId="@item.DishId" class="glyphicon glyphicon-shopping-cart"></a>
-                        <a asp-controller="Order" asp-action="Details" asp-route-dishId="@item.DishId">Detaljer</a>
-                        <a asp-controller="Order" asp-action="Edit" asp-route-dishId="@item.DishId">Ändra</a>
+                        @if (User.IsInRole("admin"))
+                        {
+
+                            <a asp-controller="Dish" asp-action="Edit" asp-route-dishId="@item.DishId">Ändra</a>
+                        }
+                        else
+                        {
+
+                            <a asp-controller="Order" asp-action="AddToCart" asp-route-dishId="@item.DishId" class="glyphicon glyphicon-shopping-cart"></a>
+                            <a asp-controller="Order" asp-action="Details" asp-route-dishId="@item.DishId">Detaljer</a>
+                            <a asp-controller="Order" asp-action="Edit" asp-route-dishId="@item.DishId">Ändra</a>
+                        }
+                   
                     </td>
                 </tr>
             }

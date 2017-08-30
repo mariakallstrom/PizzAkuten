@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using PizzAkuten.Extensions;
 using System;
+using System.Security.Claims;
 
 namespace PizzAkuten.Services
 {
@@ -56,7 +57,7 @@ namespace PizzAkuten.Services
                     if (tempDish != null)
                     {
                         tempDish.Quantity++;
-                        cartFromSession.TotalPrice = tempDish.OrderDish.Price * tempDish.Quantity;
+                        cartFromSession.TotalPrice = cartFromSession.TotalPrice + tempDish.OrderDish.Price;
                     }
 
                     var index = cartFromSession.OrderItems.IndexOf(cartFromSession.OrderItems.First(x => x.OrderDish.DishId == dish.DishId));
@@ -76,7 +77,7 @@ namespace PizzAkuten.Services
                     item.OrderDish = dish;
                     item.Quantity = 1;
                     cartFromSession.OrderItems.Add(item);
-                    cartFromSession.TotalPrice = cartFromSession.TotalPrice +=  item.OrderDish.Price;
+                    cartFromSession.TotalPrice = cartFromSession.TotalPrice + item.OrderDish.Price;
                     _session.SetObjectAsJson("Cart", cartFromSession);
                     return GetOrderForCurrentSession(_session);
                 }
@@ -125,19 +126,37 @@ namespace PizzAkuten.Services
         {
             var orderList = GetOrderForCurrentSession(_session);
             var order = new Order();
+            var orderDish = new OrderDish();
+            var orderItemlist = new List<OrderItem>();
+
+            foreach (var item in orderList.OrderItems)
+            {
+                var orderItem = new OrderItem();
+                var dish = _context.Dishes.FirstOrDefault(x => x.DishId == item.OrderDish.DishId);
+                orderItem.OrderDish = dish;
+                orderItem.Quantity = item.Quantity;
+                
+                orderItemlist.Add(orderItem);
+                
+
+
+            }
+          
+            orderDish.OrderItems = orderItemlist;
+            order.OrderDish = orderDish;
+
             order.OrderDate = DateTime.Today;
-            order.OrderDish = orderList;
             order.TotalPrice = orderList.TotalPrice;
             return order;
         }
 
-        public string ConfirmOrder(Order order)
+        public Order SaveOrderToDataBase(Order order)
         {
-         
-            _context.Orders.Add(order);
-            _context.SaveChangesAsync();
-            DeleteSpecialDishes(order);
-            return "Tack för din order";
+            _context.Add(order);
+            _context.SaveChanges();
+            var newOrder = _context.Orders.Last();
+
+            return newOrder;
         }
 
         public void DeleteSpecialDishes(Order order)
@@ -194,6 +213,11 @@ namespace PizzAkuten.Services
             _context.SaveChangesAsync();
 
             SetOrderForCurrentSession(specialDish.DishId);
+        }
+
+        public void DeleteSession()
+        {
+            _session.Remove("Cart");
         }
     }
 }

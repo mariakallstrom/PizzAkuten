@@ -1,16 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Linq;
 using Microsoft.AspNetCore.Mvc;
 using PizzAkuten.Data;
 using PizzAkuten.Models;
-using Newtonsoft.Json;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using PizzAkuten.Services;
 using Microsoft.EntityFrameworkCore;
 using System.Threading.Tasks;
+using System.Security.Claims;
+using Microsoft.AspNetCore.Http;
 
 namespace PizzAkuten.Controllers
 {
@@ -19,13 +17,23 @@ namespace PizzAkuten.Controllers
 
         private readonly ApplicationDbContext _context;
         private readonly UserManager<ApplicationUser> _userManager;
+        private readonly SignInManager<ApplicationUser> _signInManager;
         private readonly OrderService _service;
+      
 
-        public OrderController(ApplicationDbContext context, UserManager<ApplicationUser> userManager, OrderService service)
+        public OrderController(ApplicationDbContext context, UserManager<ApplicationUser> userManager, OrderService service, SignInManager<ApplicationUser> signInManager)
         {
             _context = context;
             _userManager = userManager;
             _service = service;
+            _signInManager = signInManager;
+        
+        }
+        [Authorize]
+        public IActionResult Index()
+        {
+
+            return View(_context.Orders.ToList());
         }
         [AllowAnonymous]
         public IActionResult AddToCart(int dishId)
@@ -112,15 +120,26 @@ namespace PizzAkuten.Controllers
 
             return View(order);
         }
-
-        public IActionResult ConfirmOrder()
+        public async Task<IActionResult> ConfirmOrder()
         {
             var order = _service.GetOrder();
-            var text = _service.ConfirmOrder(order);
+            if(_signInManager.IsSignedIn(User))
+            {
+                var currentUser = User;
+                order.ApplicationUser = await _userManager.FindByNameAsync(User.Identity.Name);
 
-            ViewBag.ThankYou = text;
+                _service.SaveOrderToDataBase(order);
+              
 
-            return RedirectToAction("ViewOrder", "Order");
+                return RedirectToAction("Create", "Payment");
+            }
+          
+            var savedOrder = _service.SaveOrderToDataBase(order);
+           
+            return View(savedOrder);
+
         }
+ 
+
     }
 }

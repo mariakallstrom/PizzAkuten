@@ -19,6 +19,5 @@ namespace PizzAkuten.Models
 
         public string City { get; set; }
 
-        public int Points { get; set; }
     }
 }

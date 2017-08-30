@@ -1,0 +1,7 @@
+﻿@model List<Order>
+
+  @foreach (var item in Model)
+  {
+      @item.ApplicationUser.FirstName
+      @item.OrderId
+  }

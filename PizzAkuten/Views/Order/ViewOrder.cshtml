@@ -1,4 +1,6 @@
 ﻿@model Order
+@inject SignInManager<ApplicationUser> SignInManager
+@inject UserManager<ApplicationUser> UserManager
 @{
     ViewData["Title"] = "View";
 }
@@ -7,6 +9,7 @@
 
 @foreach (var item in Model.OrderDish.OrderItems)
 {
+ 
     <div>
         <label>Namn: </label>  @item.OrderDish.Name
     </div>
@@ -23,7 +26,9 @@
 @Model.TotalPrice  
 
 
-<a asp-controller="Order" asp-action="ConfirmOrder">Bekräfta order</a>
+ <a asp-controller="Order" asp-action="ConfirmOrder">Bekräfta order</a>
+
+
 
 
 

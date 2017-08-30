@@ -22,9 +22,11 @@ namespace PizzAkuten.Data
         public DbSet<ExtraIngredient> ExtraIngredients { get; set; }
         public DbSet<DishExtraIngredient> DishExtraIngredients { get; set; }
         public DbSet<Ingredient> Ingredients { get; set; }
-        public DbSet<DishIngredient> DishIngredient { get; set; }
+        public DbSet<DishIngredient> DishIngredients { get; set; }
         public DbSet<Order> Orders { get; set; }
         public DbSet<OrderDish> OrderDishes { get; set; }
+        public DbSet<Payment> Payments { get; set; }
+        public DbSet<NonAccountUser> NonAccountUsers { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
             {
@@ -59,6 +61,8 @@ namespace PizzAkuten.Data
                 // For example, you can rename the ASP.NET Identity table names and more.
                 // Add your customizations after calling base.OnModelCreating(builder);
             }
+
+        public DbSet<PizzAkuten.Models.Payment> Payment { get; set; }
         }
     }
 

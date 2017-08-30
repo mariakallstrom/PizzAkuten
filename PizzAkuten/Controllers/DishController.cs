@@ -24,12 +24,17 @@ namespace PizzAkuten.Controllers
         private readonly ApplicationDbContext _context;
         private readonly IHostingEnvironment _hostingEnvironment;
         private readonly DishService _service;
+    
 
-        public DishController(ApplicationDbContext context, IHostingEnvironment environment, DishService service)
+        public DishController(IHostingEnvironment environment, DishService service)
         {
-            _context = context;
             _hostingEnvironment = environment;
             _service = service;
+        }
+
+        public DishController(ApplicationDbContext context)
+        {
+            _context = context;
         }
 
         // GET: Dish
@@ -107,15 +112,15 @@ namespace PizzAkuten.Controllers
         }
 
         // GET: Dish/Edit/5
-        public async Task<IActionResult> Edit(int? id)
+        public async Task<IActionResult> Edit(int? DishId)
         {
-            if (id == null)
+            if (DishId == null)
             {
                 return NotFound();
             }
 
             var dish = await _context.Dishes.Include(c=>c.Category).Include(d => d.DishIngredients).ThenInclude(di => di.Ingredient)
-              .SingleOrDefaultAsync(m => m.DishId == id);
+              .SingleOrDefaultAsync(m => m.DishId == DishId);
             var editDish = new AdminDishViewModel();
             editDish.DishId = dish.DishId;
             editDish.Name = dish.Name;
@@ -182,15 +187,15 @@ namespace PizzAkuten.Controllers
         }
 
         // GET: Dish/Delete/5
-        public async Task<IActionResult> Delete(int? id)
+        public async Task<IActionResult> Delete(int? DishId)
         {
-            if (id == null)
+            if (DishId == null)
             {
                 return NotFound();
             }
 
             var dish = await _context.Dishes
-                .SingleOrDefaultAsync(m => m.DishId == id);
+                .SingleOrDefaultAsync(m => m.DishId == DishId);
             if (dish == null)
             {
                 return NotFound();
@@ -202,17 +207,17 @@ namespace PizzAkuten.Controllers
         // POST: Dish/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int id)
+        public async Task<IActionResult> DeleteConfirmed(int DishId)
         {
-            var dish = await _context.Dishes.SingleOrDefaultAsync(m => m.DishId == id);
+            var dish = await _context.Dishes.SingleOrDefaultAsync(m => m.DishId == DishId);
             _context.Dishes.Remove(dish);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
-        private bool DishExists(int id)
+        private bool DishExists(int DishId)
         {
-            return _context.Dishes.Any(e => e.DishId == id);
+            return _context.Dishes.Any(e => e.DishId == DishId);
         }
 
    

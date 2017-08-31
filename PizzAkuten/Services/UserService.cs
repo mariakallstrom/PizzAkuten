@@ -47,5 +47,10 @@ namespace PizzAkuten.Services
         {
             return _context.NonAccountUsers.Find(nonAccountUserId);
         }
+
+        public List<NonAccountUser> GetAllNonAccountUsers()
+        {
+            return _context.NonAccountUsers.ToList();
+        }
     }
 }

@@ -8,12 +8,12 @@
             <h5>Kundkorg</h5>
             @if (cart != null)
             {
-                @foreach (var dish in cart.OrderItems)
+                @foreach (var dish in cart.CartItems)
                 {
                     <div>
-                        <a asp-controller="Order" asp-action="Details" asp-route-dishId="@dish.OrderDish.DishId">@dish.OrderDish.Name, @dish.Quantity st, @dish.OrderDish.Price kr </a>
-                        <a asp-controller="Order" asp-action="RemoveFromCart" asp-route-dishId="@dish.OrderDish.DishId" class="glyphicon glyphicon-minus"></a>
-                        <a asp-controller="Order" asp-action="AddToCart" asp-route-dishId="@dish.OrderDish.DishId" class="glyphicon glyphicon-plus"></a>
+                        <a asp-controller="Order" asp-action="Details" asp-route-dishId="@dish.Dish.DishId">@dish.Dish.Name, @dish.Quantity st, @dish.Dish.Price kr </a>
+                        <a asp-controller="Order" asp-action="RemoveFromCart" asp-route-dishId="@dish.Dish.DishId" class="glyphicon glyphicon-minus"></a>
+                        <a asp-controller="Order" asp-action="AddToCart" asp-route-dishId="@dish.Dish.DishId" class="glyphicon glyphicon-plus"></a>
                     </div>
                 }
                

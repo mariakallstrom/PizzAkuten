@@ -28,9 +28,9 @@ namespace PizzAkuten.Services
 
             htmlBody += "<table>"; 
             htmlBody += "<tr><td> Namn </td><td>Pris</td><td>Antal</td></tr>";
-            foreach (var item in order.OrderDish.OrderItems)
+            foreach (var item in order.Cart.CartItems)
             {
-                htmlBody += "<tr><td>" + item.OrderDish.Name + "</td><td>" + item.OrderDish.Price + "</td><td>" + item.Quantity + "</td></tr>";
+                htmlBody += "<tr><td>" + item.Dish.Name + "</td><td>" + item.Dish.Price + "</td><td>" + item.Quantity + "</td></tr>";
             }
             
             htmlBody += "</table>";
@@ -66,9 +66,9 @@ namespace PizzAkuten.Services
 
             htmlBody += "<table>";
             htmlBody += "<tr><td> Namn </td><td>Pris</td><td>Antal</td></tr>";
-            foreach (var item in order.OrderDish.OrderItems)
+            foreach (var item in order.Cart.CartItems)
             {
-                htmlBody += "<tr><td>" + item.OrderDish.Name + "</td><td>" + item.OrderDish.Price + "</td><td>" + item.Quantity + "</td></tr>";
+                htmlBody += "<tr><td>" + item.Dish.Name + "</td><td>" + item.Dish.Price + "</td><td>" + item.Quantity + "</td></tr>";
             }
 
             htmlBody += "</table>";

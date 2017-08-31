@@ -6,12 +6,15 @@
 
 <h2>Index</h2>
 
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
 <table class="table">
     <thead>
         <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.ApplicationUser.UserName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.NonAccountUser.Email)
+            </th>
                 <th>
                     @Html.DisplayNameFor(model => model.CardNumber)
                 </th>
@@ -24,12 +27,24 @@
                 <th>
                     @Html.DisplayNameFor(model => model.Month)
                 </th>
+            <th>
+                @Html.DisplayNameFor(model => model.PayMethod)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Order)
+            </th>
             <th></th>
         </tr>
     </thead>
     <tbody>
 @foreach (var item in Model) {
         <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.ApplicationUser.UserName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.NonAccountUser.Email)
+            </td>
             <td>
                 @Html.DisplayFor(modelItem => item.CardNumber)
             </td>
@@ -41,6 +56,12 @@
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.Month)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.PayMethod)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Order)
             </td>
             <td>
                 <a asp-action="Edit" asp-route-id="@item.PaymentId">Edit</a> |

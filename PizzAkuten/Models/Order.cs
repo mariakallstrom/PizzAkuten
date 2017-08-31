@@ -12,12 +12,14 @@ namespace PizzAkuten.Models
         public DateTime OrderDate { get; set; }
         public int TotalPrice { get; set; }
         public bool Delivered { get; set; }
-        public string ApplicationuserId { get; set; }
+        public string ApplicationUserId { get; set; }
         public virtual ApplicationUser ApplicationUser { get; set; }
         [ForeignKey("NonAccountUser")]
         public int NonAccountUserId { get; set; }
         public virtual NonAccountUser NonAccountUser { get; set; }
-        public virtual OrderDish OrderDish { get; set; }
+        public Cart Cart { get; set; }
+        [ForeignKey("Payment")]
+        public int PaymentId { get; set; }
         public Payment Payment { get; set; }
 
     }

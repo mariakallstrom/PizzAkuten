@@ -14,7 +14,7 @@
         </div>
   
    <br />
-        <form asp-action="SavePayment">
+        <form asp-controller="Payment" asp-action="SavePayment" method="post">
             <div>
                 <img class="cardImage" src="~/images/VisaCard.png" alt="Alternate Text" />
                 <input id="visa" class="paymentMethod" name="creditCardRadio" value="1" type="radio" />

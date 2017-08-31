@@ -32,7 +32,7 @@ namespace PizzAkuten.Controllers
         // GET: Payment
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Payment.ToListAsync());
+            return View(await _context.Payments.ToListAsync());
         }
         [Authorize(Roles = "admin")]
         // GET: Payment/Details/5
@@ -43,7 +43,7 @@ namespace PizzAkuten.Controllers
                 return NotFound();
             }
 
-            var payment = await _context.Payment
+            var payment = await _context.Payments.Include(x=>x.ApplicationUser).Include(x=>x.NonAccountUser)
                 .SingleOrDefaultAsync(m => m.PaymentId == id);
             if (payment == null)
             {
@@ -81,7 +81,7 @@ namespace PizzAkuten.Controllers
                 _context.NonAccountUsers.Add(model);
                 _context.SaveChanges();
                 var user = _context.NonAccountUsers.Last();
-                ViewBag.NonAccountUserId = user.Id;
+                ViewBag.NonAccountUserId = user.NonAccountUserId;
                 ViewBag.OrderId = user.OrderId;
             };
            
@@ -127,14 +127,14 @@ namespace PizzAkuten.Controllers
 
             model.OrderId = Convert.ToInt32(form["OrderId"]);
 
-                _context.Payment.Add(model);
+                _context.Payments.Add(model);
                 _context.SaveChanges();
 
-                var order = _context.Orders.Include(i => i.OrderDish.OrderItems).ThenInclude(p => p.OrderDish).FirstOrDefault(x => x.OrderId == model.OrderId);
+                var order = _context.Orders.Include(i => i.Cart).ThenInclude(p => p.CartItems).FirstOrDefault(x => x.OrderId == model.OrderId);
 
-                 if (order.ApplicationuserId != null)
+                 if (order.ApplicationUserId != null)
                     {
-                        var user = _userService.GetApplicationUserById(order.ApplicationuserId);
+                        var user = _userService.GetApplicationUserById(order.ApplicationUserId);
                         _emailservice.SendOrderConfirmToUser(order, user);
                         return RedirectToAction("ThankForOrdering");
                     }
@@ -146,7 +146,7 @@ namespace PizzAkuten.Controllers
                 return RedirectToAction("ThankForOrdering");
                 }
 
-            return View();
+            return RedirectToAction("Create");
         }
 
         public IActionResult ThankForOrdering()
@@ -166,7 +166,7 @@ namespace PizzAkuten.Controllers
                 return NotFound();
             }
 
-            var payment = await _context.Payment.SingleOrDefaultAsync(m => m.PaymentId == id);
+            var payment = await _context.Payments.Include(x => x.ApplicationUser).Include(x => x.NonAccountUser).SingleOrDefaultAsync(m => m.PaymentId == id);
             if (payment == null)
             {
                 return NotFound();
@@ -179,7 +179,7 @@ namespace PizzAkuten.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("PaymentId,CardNumber,Cvv,Year,Month")] Payment payment)
+        public async Task<IActionResult> Edit(int id, [Bind("PaymentId,CardNumber,Cvv,Year,Month,IsPaid")] Payment payment)
         {
             if (id != payment.PaymentId)
             {
@@ -217,7 +217,7 @@ namespace PizzAkuten.Controllers
                 return NotFound();
             }
 
-            var payment = await _context.Payment
+            var payment = await _context.Payments
                 .SingleOrDefaultAsync(m => m.PaymentId == id);
             if (payment == null)
             {
@@ -232,15 +232,15 @@ namespace PizzAkuten.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var payment = await _context.Payment.SingleOrDefaultAsync(m => m.PaymentId == id);
-            _context.Payment.Remove(payment);
+            var payment = await _context.Payments.SingleOrDefaultAsync(m => m.PaymentId == id);
+            _context.Payments.Remove(payment);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
         private bool PaymentExists(int id)
         {
-            return _context.Payment.Any(e => e.PaymentId == id);
+            return _context.Payments.Any(e => e.PaymentId == id);
         }
     }
 }

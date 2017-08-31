@@ -14,6 +14,14 @@
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <input type="hidden" asp-for="PaymentId" />
             <div class="form-group">
+                <label asp-for="ApplicationUser.Email" class="control-label"></label>
+                <input asp-for="ApplicationUser.Email" class="form-control" disabled/>
+            </div>
+            <div class="form-group">
+                <label asp-for="NonAccountUser.Email" class="control-label"></label>
+                <input asp-for="NonAccountUser.Email" class="form-control" disabled />
+            </div>
+            <div class="form-group">
                 <label asp-for="CardNumber" class="control-label"></label>
                 <input asp-for="CardNumber" class="form-control" />
                 <span asp-validation-for="CardNumber" class="text-danger"></span>
@@ -32,6 +40,10 @@
                 <label asp-for="Month" class="control-label"></label>
                 <input asp-for="Month" class="form-control" />
                 <span asp-validation-for="Month" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="IsPaid" class="control-label"></label>
+                <input asp-for="IsPaid" name="IsPaid-@Model.PaymentId" type="checkbox" />
             </div>
             <div class="form-group">
                 <input type="submit" value="Save" class="btn btn-default" />

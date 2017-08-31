@@ -67,7 +67,7 @@ namespace PizzAkuten.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["ApplicationuserId"] = new SelectList(_context.Users, "Id", "Id", order.ApplicationuserId);
+            ViewData["ApplicationuserId"] = new SelectList(_context.Users, "Id", "Id", order.ApplicationUserId);
             ViewData["NonAccountUserId"] = new SelectList(_context.NonAccountUsers, "Id", "Id", order.NonAccountUserId);
             return View(order);
         }
@@ -85,7 +85,7 @@ namespace PizzAkuten.Controllers
             {
                 return NotFound();
             }
-            ViewData["ApplicationuserId"] = new SelectList(_context.Users, "Id", "Id", order.ApplicationuserId);
+            ViewData["ApplicationuserId"] = new SelectList(_context.Users, "Id", "Id", order.ApplicationUserId);
             ViewData["NonAccountUserId"] = new SelectList(_context.NonAccountUsers, "Id", "Id", order.NonAccountUserId);
             return View(order);
         }
@@ -122,7 +122,7 @@ namespace PizzAkuten.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["ApplicationuserId"] = new SelectList(_context.Users, "Id", "Id", order.ApplicationuserId);
+            ViewData["ApplicationuserId"] = new SelectList(_context.Users, "Id", "Id", order.ApplicationUserId);
             ViewData["NonAccountUserId"] = new SelectList(_context.NonAccountUsers, "Id", "Id", order.NonAccountUserId);
             return View(order);
         }

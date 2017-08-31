@@ -6,14 +6,14 @@
 
 <label>@Model.OrderId</label>
 
-@foreach (var item in Model.OrderDish.OrderItems)
+@foreach (var item in Model.Cart.CartItems)
 {
 
     <div>
-        <label>Namn: </label>  @item.OrderDish.Name
+        <label>Namn: </label>  @item.Dish.Name
     </div>
     <div>
-        <label>Pris: </label> @item.OrderDish.Price
+        <label>Pris: </label> @item.Dish.Price
     </div>
     <div>
         <label>Antal: </label>  @item.Quantity

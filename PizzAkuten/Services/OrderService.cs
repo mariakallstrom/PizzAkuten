@@ -23,20 +23,20 @@ namespace PizzAkuten.Services
             _userManager = userManager;
             _httpContextAccessor = httpContextAccessor;
         }
-        public OrderDish SetOrderForCurrentSession(int dishId)
+        public Cart SetOrderForCurrentSession(int dishId)
         {
             var dish = _context.Dishes.SingleOrDefault(x => x.DishId == dishId);
      
             // kolla om det finns en session, om det inte finns skapa en.
-            if (_session.GetObjectFromJson<OrderDish>("Cart") == null)
+            if (_session.GetObjectFromJson<Cart>("Cart") == null)
             {
                 return CreateSession(dish);
             }
             else
             {
                 //kolla om maträtten finns i cart
-                var cartFromSession = _session.GetObjectFromJson<OrderDish>("Cart");
-                var dishExists = cartFromSession.OrderItems.Any(x => x.OrderDish.DishId == dish.DishId);
+                var cartFromSession = _session.GetObjectFromJson<Cart>("Cart");
+                var dishExists = cartFromSession.CartItems.Any(x => x.Dish.DishId == dish.DishId);
                 if (dishExists)
                 {
                     //om den finns addera antalet
@@ -49,44 +49,44 @@ namespace PizzAkuten.Services
                 }
             }
         }
-        public OrderDish CreateSession(Dish dish)
+        public Cart CreateSession(Dish dish)
         {
-            var cart = new OrderDish();
-            var item = new OrderItem();
-            var itemList = new List<OrderItem>();
-            item.OrderDish = dish;
+            var cart = new Cart();
+            var item = new CartItem();
+            var itemList = new List<CartItem>();
+            item.Dish = dish;
             item.Quantity = 1;
             itemList.Add(item);
-            cart.TotalPrice = item.OrderDish.Price;
-            cart.OrderItems = itemList;
+            cart.TotalPrice = item.Dish.Price;
+            cart.CartItems = itemList;
 
             _session.SetObjectAsJson("Cart", cart);
             return GetOrderForCurrentSession(_session);
         }
-        public OrderDish AddDishToCart(OrderDish cartFromSession, Dish dish)
+        public Cart AddDishToCart(Cart cartFromSession, Dish dish)
         {
-            var cart = new OrderDish();
-            var item = new OrderItem();
-            item.OrderDish = dish;
+            var cart = new Cart();
+            var item = new CartItem();
+            item.Dish = dish;
             item.Quantity = 1;
-            cartFromSession.OrderItems.Add(item);
-            cartFromSession.TotalPrice = cartFromSession.TotalPrice + item.OrderDish.Price;
+            cartFromSession.CartItems.Add(item);
+            cartFromSession.TotalPrice = cartFromSession.TotalPrice + item.Dish.Price;
             _session.SetObjectAsJson("Cart", cartFromSession);
             return GetOrderForCurrentSession(_session);
         }
-        public OrderDish AddQuantityToDish(OrderDish cartFromSession, Dish dish)
+        public Cart AddQuantityToDish(Cart cartFromSession, Dish dish)
         {
-            var tempDish = cartFromSession.OrderItems.FirstOrDefault(x => x.OrderDish.DishId == dish.DishId);
+            var tempDish = cartFromSession.CartItems.FirstOrDefault(x => x.Dish.DishId == dish.DishId);
             if (tempDish != null)
             {
                 tempDish.Quantity++;
-                cartFromSession.TotalPrice = cartFromSession.TotalPrice + tempDish.OrderDish.Price;
+                cartFromSession.TotalPrice = cartFromSession.TotalPrice + tempDish.Dish.Price;
             }
 
-            var index = cartFromSession.OrderItems.IndexOf(cartFromSession.OrderItems.First(x => x.OrderDish.DishId == dish.DishId));
+            var index = cartFromSession.CartItems.IndexOf(cartFromSession.CartItems.First(x => x.Dish.DishId == dish.DishId));
             if (index != -1)
             {
-                cartFromSession.OrderItems[index] = tempDish;
+                cartFromSession.CartItems[index] = tempDish;
 
                 _session.SetObjectAsJson("Cart", cartFromSession);
                 return GetOrderForCurrentSession(_session);
@@ -94,32 +94,32 @@ namespace PizzAkuten.Services
 
             return null;
         }
-        public OrderDish GetOrderForCurrentSession(ISession session)
+        public Cart GetOrderForCurrentSession(ISession session)
         {
-            var orderDish = _session.GetObjectFromJson<OrderDish>("Cart");
-            if(orderDish != null)
+            var Cart = _session.GetObjectFromJson<Cart>("Cart");
+            if(Cart != null)
             {
-                return orderDish;
+                return Cart;
             }
             return null;
           
         }
-        public OrderDish RemoveItemFromSession(int dishId)
+        public Cart RemoveItemFromSession(int dishId)
         {
             var dish = _context.Dishes.SingleOrDefault(x => x.DishId == dishId);
-            var cartFromSession = _session.GetObjectFromJson<OrderDish>("Cart");
-            var orderItem = cartFromSession.OrderItems.SingleOrDefault(x => x.OrderDish.DishId == dishId);
+            var cartFromSession = _session.GetObjectFromJson<Cart>("Cart");
+            var orderItem = cartFromSession.CartItems.SingleOrDefault(x => x.Dish.DishId == dishId);
 
             if(orderItem != null)
             {
                 if(orderItem.Quantity > 1)
                 {
-                    cartFromSession.OrderItems.Where(x => x.OrderDish.DishId == dishId).First().Quantity -=1;
+                    cartFromSession.CartItems.Where(x => x.Dish.DishId == dishId).First().Quantity -=1;
                     cartFromSession.TotalPrice = cartFromSession.TotalPrice -= dish.Price;
                     _session.SetObjectAsJson("Cart", cartFromSession);
                     return GetOrderForCurrentSession(_session);
                 }
-                cartFromSession.OrderItems.Remove(orderItem);
+                cartFromSession.CartItems.Remove(orderItem);
                 cartFromSession.TotalPrice = cartFromSession.TotalPrice -= dish.Price;
                 _session.SetObjectAsJson("Cart", cartFromSession);
                 return GetOrderForCurrentSession(_session);
@@ -130,20 +130,20 @@ namespace PizzAkuten.Services
         {
             var orderList = GetOrderForCurrentSession(_session);
             var order = new Order();
-            var orderDish = new OrderDish();
-            var orderItemlist = new List<OrderItem>();
+            var Cart = new Cart();
+            var orderItemlist = new List<CartItem>();
 
-            foreach (var item in orderList.OrderItems)
+            foreach (var item in orderList.CartItems)
             {
-                var orderItem = new OrderItem();
-                var dish = _context.Dishes.FirstOrDefault(x => x.DishId == item.OrderDish.DishId);
-                orderItem.OrderDish = dish;
+                var orderItem = new CartItem();
+                var dish = _context.Dishes.FirstOrDefault(x => x.DishId == item.Dish.DishId);
+                orderItem.Dish = dish;
                 orderItem.Quantity = item.Quantity;
                 orderItemlist.Add(orderItem);
             }
           
-            orderDish.OrderItems = orderItemlist;
-            order.OrderDish = orderDish;
+            Cart.CartItems = orderItemlist;
+            order.Cart = Cart;
             order.OrderDate = DateTime.Today;
             order.TotalPrice = orderList.TotalPrice;
             return order;
@@ -158,11 +158,11 @@ namespace PizzAkuten.Services
         }
         public void DeleteSpecialDishes(Order order)
         {
-            foreach (var item in order.OrderDish.OrderItems)
+            foreach (var item in order.Cart.CartItems)
             {
-                if(item.OrderDish.Name.Contains("special"))
+                if(item.Dish.Name.Contains("special"))
                 {
-                    var dishes = _context.Dishes.Where(x => x.DishId == item.OrderDish.DishId);
+                    var dishes = _context.Dishes.Where(x => x.DishId == item.Dish.DishId);
                     foreach (var dish in dishes)
                     {
                         _context.Dishes.Remove(dish);

@@ -72,7 +72,7 @@ namespace PizzAkuten.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(IFormCollection form)
+        public IActionResult Create(IFormCollection form)
         {
             if (form == null)
             {
@@ -81,7 +81,7 @@ namespace PizzAkuten.Controllers
 
             _service.SaveDishToDatabase(form);
             return RedirectToAction(nameof(Index));
-           
+
         }
 
         // GET: Dish/Edit/5
@@ -112,7 +112,7 @@ namespace PizzAkuten.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(IFormCollection form)
+        public IActionResult Edit(IFormCollection form)
         {
             _service.EditDish(form);
             return RedirectToAction(nameof(Index));

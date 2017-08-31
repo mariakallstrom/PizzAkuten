@@ -8,7 +8,7 @@ namespace PizzAkuten.Models
 {
     public class NonAccountUser
     {
-        public int Id { get; set; }
+        public int NonAccountUserId { get; set; }
 
         public string FirstName { get; set; }
 
@@ -23,13 +23,9 @@ namespace PizzAkuten.Models
 
         public string Phone { get; set; }
 
-        [ForeignKey("Payment")]
-        public int PaymentId { get; set; }
-
-        public Payment Payment { get; set; }
-
         public int OrderId { get; set; }
 
         public Order Order { get; set; }
+
     }
 }

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace PizzAkuten.Models
 {
@@ -18,6 +19,6 @@ namespace PizzAkuten.Models
         public string ZipCode { get; set; }
 
         public string City { get; set; }
-
+       
     }
 }

@@ -18,15 +18,16 @@ namespace PizzAkuten.Data
 
         public DbSet<Dish> Dishes { get; set; }
         public DbSet<Category> Categories { get; set; }
-
         public DbSet<ExtraIngredient> ExtraIngredients { get; set; }
         public DbSet<DishExtraIngredient> DishExtraIngredients { get; set; }
         public DbSet<Ingredient> Ingredients { get; set; }
         public DbSet<DishIngredient> DishIngredients { get; set; }
         public DbSet<Order> Orders { get; set; }
-        public DbSet<OrderDish> OrderDishes { get; set; }
+        public DbSet<Cart> Carts { get; set; }
         public DbSet<Payment> Payments { get; set; }
         public DbSet<NonAccountUser> NonAccountUsers { get; set; }
+        public DbSet<ApplicationUser> ApplicationUsers { get; set; }
+
 
         protected override void OnModelCreating(ModelBuilder builder)
             {
@@ -54,7 +55,7 @@ namespace PizzAkuten.Data
                 .WithMany(i => i.DishExtraIngredients)
                 .HasForeignKey(di => di.ExtraIngredientId);
 
-            builder.Entity<OrderDish>().HasKey(od => od.OrderId);
+            builder.Entity<Cart>().HasKey(od => od.OrderId);
 
             base.OnModelCreating(builder);
                 // Customize the ASP.NET Identity model and override the defaults if needed.
@@ -62,7 +63,7 @@ namespace PizzAkuten.Data
                 // Add your customizations after calling base.OnModelCreating(builder);
             }
 
-        public DbSet<PizzAkuten.Models.Payment> Payment { get; set; }
+       
         }
     }
 

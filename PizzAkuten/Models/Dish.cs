@@ -26,7 +26,6 @@ namespace PizzAkuten.Models
         public List<DishExtraIngredient> DishExtraIngredients { get; set; }
         [Display(Name = "Ingredients")]
         public List<DishIngredient> DishIngredients { get; set; }
-        [Display(Name = "Orderrader")]
-        public List<OrderDish> OrderDishes { get; set; }
+   
     }
 }

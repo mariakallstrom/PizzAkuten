@@ -20,7 +20,7 @@ namespace PizzAkuten.Models
         public int Year { get; set; }
  
         public int Month { get; set; }
-       
+        [ForeignKey("Order")]
         public int OrderId { get; set; }
         public Order Order { get; set; }
         public bool IsPaid { get; set; }

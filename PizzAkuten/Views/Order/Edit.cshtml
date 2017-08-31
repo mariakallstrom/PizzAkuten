@@ -1,46 +1,43 @@
-﻿@model PizzAkuten.Models.EditDishViewModel
+﻿@model Dish
+@inject DishService DishService
+@inject OrderService OrderServive
 
 @{
     ViewData["Title"] = "Edit";
+    var extraIngredients = DishService.GetAllExtraIngredients();
 }
 
 <h2>Edit</h2>
 
 <h4>Dish</h4>
 <form asp-action="Edit" asp-controller="Order" method="post">
-    <input type="hidden" asp-for="EditDish.DishId" />
+    <input type="hidden" asp-for="DishId" />
     <div class="form-group">
-        <label asp-for="EditDish.Name" class="control-label"></label>
-        <input asp-for="EditDish.Name" class="form-control" value="@Model.EditDish.Name" disabled/>
-        <input type="hidden" asp-for="EditDish.Name" />
+        <label asp-for="Name" class="control-label"></label>
+        <input asp-for="Name" class="form-control" value="@Model.Name" disabled/>
     </div>
     <div class="form-group">
-        <label asp-for="EditDish.Price" class="control-label"></label>
-        <input asp-for="EditDish.Price" class="form-control" value="@Model.EditDish.Price" disabled/>
-        <input type="hidden" asp-for="EditDish.Price" />
+        <label asp-for="Price" class="control-label"></label>
+        <input asp-for="Price" class="form-control" value="@Model.Price" disabled/>
     </div>
-    <label asp-for="EditDish.DishIngredients" class="control-label">Ingredienser</label>
+    <label asp-for="DishIngredients" class="control-label">Ingredienser</label>
     <div class="form-group">
 
-        @for (int i = 0; i < Model.EditDish.DishIngredients.Count; i++)
+        @for (int i = 0; i < Model.DishIngredients.Count; i++)
         {
-            <label asp-for="@Model.EditDish.DishIngredients[i].Ingredient.Name" class="control-label">@Model.EditDish.DishIngredients[i].Ingredient.Name</label>
-            <input asp-for="@Model.EditDish.DishIngredients[i].IngredientId" value="@Model.EditDish.DishIngredients[i].IngredientId" hidden />
-            <input asp-for="@Model.EditDish.DishIngredients[i].Ingredient.Name" value="@Model.EditDish.DishIngredients[i].Ingredient.Name" hidden />
+            <label asp-for="@Model.DishIngredients[i].Ingredient.Name" class="control-label">@Model.DishIngredients[i].Ingredient.Name</label>
+            <input asp-for="@Model.DishIngredients[i].IngredientId" value="@Model.DishIngredients[i].IngredientId" hidden />
 
-            <input asp-for="@Model.EditDish.DishIngredients[i].Ingredient.IsChecked" type="checkbox" value="true" />
+            <input asp-for="@Model.DishIngredients[i].Ingredient.IsChecked" name="OrdinaryChecked-@Model.DishIngredients[i].IngredientId" type="checkbox" value="" />
         }
     </div>
     <div class="form-group">
 
-        @for (int i = 0; i < Model.ExtraIngredients.Count; i++)
+        @for (int i = 0; i < extraIngredients.Count; i++)
         {
-            <label asp-for="@Model.ExtraIngredients[i].Name" class="control-label">@Model.ExtraIngredients[i].Name</label>
-            <label asp-for="@Model.ExtraIngredients[i].Price" class="control-label">@Model.ExtraIngredients[i].Price kr</label>
-            <input asp-for="@Model.ExtraIngredients[i].Name" value="@Model.ExtraIngredients[i].Name" hidden />
-            <input asp-for="@Model.ExtraIngredients[i].Price" value="@Model.ExtraIngredients[i].Price" hidden />
-            <input asp-for="@Model.ExtraIngredients[i].ExtraIngredientId"  value="@Model.ExtraIngredients[i].ExtraIngredientId" hidden/>
-            <input asp-for="@Model.ExtraIngredients[i].IsChecked" type="checkbox" value="true" />
+            <label asp-for="@extraIngredients[i].Name" class="control-label">@extraIngredients[i].Name</label>
+            <label asp-for="@extraIngredients[i].Price" class="control-label">@extraIngredients[i].Price kr</label>
+            <input asp-for="@extraIngredients[i].IsChecked" name ="ExtraChecked-@extraIngredients[i].ExtraIngredientId-@extraIngredients[i].Price" type="checkbox" value="" />
         }
     </div>
         <div class="form-group">

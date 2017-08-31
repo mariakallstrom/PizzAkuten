@@ -86,6 +86,8 @@ namespace PizzAkuten.Services
             return GetOrderForCurrentSession(_session);
         }
 
+     
+
         public OrderDish GetOrderForCurrentSession(ISession session)
         {
             var orderDish = _session.GetObjectFromJson<OrderDish>("Cart");
@@ -172,39 +174,51 @@ namespace PizzAkuten.Services
                 }
             }
         }
-        public void AddSpecialDishToCart(EditDishViewModel model)
+        public void AddSpecialDishToCart(IFormCollection form)
         {
+
+            var dish = _context.Dishes.Find(Convert.ToInt32(form["DishId"]));
             //Skapa en ny Special Dish
             var specialDish = new Dish();
             var diList = new List<DishIngredient>();
             var xDiList = new List<DishExtraIngredient>();
             var xtraIngPrice = 0;
 
+            string input = "User name (sales)";
+            string output = input.Split('(', ')')[1];
+
             //Kolla vilka vanliga ingredienser som är bockade 
-            foreach (var item in model.EditDish.DishIngredients.ToList())
-            {
-                if (item.Ingredient.IsChecked)
-                {
-                    diList.Add(item);
-                }
-            }
-            //Kolla vilka extra ingredienser som är bockade
-            foreach (var item in model.ExtraIngredients.ToList())
-            {
-                var di = new DishExtraIngredient();
-                if (item.IsChecked)
-                {
-                    di.ExtraIngredient = item;
-                    xtraIngPrice = xtraIngPrice + item.Price;
+            var ordinaryKeys = form.Keys.FirstOrDefault(k => k.Contains("OrdinaryChecked-"));
+            var ordinaryDashPosition = ordinaryKeys.IndexOf("-");
+            var checkedIngredients = form.Keys.Where(k => k.Contains("OrdinaryChecked-"));
 
-                    xDiList.Add(di);
-                }
+            //Lägg till vanliga ingredienserna
+            foreach (var ingredient in checkedIngredients)
+            {
+                var id = int.Parse(ingredient.Substring(ordinaryDashPosition + 1));
+                diList.Add(new DishIngredient { IngredientId = id });
             }
 
-            specialDish.Price = model.EditDish.Price + xtraIngPrice;
+            //Kolla vilka extra ingredienser som är bockade 
+
+            var extraKeys = form.Keys.FirstOrDefault(k => k.Contains("ExtraChecked-"));
+            var getId = extraKeys.Split('-', '-')[1];
+            var getPrice = extraKeys.Split('-').Skip(2).FirstOrDefault();
+            var checkedExtraIngredients = form.Keys.Where(k => k.Contains("ExtraChecked-"));
+
+            //Lägg till extra ingredienserna
+            foreach (var ingredient in checkedExtraIngredients)
+            {
+                var id = int.Parse(getId);
+                var price = int.Parse(getPrice);
+                xDiList.Add(new DishExtraIngredient { ExtraIngredientId = id });
+                xtraIngPrice = xtraIngPrice = price;
+
+            }
+            specialDish.Price = dish.Price + xtraIngPrice;
             specialDish.DishExtraIngredients = xDiList;
             specialDish.DishIngredients = diList;
-            specialDish.Name = model.EditDish.Name + " special";
+            specialDish.Name = dish.Name + " special";
             specialDish.SpecialDish = true;
 
             _context.Add(specialDish);

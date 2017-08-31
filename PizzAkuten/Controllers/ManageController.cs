@@ -59,6 +59,9 @@ namespace PizzAkuten.Controllers
                 Username = user.UserName,
                 Email = user.Email,
                 PhoneNumber = user.PhoneNumber,
+                Street = user.Street,
+                City = user.City,
+                ZipCode = user.ZipCode,
                 IsEmailConfirmed = user.EmailConfirmed,
                 StatusMessage = StatusMessage
             };
@@ -96,6 +99,35 @@ namespace PizzAkuten.Controllers
             {
                 var setPhoneResult = await _userManager.SetPhoneNumberAsync(user, model.PhoneNumber);
                 if (!setPhoneResult.Succeeded)
+                {
+                    throw new ApplicationException($"Unexpected error occurred setting phone number for user with ID '{user.Id}'.");
+                }
+            }
+            var city = user.City;
+            if (model.City != city)
+            {
+                var setCityResult = await _userManager.UpdateAsync(user);
+                if (!setCityResult.Succeeded)
+                {
+                    throw new ApplicationException($"Unexpected error occurred setting phone number for user with ID '{user.Id}'.");
+                }
+            }
+
+            var street = user.Street;
+            if (model.Street != street)
+            {
+                var setStreetResult = await _userManager.UpdateAsync(user);
+                if (!setStreetResult.Succeeded)
+                {
+                    throw new ApplicationException($"Unexpected error occurred setting phone number for user with ID '{user.Id}'.");
+                }
+            }
+
+            var zipcode = user.ZipCode;
+            if (model.ZipCode != zipcode)
+            {
+                var setZipCodeResult = await _userManager.UpdateAsync(user);
+                if (!setZipCodeResult.Succeeded)
                 {
                     throw new ApplicationException($"Unexpected error occurred setting phone number for user with ID '{user.Id}'.");
                 }

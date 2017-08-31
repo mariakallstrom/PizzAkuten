@@ -81,34 +81,28 @@ namespace PizzAkuten.Controllers
             {
                 return NotFound();
             }
-            var ingredients = _context.Ingredients.OrderBy(x=>x.Name).ToList();
             var dish = await _context.Dishes.Include(d => d.DishIngredients).ThenInclude(di => di.Ingredient)
                 .SingleOrDefaultAsync(m => m.DishId == dishId);
 
-            var model = new EditDishViewModel();
-
-            var extraIngredients = _context.ExtraIngredients.ToList();
             foreach (var item in dish.DishIngredients)
             {
                 item.Ingredient.IsChecked = true;
             }
-            model.EditDish = dish;
-            model.ExtraIngredients = extraIngredients;
 
             if (dish == null)
             {
                 return NotFound();
             }
 
-            return View(model);
+            return View(dish);
         }
 
         [HttpPost]
-        public IActionResult Edit(EditDishViewModel model)
+        public IActionResult Edit(IFormCollection form)
         {
-            if (model != null)
+            if (form != null)
             {
-                _service.AddSpecialDishToCart(model);
+                _service.AddSpecialDishToCart(form);
                 return RedirectToAction("Index", "Home");
             };
             return View();

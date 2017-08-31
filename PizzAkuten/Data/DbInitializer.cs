@@ -16,6 +16,11 @@ namespace PizzAkuten.Data
             var aUser = new ApplicationUser();
             aUser.UserName = "student@test.se";
             aUser.Email = "student@test.se";
+            aUser.City = "Ankeborg";
+            aUser.ZipCode = "11313";
+            aUser.Street = "Ankgatan 1";
+            aUser.FirstName = "Kalle";
+            aUser.LastName = "Anka";
             var result = userManager.CreateAsync(aUser, "Passw0rd").Result;
 
             if (result.Succeeded)

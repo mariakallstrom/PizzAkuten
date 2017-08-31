@@ -1,8 +1,9 @@
 ﻿@model Order
+@inject UserService UserService
 @inject SignInManager<ApplicationUser> SignInManager
-@inject UserManager<ApplicationUser> UserManager
+
 @{
-    ViewData["Title"] = "View";
+    var aUser = UserService.GetApplicationUser().Result;
 }
 
 <h2>Din Order</h2>
@@ -24,6 +25,33 @@
 
 <label>Summa: </label>  
 @Model.TotalPrice  
+
+@if (SignInManager.IsSignedIn(User))
+{
+    <p>Dina uppgifter</p>
+
+    <div>
+        <label>Förnamn: </label>  @aUser.FirstName
+    </div>
+    <div>
+        <label>Efternamn: </label> @aUser.LastName
+    </div>
+    <div>
+        <label>Gatunamn: </label>  @aUser.Street
+    </div>
+    <div>
+        <label>Postkod: </label>  @aUser.ZipCode
+    </div>
+    <div>
+        <label>Postort: </label>  @aUser.City
+    </div>
+    <div>
+        <label>Telefon: </label>  @aUser.PhoneNumber
+    </div>
+    <div>
+        <label>Email: </label>  @aUser.Email
+    </div>
+}
 
 
  <a asp-controller="Order" asp-action="ConfirmOrder">Bekräfta order</a>

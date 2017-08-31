@@ -18,12 +18,14 @@ namespace PizzAkuten.Controllers
         private readonly ApplicationDbContext _context;
         private readonly OrderService _orderservice;
         private readonly IEmailSender _emailservice;
+        private readonly UserService _userService;
 
-        public PaymentController(ApplicationDbContext context, OrderService orderservice, IEmailSender emailservice)
+        public PaymentController(ApplicationDbContext context, OrderService orderservice, IEmailSender emailservice, UserService userService)
         {
             _context = context;
             _orderservice = orderservice;
             _emailservice = emailservice;
+            _userService = userService;
         }
 
         [Authorize(Roles ="admin")]
@@ -114,8 +116,10 @@ namespace PizzAkuten.Controllers
             _context.Payment.Add(model);
             _context.SaveChanges();
             var order = _context.Orders.Include(i=>i.OrderDish.OrderItems).ThenInclude(p=>p.OrderDish).FirstOrDefault(x=>x.OrderId==model.OrderId);
-           //order.orderdish.orderitems.orderitem.name är null
-            _emailservice.SendOrderConfirmToUser(order);
+            //order.orderdish.orderitems.orderitem.name är null
+            var user = _userService.GetApplicationUser();
+            
+            _emailservice.SendOrderConfirmToUser(order, user);
             return RedirectToAction("ThankForOrdering");
         }
 

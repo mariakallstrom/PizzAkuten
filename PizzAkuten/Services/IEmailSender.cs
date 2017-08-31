@@ -9,7 +9,7 @@ namespace PizzAkuten.Services
     public interface IEmailSender
     {
         Task SendEmailAsync(string email, string subject, string message);
-        Task SendOrderConfirmToUser(Order order);
+        Task SendOrderConfirmToUser(Order order, ApplicationUser user);
     }
 
   

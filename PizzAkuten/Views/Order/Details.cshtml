@@ -25,22 +25,27 @@
         <dt>
             @Html.DisplayNameFor(model => model.DishIngredients)
         </dt>
-        <dd>
-            @Html.DisplayFor(model => model.Category)
-        </dd>
-        <dt>
-            @Html.DisplayNameFor(model => model.Category.Name)
-        </dt>
+    
         @foreach (var dish in Model.DishIngredients)
         {
             <dd>
                 @dish.Ingredient.Name
             </dd>
         }
+
+        <dt>
+            @Html.DisplayNameFor(model => model.DishExtraIngredients)
+        </dt>
+
+        @foreach (var dish in Model.DishExtraIngredients)
+        {
+            <dd>
+                @dish.ExtraIngredient.Name
+            </dd>
+        }
     </dl>
 </div>
 <div>
-    <a asp-action="Edit" asp-route-DishId="@Model.DishId">Edit</a> |
     <a asp-controller="Home"asp-action="Index">Back to List</a>
 </div>
 

@@ -37,7 +37,7 @@
         {
             <label asp-for="@extraIngredients[i].Name" class="control-label">@extraIngredients[i].Name</label>
             <label asp-for="@extraIngredients[i].Price" class="control-label">@extraIngredients[i].Price kr</label>
-            <input asp-for="@extraIngredients[i].IsChecked" name ="ExtraChecked-@extraIngredients[i].ExtraIngredientId-@extraIngredients[i].Price" type="checkbox" value="" />
+            <input asp-for="@extraIngredients[i].IsChecked" name ="ExtraChecked-@extraIngredients[i].ExtraIngredientId" type="checkbox" value="" />
         }
     </div>
         <div class="form-group">

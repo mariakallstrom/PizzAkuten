@@ -12,6 +12,7 @@ namespace PizzAkuten.Models
 
         public int PaymentId { get; set; }
       
+        public string PayMethod { get; set; }
         public string CardNumber { get; set; }
    
         public int Cvv { get; set; }
@@ -21,7 +22,6 @@ namespace PizzAkuten.Models
         public int Month { get; set; }
        
         public int OrderId { get; set; }
-
         public Order Order { get; set; }
         public bool IsPaid { get; set; }
         [ForeignKey("ApplicationUser")]

@@ -10,6 +10,8 @@ namespace PizzAkuten.Services
     {
         Task SendEmailAsync(string email, string subject, string message);
         Task SendOrderConfirmToUser(Order order, ApplicationUser user);
+
+        Task SendOrderConfirmToUser(Order order, NonAccountUser user);
     }
 
   

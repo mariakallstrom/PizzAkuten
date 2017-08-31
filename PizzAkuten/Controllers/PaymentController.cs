@@ -95,7 +95,8 @@ namespace PizzAkuten.Controllers
             var paymentChoize = Convert.ToInt32(form["creditCardRadio"]);
 
             var model = new Payment();
-            if(String.IsNullOrEmpty(form["NonAccountUserId"]))
+
+            if (String.IsNullOrEmpty(form["NonAccountUserId"]))
             {
                 model.ApplicationuserId = form["UserId"];
             }
@@ -103,24 +104,49 @@ namespace PizzAkuten.Controllers
             {
                 model.NonAccountUserId = Convert.ToInt32(form["NonAccountUserId"]);
             }
-          
-            if(paymentChoize != 3)
+            if (paymentChoize != 3)
             {
                 model.Month = Convert.ToInt32(form["Month"]);
                 model.CardNumber = form["CardNumber"];
                 model.Cvv = Convert.ToInt32(form["Cvv"]);
                 model.Year = Convert.ToInt32(form["Year"]);
             }
-        
+
+            if (paymentChoize == 1)
+            {
+                model.PayMethod = "Visa";
+            }
+            else if (paymentChoize == 2)
+            {
+                model.PayMethod = "MasterCard";
+            }
+            else 
+            {
+                model.PayMethod = "Swish";
+            }
+
             model.OrderId = Convert.ToInt32(form["OrderId"]);
-            _context.Payment.Add(model);
-            _context.SaveChanges();
-            var order = _context.Orders.Include(i=>i.OrderDish.OrderItems).ThenInclude(p=>p.OrderDish).FirstOrDefault(x=>x.OrderId==model.OrderId);
-            //order.orderdish.orderitems.orderitem.name är null
-            var user = _userService.GetApplicationUser();
-            
-            _emailservice.SendOrderConfirmToUser(order, user);
-            return RedirectToAction("ThankForOrdering");
+
+                _context.Payment.Add(model);
+                _context.SaveChanges();
+
+                var order = _context.Orders.Include(i => i.OrderDish.OrderItems).ThenInclude(p => p.OrderDish).FirstOrDefault(x => x.OrderId == model.OrderId);
+
+                 if (order.ApplicationuserId != null)
+                    {
+                        var user = _userService.GetApplicationUserById(order.ApplicationuserId);
+                        _emailservice.SendOrderConfirmToUser(order, user);
+                        return RedirectToAction("ThankForOrdering");
+                    }
+
+            if (order.NonAccountUserId != 0)
+                {
+                var user = _userService.GetNonAccountUserById(order.NonAccountUserId);
+                _emailservice.SendOrderConfirmToUser(order, user);
+                return RedirectToAction("ThankForOrdering");
+                }
+
+            return View();
         }
 
         public IActionResult ThankForOrdering()

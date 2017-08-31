@@ -29,12 +29,7 @@ namespace PizzAkuten.Controllers
             _signInManager = signInManager;
         
         }
-        [Authorize]
-        public IActionResult Index()
-        {
 
-            return View(_context.Orders.ToList());
-        }
         [AllowAnonymous]
         public IActionResult AddToCart(int dishId)
         {
@@ -65,7 +60,7 @@ namespace PizzAkuten.Controllers
                 return NotFound();
             }
 
-            var dish = await _context.Dishes.Include(d => d.DishIngredients).ThenInclude(di => di.Ingredient)
+            var dish = await _context.Dishes.Include(d => d.DishIngredients).ThenInclude(di => di.Ingredient).Include(dei=>dei.DishExtraIngredients).ThenInclude(di=>di.ExtraIngredient)
                 .SingleOrDefaultAsync(m => m.DishId == dishId);
             if (dish == null)
             {

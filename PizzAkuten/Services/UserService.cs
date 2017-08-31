@@ -35,5 +35,17 @@ namespace PizzAkuten.Services
             }
             return null;
         }
+
+  
+
+        public ApplicationUser GetApplicationUserById(string applicationuserId)
+        {
+            return _context.Users.Find(applicationuserId);
+        }
+
+        public NonAccountUser GetNonAccountUserById(int nonAccountUserId)
+        {
+            return _context.NonAccountUsers.Find(nonAccountUserId);
+        }
     }
 }

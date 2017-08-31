@@ -2,9 +2,6 @@
 @inject UserService UserService
 @inject SignInManager<ApplicationUser> SignInManager
 
-@{
-    var aUser = UserService.GetApplicationUser().Result;
-}
 
 <h2>Din Order</h2>
 
@@ -28,8 +25,8 @@
 
 @if (SignInManager.IsSignedIn(User))
 {
+    var aUser = UserService.GetApplicationUser();
     <p>Dina uppgifter</p>
-
     <div>
         <label>Förnamn: </label>  @aUser.FirstName
     </div>

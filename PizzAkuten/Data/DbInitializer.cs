@@ -177,6 +177,19 @@ namespace PizzAkuten.Data
 
                 context.AddRange(capricciosa, margueritha, vesuvio, pastaBeef, pastaPork, kebabSalad, kebabDish, chickenSalad, hamburger);
                 context.SaveChanges();
+
+                var payment = new Payment { CardNumber = "123", ApplicationUser = aUser, Cvv = 123, Month = 10, Year = 2019, PayMethod = "Visa" };
+                var order = new Order();
+                order.ApplicationUser = aUser;
+                order.Cart = new Cart { CartItems = new List<CartItem> { new CartItem { Dish = capricciosa, Quantity = 1 } }, TotalPrice = capricciosa.Price };
+                order.TotalPrice = capricciosa.Price;
+                order.Payment = payment;
+                order.OrderDate = DateTime.Now;
+                payment.Order = order;
+                order.Payment = payment;
+                context.Orders.Add(order);
+                context.Payments.Add(payment);
+                context.SaveChanges();
             };
             if (context.ExtraIngredients.ToList().Count == 0)
             {
@@ -202,7 +215,12 @@ namespace PizzAkuten.Data
 
                 context.AddRange(xcheese, xham, xtomato, xmushroom, xkebab, xpasta, xtuna, xsalad, xchicken, xpork, xbeef, xcucumber, xpaprika, xananas, xbanana, xbread, xpotatoe, xdressing, xonion);
                 context.SaveChanges();
+
+
+
             };
+
+        
         }
     }
 }

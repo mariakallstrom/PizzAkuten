@@ -18,38 +18,38 @@ namespace XUnitTestPizzAkuten
         public async void Test1Async()
         {
             //Arrange
-            var dishes = GetFakeDishes().ToAsyncDbSetMock();
+            //var dishes = GetFakeDishes().ToAsyncDbSetMock();
 
-            var mockDbContext = new Mock<ApplicationDbContext>();
-            var mockDbSet = new Mock<DbSet<Dish>>();
-            mockDbContext.Setup(repo => repo.Dishes).Returns(dishes.Object);
-            var controller = new DishController(mockDbContext.Object);
+            //var mockDbContext = new Mock<ApplicationDbContext>();
+            //var mockDbSet = new Mock<DbSet<Dish>>();
+            //mockDbContext.Setup(repo => repo.Dishes).Returns(dishes.Object);
+            //var controller = new DishController(mockDbContext.Object);
 
             //Act
-            var result = await controller.Index();
+            //var result = await controller.Index();
 
             //Assert
-            var viewResult = Assert.IsType<ViewResult>(result);
-            var model = Assert.IsAssignableFrom<IEnumerable<Dish>>(
-                viewResult.ViewData.Model);
-            Assert.Equal(2, model.Count());
+            //var viewResult = Assert.IsType<ViewResult>(result);
+            //var model = Assert.IsAssignableFrom<IEnumerable<Dish>>(
+            //    viewResult.ViewData.Model);
+            //Assert.Equal(2, model.Count());
         }
 
-        private List<Dish> GetFakeDishes()
-        {
-            return new List<Dish>()
-            {
-                new Dish()
-                {
-                    DishId = 1,
-                    Name = "Hawaii"
-                },
-        new Dish()
-        {
-            DishId = 2,
-            Name = "Vezuvio"
-        }
-            };
-        }
+        //private List<Dish> GetFakeDishes()
+        //{
+        //    return new List<Dish>()
+        //    {
+        //        new Dish()
+        //        {
+        //            DishId = 1,
+        //            Name = "Hawaii"
+        //        },
+        //new Dish()
+        //{
+        //    DishId = 2,
+        //    Name = "Vezuvio"
+        //}
+        //    };
+        //}
     }
 }

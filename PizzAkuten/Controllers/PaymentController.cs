@@ -10,6 +10,7 @@ using PizzAkuten.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using PizzAkuten.Services;
+using System.Globalization;
 
 namespace PizzAkuten.Controllers
 {
@@ -32,7 +33,8 @@ namespace PizzAkuten.Controllers
         // GET: Payment
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Payments.ToListAsync());
+            var applicationDbContext = _context.Payments.Include(p => p.Order);
+            return View(await applicationDbContext.ToListAsync());
         }
         [Authorize(Roles = "admin")]
         // GET: Payment/Details/5
@@ -43,7 +45,10 @@ namespace PizzAkuten.Controllers
                 return NotFound();
             }
 
-            var payment = await _context.Payments.Include(x=>x.ApplicationUser).Include(x=>x.NonAccountUser)
+            var payment = await _context.Payments
+                .Include(p => p.ApplicationUser)
+                .Include(p => p.NonAccountUser)
+                .Include(p => p.Order)
                 .SingleOrDefaultAsync(m => m.PaymentId == id);
             if (payment == null)
             {
@@ -56,7 +61,11 @@ namespace PizzAkuten.Controllers
         // GET: Payment/Create
         public IActionResult Create()
         {
-            ViewBag.OrderId = _context.Orders.LastOrDefault().OrderId;
+            var order = _context.Orders.Include(x=>x.ApplicationUser).Include(x=>x.NonAccountUser).LastOrDefault();
+            ViewBag.OrderId = order.OrderId;
+            ViewBag.NonAccountUserId = order.NonAccountUser.NonAccountUserId;
+            ViewData["Month"] = new SelectList(Enumerable.Range(1, 12));
+            ViewData["Year"] = new SelectList(Enumerable.Range(DateTime.Now.Year, 2037));
             return View();
         }
 
@@ -67,30 +76,6 @@ namespace PizzAkuten.Controllers
         [ValidateAntiForgeryToken]
         public IActionResult Create(IFormCollection form)
         {
-            if(form != null)
-            {
-                var model = new NonAccountUser();
-                model.FirstName = form["FirstName"];
-                model.LastName = form["LastName"];
-                model.Street = form["Street"];
-                model.ZipCode = Convert.ToInt32(form["ZipCode"]);
-                model.Phone = form["Phone"];
-                model.Email = form["Email"];
-                model.City = form["City"];
-                model.OrderId = Convert.ToInt32(form["OrderId"]);
-                _context.NonAccountUsers.Add(model);
-                _context.SaveChanges();
-                var user = _context.NonAccountUsers.Last();
-                ViewBag.NonAccountUserId = user.NonAccountUserId;
-                ViewBag.OrderId = user.OrderId;
-            };
-           
-
-            return View();
-        }
-
-        public IActionResult SavePayment(IFormCollection form)
-        {
 
             var paymentChoize = Convert.ToInt32(form["creditCardRadio"]);
 
@@ -98,7 +83,7 @@ namespace PizzAkuten.Controllers
 
             if (String.IsNullOrEmpty(form["NonAccountUserId"]))
             {
-                model.ApplicationuserId = form["UserId"];
+                model.ApplicationUserId = form["UserId"];
             }
             else
             {
@@ -120,31 +105,31 @@ namespace PizzAkuten.Controllers
             {
                 model.PayMethod = "MasterCard";
             }
-            else 
+            else
             {
                 model.PayMethod = "Swish";
             }
 
             model.OrderId = Convert.ToInt32(form["OrderId"]);
 
-                _context.Payments.Add(model);
-                _context.SaveChanges();
+            _context.Payments.Add(model);
+            _context.SaveChanges();
 
-                var order = _context.Orders.Include(i => i.Cart).ThenInclude(p => p.CartItems).FirstOrDefault(x => x.OrderId == model.OrderId);
+            var order = _context.Orders.Include(i => i.Cart).ThenInclude(p => p.CartItems).ThenInclude(d => d.Dish).FirstOrDefault(x => x.OrderId == model.OrderId);
 
-                 if (order.ApplicationUserId != null)
-                    {
-                        var user = _userService.GetApplicationUserById(order.ApplicationUserId);
-                        _emailservice.SendOrderConfirmToUser(order, user);
-                        return RedirectToAction("ThankForOrdering");
-                    }
-
-            if (order.NonAccountUserId != 0)
-                {
-                var user = _userService.GetNonAccountUserById(order.NonAccountUserId);
+            if (order.ApplicationUserId != null)
+            {
+                var user = _userService.GetApplicationUserById(order.ApplicationUserId);
                 _emailservice.SendOrderConfirmToUser(order, user);
                 return RedirectToAction("ThankForOrdering");
-                }
+            }
+
+            if (model.NonAccountUserId != 0)
+            {
+                var user = _userService.GetNonAccountUserById(model.NonAccountUserId);
+                _emailservice.SendOrderConfirmToUser(order, user);
+                return RedirectToAction("ThankForOrdering");
+            }
 
             return RedirectToAction("Create");
         }
@@ -166,11 +151,14 @@ namespace PizzAkuten.Controllers
                 return NotFound();
             }
 
-            var payment = await _context.Payments.Include(x => x.ApplicationUser).Include(x => x.NonAccountUser).SingleOrDefaultAsync(m => m.PaymentId == id);
+            var payment = await _context.Payments.SingleOrDefaultAsync(m => m.PaymentId == id);
             if (payment == null)
             {
                 return NotFound();
             }
+            ViewData["ApplicationuserId"] = new SelectList(_context.ApplicationUsers, "Id", "Id", payment.ApplicationUserId);
+            ViewData["NonAccountUserId"] = new SelectList(_context.NonAccountUsers, "NonAccountUserId", "NonAccountUserId", payment.NonAccountUserId);
+            ViewData["OrderId"] = new SelectList(_context.Orders, "OrderId", "OrderId", payment.OrderId);
             return View(payment);
         }
         [Authorize(Roles = "admin")]
@@ -179,7 +167,7 @@ namespace PizzAkuten.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("PaymentId,CardNumber,Cvv,Year,Month,IsPaid")] Payment payment)
+        public async Task<IActionResult> Edit(int id, [Bind("PaymentId,PayMethod,CardNumber,Cvv,Year,Month,OrderId,IsPaid,ApplicationuserId,NonAccountUserId")] Payment payment)
         {
             if (id != payment.PaymentId)
             {
@@ -206,8 +194,12 @@ namespace PizzAkuten.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
+            ViewData["ApplicationuserId"] = new SelectList(_context.ApplicationUsers, "Id", "Id", payment.ApplicationUserId);
+            ViewData["NonAccountUserId"] = new SelectList(_context.NonAccountUsers, "NonAccountUserId", "NonAccountUserId", payment.NonAccountUserId);
+            ViewData["OrderId"] = new SelectList(_context.Orders, "OrderId", "OrderId", payment.OrderId);
             return View(payment);
         }
+
         [Authorize(Roles = "admin")]
         // GET: Payment/Delete/5
         public async Task<IActionResult> Delete(int? id)
@@ -218,6 +210,9 @@ namespace PizzAkuten.Controllers
             }
 
             var payment = await _context.Payments
+                .Include(p => p.ApplicationUser)
+                .Include(p => p.NonAccountUser)
+                .Include(p => p.Order)
                 .SingleOrDefaultAsync(m => m.PaymentId == id);
             if (payment == null)
             {
@@ -232,6 +227,7 @@ namespace PizzAkuten.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
+
             var payment = await _context.Payments.SingleOrDefaultAsync(m => m.PaymentId == id);
             _context.Payments.Remove(payment);
             await _context.SaveChangesAsync();

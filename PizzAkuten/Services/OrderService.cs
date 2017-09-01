@@ -150,11 +150,22 @@ namespace PizzAkuten.Services
         }
         public Order SaveOrderToDataBase(Order order)
         {
+            var newOrder = new Order {
+                Cart = order.Cart,
+                OrderDate = DateTime.Now,
+                TotalPrice = order.TotalPrice,
+            };
+            if(order.ApplicationUser != null)
+            {
+                newOrder.ApplicationUser = order.ApplicationUser;
+            }
+            else { newOrder.NonAccountUser = order.NonAccountUser; }
+
             _context.Add(order);
             _context.SaveChanges();
-            var newOrder = _context.Orders.Last();
+            var thisOrder = _context.Orders.Last();
 
-            return newOrder;
+            return thisOrder;
         }
         public void DeleteSpecialDishes(Order order)
         {

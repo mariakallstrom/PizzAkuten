@@ -1,26 +1,17 @@
 ﻿@model PizzAkuten.Models.Payment
-
 @{
     ViewData["Title"] = "Details";
 }
-
 <h2>Details</h2>
-
 <div>
     <h4>Payment</h4>
     <hr />
     <dl class="dl-horizontal">
         <dt>
-            @Html.DisplayNameFor(model => model.ApplicationUser.UserName)
+            @Html.DisplayNameFor(model => model.PayMethod)
         </dt>
         <dd>
-            @Html.DisplayFor(model => model.ApplicationUser.UserName)
-        </dd>
-        <dt>
-            @Html.DisplayNameFor(model => model.NonAccountUser.Email)
-        </dt>
-        <dd>
-            @Html.DisplayFor(model => model.NonAccountUser.Email)
+            @Html.DisplayFor(model => model.PayMethod)
         </dd>
         <dt>
             @Html.DisplayNameFor(model => model.CardNumber)
@@ -51,6 +42,24 @@
         </dt>
         <dd>
             @Html.DisplayFor(model => model.IsPaid)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.ApplicationUser)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.ApplicationUser.Id)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.NonAccountUser)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.NonAccountUser.NonAccountUserId)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.Order)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Order.OrderId)
         </dd>
     </dl>
 </div>

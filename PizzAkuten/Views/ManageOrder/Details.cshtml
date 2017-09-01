@@ -38,7 +38,17 @@
             @Html.DisplayNameFor(model => model.NonAccountUser)
         </dt>
         <dd>
-            @Html.DisplayFor(model => model.NonAccountUser.Id)
+            @Html.DisplayFor(model => model.NonAccountUser.NonAccountUserId)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.Cart)
+        </dt>
+        <dd>
+            @foreach (var item in Model.Cart.CartItems)
+            {
+                @item.Dish.Name
+            }
+          
         </dd>
     </dl>
 </div>

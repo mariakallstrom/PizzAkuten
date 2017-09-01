@@ -9,6 +9,7 @@ using Microsoft.EntityFrameworkCore;
 using System.Threading.Tasks;
 using System.Security.Claims;
 using Microsoft.AspNetCore.Http;
+using System;
 
 namespace PizzAkuten.Controllers
 {
@@ -109,8 +110,23 @@ namespace PizzAkuten.Controllers
 
             return View(order);
         }
-        public async Task<IActionResult> ConfirmOrder()
+        public async Task<IActionResult> ConfirmOrder(IFormCollection form)
         {
+            if (form.Keys.Count != 0)
+            {
+                var model = new NonAccountUser();
+                model.FirstName = form["FirstName"];
+                model.LastName = form["LastName"];
+                model.Street = form["Street"];
+                model.ZipCode = Convert.ToInt32(form["ZipCode"]);
+                model.Phone = form["Phone"];
+                model.Email = form["Email"];
+                model.City = form["City"];
+                model.OrderId = Convert.ToInt32(form["OrderId"]);
+                _context.NonAccountUsers.Add(model);
+                _context.SaveChanges();
+            };
+
             var order = _service.GetOrder();
             if(_signInManager.IsSignedIn(User))
             {
@@ -121,10 +137,10 @@ namespace PizzAkuten.Controllers
 
                 return RedirectToAction("Create", "Payment");
             }
-          
+            order.NonAccountUser = _context.NonAccountUsers.Last();
             var savedOrder = _service.SaveOrderToDataBase(order);
            
-            return View(savedOrder);
+            return RedirectToAction("Create", "Payment");
 
         }
  

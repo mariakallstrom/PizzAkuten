@@ -25,7 +25,7 @@ namespace PizzAkuten.Models
         public Order Order { get; set; }
         public bool IsPaid { get; set; }
         [ForeignKey("ApplicationUser")]
-        public string ApplicationuserId { get; set; }
+        public string ApplicationUserId { get; set; }
         public ApplicationUser ApplicationUser { get; set; }
 
         [ForeignKey("NonAccountUser")]

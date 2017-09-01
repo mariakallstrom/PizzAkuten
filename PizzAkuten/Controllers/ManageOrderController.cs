@@ -20,24 +20,24 @@ namespace PizzAkuten.Controllers
         }
 
         // GET: ManageOrder
-        public async Task<IActionResult> Index()
+        public IActionResult Index()
         {
-            var applicationDbContext = _context.Orders.Include(o => o.ApplicationUser).Include(o => o.NonAccountUser);
-            return View(await applicationDbContext.ToListAsync());
+            var orders = _context.Orders.ToList();
+            return View(orders);
         }
 
         // GET: ManageOrder/Details/5
-        public async Task<IActionResult> Details(int? id)
+        public IActionResult Details(int? id)
         {
             if (id == null)
             {
                 return NotFound();
             }
 
-            var order = await _context.Orders
+            var order =  _context.Orders
                 .Include(o => o.ApplicationUser)
-                .Include(o => o.NonAccountUser)
-                .SingleOrDefaultAsync(m => m.OrderId == id);
+                .Include(o => o.NonAccountUser).Include(x=>x.Payment).Include(x=>x.Cart).ThenInclude(p=>p.CartItems)
+                .FirstOrDefault(m => m.OrderId == id);
             if (order == null)
             {
                 return NotFound();
@@ -49,7 +49,7 @@ namespace PizzAkuten.Controllers
         // GET: ManageOrder/Create
         public IActionResult Create()
         {
-            ViewData["ApplicationuserId"] = new SelectList(_context.Users, "Id", "Id");
+            ViewData["ApplicationUserId"] = new SelectList(_context.Users, "Id", "Id");
             ViewData["NonAccountUserId"] = new SelectList(_context.NonAccountUsers, "Id", "Id");
             return View();
         }
@@ -67,7 +67,7 @@ namespace PizzAkuten.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["ApplicationuserId"] = new SelectList(_context.Users, "Id", "Id", order.ApplicationUserId);
+            ViewData["ApplicationUserId"] = new SelectList(_context.Users, "Id", "Id", order.ApplicationUserId);
             ViewData["NonAccountUserId"] = new SelectList(_context.NonAccountUsers, "Id", "Id", order.NonAccountUserId);
             return View(order);
         }
@@ -85,7 +85,7 @@ namespace PizzAkuten.Controllers
             {
                 return NotFound();
             }
-            ViewData["ApplicationuserId"] = new SelectList(_context.Users, "Id", "Id", order.ApplicationUserId);
+            ViewData["ApplicationUserId"] = new SelectList(_context.Users, "Id", "Id", order.ApplicationUserId);
             ViewData["NonAccountUserId"] = new SelectList(_context.NonAccountUsers, "Id", "Id", order.NonAccountUserId);
             return View(order);
         }
@@ -122,7 +122,7 @@ namespace PizzAkuten.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["ApplicationuserId"] = new SelectList(_context.Users, "Id", "Id", order.ApplicationUserId);
+            ViewData["ApplicationUserId"] = new SelectList(_context.Users, "Id", "Id", order.ApplicationUserId);
             ViewData["NonAccountUserId"] = new SelectList(_context.NonAccountUsers, "Id", "Id", order.NonAccountUserId);
             return View(order);
         }

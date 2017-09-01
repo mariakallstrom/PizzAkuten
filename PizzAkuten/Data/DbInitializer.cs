@@ -187,8 +187,9 @@ namespace PizzAkuten.Data
                 order.OrderDate = DateTime.Now;
                 payment.Order = order;
                 order.Payment = payment;
+
+                
                 context.Orders.Add(order);
-                context.Payments.Add(payment);
                 context.SaveChanges();
             };
             if (context.ExtraIngredients.ToList().Count == 0)

@@ -46,8 +46,6 @@ namespace PizzAkuten.Controllers
             }
 
             var payment = await _context.Payments
-                .Include(p => p.ApplicationUser)
-                .Include(p => p.NonAccountUser)
                 .Include(p => p.Order)
                 .SingleOrDefaultAsync(m => m.PaymentId == id);
             if (payment == null)

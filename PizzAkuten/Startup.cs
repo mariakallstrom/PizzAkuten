@@ -53,6 +53,8 @@ namespace PizzAkuten
             services.AddTransient<DishService>();
             services.AddTransient<CategoryService>();
             services.AddTransient<UserService>();
+            services.AddTransient<ManageOrderService>();
+            services.AddTransient<PaymentService>();
 
             services.AddDistributedMemoryCache();
 

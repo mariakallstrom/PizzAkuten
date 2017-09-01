@@ -22,8 +22,7 @@ namespace PizzAkuten.Controllers
         // GET: ManageOrder
         public IActionResult Index()
         {
-            var orders = _context.Orders.ToList();
-            return View(orders);
+            return View();
         }
 
         // GET: ManageOrder/Details/5

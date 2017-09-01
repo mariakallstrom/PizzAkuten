@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 using PizzAkuten.Data;
 using PizzAkuten.Models;
 
@@ -38,6 +39,12 @@ namespace PizzAkuten.Services
         public List<Order> GetPaymentsByNonAccountUserId(int nonAccountUserId)
         {
             return _context.Orders.Where(x => x.NonAccountUserId == nonAccountUserId).ToList();
+        }
+
+        public List<CartItem> GetCartFromOrderId(int orderId)
+        {
+            var list = _context.Carts.Where(x => x.OrderId == orderId).SelectMany(ci=>ci.CartItems).Include(d=>d.Dish);
+            return new List<CartItem>(list);
         }
     }
 }

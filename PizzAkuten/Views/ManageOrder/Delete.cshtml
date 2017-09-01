@@ -1,5 +1,5 @@
 ﻿@model PizzAkuten.Models.Order
-
+@inject UserService UserService
 @{
     ViewData["Title"] = "Delete";
 }
@@ -33,13 +33,20 @@
             @Html.DisplayNameFor(model => model.ApplicationUser)
         </dt>
         <dd>
-            @Html.DisplayFor(model => model.ApplicationUser.Id)
+            @if (Model.ApplicationUserId != null)
+            {
+                @UserService.GetApplicationUserById(Model.ApplicationUserId).Email
+            }
+           
         </dd>
         <dt>
             @Html.DisplayNameFor(model => model.NonAccountUser)
         </dt>
         <dd>
-            @Html.DisplayFor(model => model.NonAccountUser.NonAccountUserId)
+            @if (Model.NonAccountUserId != 0)
+            {
+                @UserService.GetNonAccountUserById(Model.NonAccountUserId).Email
+            }
         </dd>
     </dl>
     

@@ -1,4 +1,5 @@
 ﻿@model PizzAkuten.Models.Payment
+@inject UserService UserService
 @{
     ViewData["Title"] = "Details";
 }
@@ -47,19 +48,26 @@
             @Html.DisplayNameFor(model => model.ApplicationUser)
         </dt>
         <dd>
-            @Html.DisplayFor(model => model.ApplicationUser.Id)
+            @if (Model.ApplicationUserId != null)
+            {
+                @UserService.GetApplicationUserById(Model.ApplicationUserId).Email
+            }
+           
         </dd>
         <dt>
             @Html.DisplayNameFor(model => model.NonAccountUser)
         </dt>
         <dd>
-            @Html.DisplayFor(model => model.NonAccountUser.NonAccountUserId)
+            @if (Model.NonAccountUserId != 0)
+            {
+                @UserService.GetNonAccountUserById(Model.NonAccountUserId).Email
+            }
         </dd>
         <dt>
             @Html.DisplayNameFor(model => model.Order)
         </dt>
         <dd>
-            @Html.DisplayFor(model => model.Order.OrderId)
+            <a asp-controller="ManageOrder" asp-action="Details" asp-route-id="@Model.OrderId">@Model.OrderId</a>
         </dd>
     </dl>
 </div>

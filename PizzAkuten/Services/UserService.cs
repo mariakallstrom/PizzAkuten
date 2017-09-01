@@ -52,5 +52,16 @@ namespace PizzAkuten.Services
         {
             return _context.NonAccountUsers.ToList();
         }
+
+        public string GetApplicationUserEmailByOrderId(int orderId)
+        {
+            return _context.Orders.Where(x => x.OrderId == orderId).Select(p => p.ApplicationUser.Email).ToString();
+        }
+
+        public string GetNonAccountUserEmailByOrderId(int orderId)
+        {
+            return _context.Orders.Where(x => x.OrderId == orderId).Select(p => p.NonAccountUser.Email).ToString(); 
+          
+        }
     }
 }

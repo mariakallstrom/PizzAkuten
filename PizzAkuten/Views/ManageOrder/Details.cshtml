@@ -1,7 +1,12 @@
 ﻿@model PizzAkuten.Models.Order
+@inject ManageOrderService ManagerOrderService
+@inject PaymentService PaymentService
+@inject UserService UserService
 
 @{
     ViewData["Title"] = "Details";
+    var order = ManagerOrderService.GetOrderByOrderId(Model.OrderId);
+    var cart = ManagerOrderService.GetCartFromOrderId(Model.OrderId);
 }
 
 <h2>Details</h2>
@@ -11,48 +16,77 @@
     <hr />
     <dl class="dl-horizontal">
         <dt>
-            @Html.DisplayNameFor(model => model.OrderDate)
+            OrderId
         </dt>
         <dd>
-            @Html.DisplayFor(model => model.OrderDate)
+            @order.OrderId
         </dd>
         <dt>
-            @Html.DisplayNameFor(model => model.TotalPrice)
+            OrderDate
         </dt>
         <dd>
-            @Html.DisplayFor(model => model.TotalPrice)
+            @order.OrderDate
         </dd>
         <dt>
-            @Html.DisplayNameFor(model => model.Delivered)
+            TotalPrice
         </dt>
         <dd>
-            @Html.DisplayFor(model => model.Delivered)
+            @order.TotalPrice
         </dd>
         <dt>
-            @Html.DisplayNameFor(model => model.ApplicationUser)
+            Delivered
         </dt>
         <dd>
-            @Html.DisplayFor(model => model.ApplicationUser.Id)
+            @order.Delivered
         </dd>
         <dt>
-            @Html.DisplayNameFor(model => model.NonAccountUser)
+            ApplicationUser
         </dt>
         <dd>
-            @Html.DisplayFor(model => model.NonAccountUser.NonAccountUserId)
-        </dd>
-        <dt>
-            @Html.DisplayNameFor(model => model.Cart)
-        </dt>
-        <dd>
-            @foreach (var item in Model.Cart.CartItems)
+            @if (order.ApplicationUserId != null)
             {
-                @item.Dish.Name
+                @UserService.GetApplicationUserById(order.ApplicationUserId).Email
             }
           
         </dd>
+        <dt>
+            NonAccountUser
+        </dt>
+        <dd>
+            @if (order.NonAccountUserId != 0)
+            {
+                @UserService.GetNonAccountUserById(order.NonAccountUserId).Email
+            }
+        </dd>
+        <dt>
+            Cart
+        </dt>
     </dl>
+    <table class="table table-bordered">
+        <thead>
+        <tr>
+            <td>Dish</td>
+            <td>Price</td>
+            <td>Quantity</td>
+        </tr>
+        </thead>
+     <tbody>
+        @foreach (var item in cart)
+        {
+            <tr>
+            <td>@item.Dish.Name</td>
+
+            <td>@item.Dish.Price</td>
+
+            <td>@item.Quantity</td>
+            </tr>
+        }
+     </tbody>
+    </table>
+       
+  
 </div>
 <div>
-    <a asp-action="Edit" asp-route-id="@Model.OrderId">Edit</a> |
+    <a asp-action="Edit" asp-route-id="@order.OrderId">Edit</a> |
     <a asp-action="Index">Back to List</a>
 </div>

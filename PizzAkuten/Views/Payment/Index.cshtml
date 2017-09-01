@@ -56,7 +56,7 @@
                     @Html.DisplayFor(modelItem => item.IsPaid)
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.Order.OrderId)
+                    <a asp-controller="ManageOrder" asp-action="Details" asp-route-id="@item.OrderId">@item.OrderId</a>
                 </td>
                 <td>
                     <a asp-action="Edit" asp-route-id="@item.PaymentId">Edit</a> |

@@ -33,8 +33,7 @@ namespace PizzAkuten.Controllers
                 return NotFound();
             }
 
-            var order =  _context.Orders.
-               Include(x=>x.Payment).Include(x=>x.Cart).ThenInclude(p=>p.CartItems).ThenInclude(d=>d.Dish)
+            var order =  _context.Orders
                 .FirstOrDefault(m => m.OrderId == id);
             if (order == null)
             {

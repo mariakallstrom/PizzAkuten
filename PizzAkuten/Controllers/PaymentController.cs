@@ -45,9 +45,7 @@ namespace PizzAkuten.Controllers
                 return NotFound();
             }
 
-            var payment = await _context.Payments
-                .Include(p => p.Order)
-                .SingleOrDefaultAsync(m => m.PaymentId == id);
+            var payment = await _context.Payments.SingleOrDefaultAsync(m => m.PaymentId == id);
             if (payment == null)
             {
                 return NotFound();

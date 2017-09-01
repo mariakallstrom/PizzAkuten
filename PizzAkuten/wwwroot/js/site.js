@@ -11,3 +11,5 @@ $(".paymentMethod").click(function () {
     }
 });
 
+
+

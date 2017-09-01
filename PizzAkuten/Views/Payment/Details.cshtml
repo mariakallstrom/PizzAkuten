@@ -42,7 +42,9 @@
             @Html.DisplayNameFor(model => model.IsPaid)
         </dt>
         <dd>
-            @Html.DisplayFor(model => model.IsPaid)
+            <form id="form" asp-controller="Payment" asp-action="Edit" asp-route-id="@Model.PaymentId">
+                <input asp-for="@Model.IsPaid" type="checkbox" onchange="$('#form').submit();"/>
+            </form>
         </dd>
         <dt>
             @Html.DisplayNameFor(model => model.ApplicationUser)
@@ -72,6 +74,5 @@
     </dl>
 </div>
 <div>
-    <a asp-action="Edit" asp-route-id="@Model.PaymentId">Edit</a> |
     <a asp-action="Index">Back to List</a>
 </div>

@@ -69,27 +69,7 @@ namespace PizzAkuten.Controllers
             return View(order);
         }
 
-        // GET: ManageOrder/Edit/5
-        public async Task<IActionResult> Edit(int? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var order = await _context.Orders.SingleOrDefaultAsync(m => m.OrderId == id);
-            if (order == null)
-            {
-                return NotFound();
-            }
-            ViewData["ApplicationUserId"] = new SelectList(_context.Users, "Id", "Id", order.ApplicationUserId);
-            ViewData["NonAccountUserId"] = new SelectList(_context.NonAccountUsers, "Id", "Id", order.NonAccountUserId);
-            return View(order);
-        }
-
-        // POST: ManageOrder/Edit/5
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
+ 
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("OrderId,OrderDate,TotalPrice,Delivered,ApplicationuserId,NonAccountUserId")] Order order)
@@ -133,8 +113,6 @@ namespace PizzAkuten.Controllers
             }
 
             var order = await _context.Orders
-                .Include(o => o.ApplicationUser)
-                .Include(o => o.NonAccountUser)
                 .SingleOrDefaultAsync(m => m.OrderId == id);
             if (order == null)
             {

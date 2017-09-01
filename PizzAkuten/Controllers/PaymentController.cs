@@ -137,63 +137,21 @@ namespace PizzAkuten.Controllers
      
             return View();
         }
-
-        [Authorize(Roles = "admin")]
-        // GET: Payment/Edit/5
-        public async Task<IActionResult> Edit(int? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var payment = await _context.Payments.SingleOrDefaultAsync(m => m.PaymentId == id);
-            if (payment == null)
-            {
-                return NotFound();
-            }
-            ViewData["ApplicationuserId"] = new SelectList(_context.ApplicationUsers, "Id", "Id", payment.ApplicationUserId);
-            ViewData["NonAccountUserId"] = new SelectList(_context.NonAccountUsers, "NonAccountUserId", "NonAccountUserId", payment.NonAccountUserId);
-            ViewData["OrderId"] = new SelectList(_context.Orders, "OrderId", "OrderId", payment.OrderId);
-            return View(payment);
-        }
-        [Authorize(Roles = "admin")]
-        // POST: Payment/Edit/5
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
+ 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("PaymentId,PayMethod,CardNumber,Cvv,Year,Month,OrderId,IsPaid,ApplicationuserId,NonAccountUserId")] Payment payment)
+        public IActionResult Edit(int id, Payment payment)
         {
-            if (id != payment.PaymentId)
-            {
-                return NotFound();
-            }
+            var updated = _context.Payments.Find(id);
+            updated.IsPaid = payment.IsPaid;
 
-            if (ModelState.IsValid)
-            {
-                try
-                {
-                    _context.Update(payment);
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!PaymentExists(payment.PaymentId))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
-                return RedirectToAction(nameof(Index));
-            }
-            ViewData["ApplicationuserId"] = new SelectList(_context.ApplicationUsers, "Id", "Id", payment.ApplicationUserId);
-            ViewData["NonAccountUserId"] = new SelectList(_context.NonAccountUsers, "NonAccountUserId", "NonAccountUserId", payment.NonAccountUserId);
-            ViewData["OrderId"] = new SelectList(_context.Orders, "OrderId", "OrderId", payment.OrderId);
-            return View(payment);
+            _context.Update(updated);
+            _context.SaveChanges();
+
+          
+            return RedirectToAction("Index");
+
+
         }
 
         [Authorize(Roles = "admin")]

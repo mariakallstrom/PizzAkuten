@@ -12,9 +12,12 @@ namespace PizzAkuten.Models
 
         public int PaymentId { get; set; }
       
+        [Required]
         public string PayMethod { get; set; }
+        [CreditCard]
         public string CardNumber { get; set; }
-   
+
+        [MaxLength(3), MinLength(3)]
         public int Cvv { get; set; }
     
         public int Year { get; set; }

@@ -9,9 +9,9 @@ namespace PizzAkuten.Models
     public class Dish
     {
         public int DishId { get; set; }
-
+        [Required]
         public string Name { get; set; }
-
+        [Required]
         public int Price { get; set; }
 
         public string ImagePath { get; set; }

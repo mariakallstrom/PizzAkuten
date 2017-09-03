@@ -18,65 +18,63 @@
     <div>
         @Html.Partial("_CartPartial");
     </div>
-    
+
     @if (dishes != null)
     {
-    <table class="table">
-        <thead>
-            <tr>
-                <th>
-                    
-                </th>
-                <th>
-                    Namn
-                </th>
-                <th>
-                   Pris
-                </th>
-                <th>
-                   Kategori
-                </th>
-                <th>
-                    Beställ
-                </th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var item in dishes)
-            {
-
-
+        <table class="table">
+            <thead>
                 <tr>
-                    <td>
-                        <img src="@item.ImagePath" alt="Alternate Text" />
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.Name)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.Price)
-                    </td>
-                    <td>
-                       @Html.DisplayFor(modelItem => item.Category.Name) 
-                    </td>
-                    <td>
-                        @if (User.IsInRole("admin"))
-                        {
+                    <th>
 
-                            <a asp-controller="Dish" asp-action="Edit" asp-route-dishId="@item.DishId">Ändra</a>
-                        }
-                        else
-                        {
-
-                            <a asp-controller="Order" asp-action="AddToCart" asp-route-dishId="@item.DishId" class="glyphicon glyphicon-shopping-cart"></a>
-                            <a asp-controller="Order" asp-action="Details" asp-route-dishId="@item.DishId">Detaljer</a>
-                            <a asp-controller="Order" asp-action="Edit" asp-route-dishId="@item.DishId">Ändra</a>
-                        }
-                   
-                    </td>
+                    </th>
+                    <th>
+                        Namn
+                    </th>
+                    <th>
+                        Pris
+                    </th>
+                    <th>
+                        Kategori
+                    </th>
+                    <th>
+                        Beställ
+                    </th>
                 </tr>
-            }
-        </tbody>
-    </table>
+            </thead>
+            <tbody>
+                @foreach (var item in dishes)
+                {
+                    <tr>
+                        <td>
+                            <img id="dishImage" src="@item.ImagePath" alt="Alternate Text" />
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Name)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Price)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Category.Name)
+                        </td>
+                        <td>
+                            @if (User.IsInRole("admin"))
+                            {
+
+                                <a asp-controller="Dish" asp-action="Edit" asp-route-dishId="@item.DishId">Ändra</a>
+                            }
+                            else
+                            {
+
+                                <div><a asp-controller="Order" asp-action="AddToCart" asp-route-dishId="@item.DishId" class="glyphicon glyphicon-shopping-cart"></a></div>
+                                <div><a asp-controller="Order" asp-action="Details" asp-route-dishId="@item.DishId">Detaljer</a></div>
+                                <div><a asp-controller="Order" asp-action="Edit" asp-route-dishId="@item.DishId">Ändra</a></div>
+                            }
+
+                            </td>
+                            </tr>
+                }
+                </tbody>
+                </table>
     }
-</div>
+    </div>

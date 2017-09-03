@@ -10,9 +10,17 @@
     padding-right: 15px;
 }
 
-.cardImage{
-    width:120px;
-    height:80px;
+.cvv {
+    width: 100px;
+}
+
+#creditCardForm {
+    margin-top: 20px;
+}
+
+.cardImage {
+    width: 120px;
+    height: 80px;
 } 
 
 #cartDiv {
@@ -21,6 +29,11 @@
     height:150px;
     width:300px;
     overflow:scroll;
+}
+
+#dishImage {
+    width: 100px;
+    height: 100px;
 }
 /* Carousel */
 .carousel-caption p {

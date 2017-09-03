@@ -159,10 +159,10 @@ namespace PizzAkuten.Data
             
 
 
-                var cpizza = new Category { CategoryId = 1, Name = "Pizza" };
-                var csalad = new Category { CategoryId = 2, Name = "Sallad" };
-                var cpasta = new Category { CategoryId = 3, Name = "Pasta" };
-                var cother = new Category { CategoryId = 4, Name = "Övrigt" };
+                var cpizza = new Category {Name = "Pizza" };
+                var csalad = new Category {Name = "Sallad" };
+                var cpasta = new Category {Name = "Pasta" };
+                var cother = new Category {Name = "Övrigt" };
                
 
                 capricciosa.Category = cpizza;

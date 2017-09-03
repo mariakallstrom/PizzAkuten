@@ -37,7 +37,9 @@
             Delivered
         </dt>
         <dd>
-            @order.Delivered
+            <form id="form" asp-controller="ManageOrder" asp-action="Edit" asp-route-id="@Model.OrderId">
+                <input asp-for="@Model.Delivered" type="checkbox" onchange="$('#form').submit();"/>
+            </form>
         </dd>
         <dt>
             ApplicationUser

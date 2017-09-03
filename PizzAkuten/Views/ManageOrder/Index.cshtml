@@ -1,6 +1,7 @@
 ﻿@model IEnumerable<PizzAkuten.Models.Order>
 @inject ManageOrderService ManagerOrderService
 @inject PaymentService PaymentService
+@inject ManageOrderService ManageOrderService
 
 @{
     ViewData["Title"] = "Index";
@@ -10,9 +11,6 @@
 
 <h2>Index</h2>
 
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
 <table class="table">
     <thead>
         <tr>
@@ -44,7 +42,9 @@
                 @item.OrderDate
             </td>
             <td>
-                @item.Delivered
+                <form id="form" asp-controller="ManageOrder" asp-action="Edit" asp-route-id="@item.OrderId">
+                    <input asp-for="@ManageOrderService.GetOrderByOrderId(item.OrderId).Delivered" type="checkbox" onchange="$('#form').submit();"/>
+                </form>
             </td>
             <td>
                 @item.TotalPrice

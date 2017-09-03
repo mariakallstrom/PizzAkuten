@@ -1,4 +1,5 @@
 ﻿@model IEnumerable<PizzAkuten.Models.Payment>
+@inject PaymentService PaymentService
 @{
     ViewData["Title"] = "Index";
 }
@@ -53,7 +54,9 @@
                     @Html.DisplayFor(modelItem => item.Month)
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.IsPaid)
+                        <form id="form" asp-controller="Payment" asp-action="Edit" asp-route-id="@item.PaymentId">
+                            <input asp-for="@PaymentService.GetPaymentByOrderId(item.PaymentId).IsPaid" type="checkbox" onchange="$('#form').submit();"/>
+                        </form>
                 </td>
                 <td>
                     <a asp-controller="ManageOrder" asp-action="Details" asp-route-id="@item.OrderId">@item.OrderId</a>

@@ -43,65 +43,22 @@ namespace PizzAkuten.Controllers
             return View(order);
         }
 
-        // GET: ManageOrder/Create
-        public IActionResult Create()
-        {
-            ViewData["ApplicationUserId"] = new SelectList(_context.Users, "Id", "Id");
-            ViewData["NonAccountUserId"] = new SelectList(_context.NonAccountUsers, "Id", "Id");
-            return View();
-        }
-
-        // POST: ManageOrder/Create
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("OrderId,OrderDate,TotalPrice,Delivered,ApplicationuserId,NonAccountUserId")] Order order)
-        {
-            if (ModelState.IsValid)
-            {
-                _context.Add(order);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
-            }
-            ViewData["ApplicationUserId"] = new SelectList(_context.Users, "Id", "Id", order.ApplicationUserId);
-            ViewData["NonAccountUserId"] = new SelectList(_context.NonAccountUsers, "Id", "Id", order.NonAccountUserId);
-            return View(order);
-        }
-
  
+    
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("OrderId,OrderDate,TotalPrice,Delivered,ApplicationuserId,NonAccountUserId")] Order order)
+        public IActionResult Edit(int id, Order order)
         {
-            if (id != order.OrderId)
-            {
-                return NotFound();
-            }
+            var updated = _context.Orders.Find(id);
+            updated.Delivered = order.Delivered;
 
-            if (ModelState.IsValid)
-            {
-                try
-                {
-                    _context.Update(order);
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!OrderExists(order.OrderId))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
-                return RedirectToAction(nameof(Index));
-            }
-            ViewData["ApplicationUserId"] = new SelectList(_context.Users, "Id", "Id", order.ApplicationUserId);
-            ViewData["NonAccountUserId"] = new SelectList(_context.NonAccountUsers, "Id", "Id", order.NonAccountUserId);
-            return View(order);
+            _context.Update(updated);
+            _context.SaveChanges();
+
+
+            return RedirectToAction("Index");
+
+
         }
 
         // GET: ManageOrder/Delete/5

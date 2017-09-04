@@ -4,77 +4,54 @@
     ViewData["Title"] = "PizzAkuten";
     var dishes = DishService.GetAllDishes();
 }
-
-<div class="container">
-    <div class="jumbotron">
-    </div>
-    <div class="col-md-6">
+<div id="bg">
+    <img src="images/foodbg.jpg" alt="">
+</div>
+<div class="container indexbody">
+    <div class="jumbotron col-md-12"></div>
+   
+    <div class="col-md-8 welcome-text">
         <h1>Välkommen till PizzAkuten!</h1>
-        <p>Pizzerian när du har ett behov av ett akutintag.</p>
-        <p>Vi har pizzor, sallader, pastarätter, kebab och hamburgar på menyn.</p>
-        <p>Beställ nu och vi garanterar leverans inom 40 minuter!</p>
+        <h4>Pizzerian när du har ett behov av ett akutintag.</h4>
+        <h4>Vi har pizzor, sallader, pastarätter, kebab och hamburgar på menyn.</h4>
+        <h4>Beställ nu och vi garanterar leverans inom 40 minuter!</h4>
     </div>
-
     <div>
-        @Html.Partial("_CartPartial");
+        @Html.Partial("_CartPartial")
     </div>
+ 
 
-    @if (dishes != null)
-    {
-        <table class="table">
-            <thead>
-                <tr>
-                    <th>
+    <div class="col-md-12">
+        @if (dishes != null)
+        {
 
-                    </th>
-                    <th>
-                        Namn
-                    </th>
-                    <th>
-                        Pris
-                    </th>
-                    <th>
-                        Kategori
-                    </th>
-                    <th>
-                        Beställ
-                    </th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach (var item in dishes)
+            @foreach (var item in dishes)
                 {
-                    <tr>
-                        <td>
-                            <img id="dishImage" src="@item.ImagePath" alt="Alternate Text" />
-                        </td>
-                        <td>
+
+                <div class="col-md-3 menuDivs">
+                    <div class="text-center">
+                        <img id="dishImage" src="@item.ImagePath" alt="Alternate Text" />
+                        <div>
                             @Html.DisplayFor(modelItem => item.Name)
-                        </td>
-                        <td>
-                            @Html.DisplayFor(modelItem => item.Price)
-                        </td>
-                        <td>
-                            @Html.DisplayFor(modelItem => item.Category.Name)
-                        </td>
-                        <td>
-                            @if (User.IsInRole("admin"))
-                            {
+                        </div>
+                        @Html.DisplayFor(modelItem => item.Price)
 
-                                <a asp-controller="Dish" asp-action="Edit" asp-route-dishId="@item.DishId">Ändra</a>
-                            }
-                            else
-                            {
+                        @Html.DisplayFor(modelItem => item.Category.Name)
 
-                                <div><a asp-controller="Order" asp-action="AddToCart" asp-route-dishId="@item.DishId" class="glyphicon glyphicon-shopping-cart"></a></div>
-                                <div><a asp-controller="Order" asp-action="Details" asp-route-dishId="@item.DishId">Detaljer</a></div>
-                                <div><a asp-controller="Order" asp-action="Edit" asp-route-dishId="@item.DishId">Ändra</a></div>
-                            }
+                        @if (User.IsInRole("admin"))
+                    {
+                            <a asp-controller="Dish" asp-action="Edit" asp-route-dishId="@item.DishId">Ändra</a>
+                        }
+                        else
+                        {
 
-                            </td>
-                            </tr>
-                }
-                </tbody>
-                </table>
-    }
+                            <div><a asp-controller="Order" asp-action="AddToCart" asp-route-dishId="@item.DishId" class="glyphicon glyphicon-shopping-cart"></a></div>
+                            <div><a asp-controller="Order" asp-action="Details" asp-route-dishId="@item.DishId">Detaljer</a></div>
+                            <div><a asp-controller="Order" asp-action="Edit" asp-route-dishId="@item.DishId">Ändra ingredienser</a></div>
+                        }
+                    </div>
+                </div>
+            }
+        }
     </div>
+</div>

@@ -42,9 +42,8 @@
                 @item.OrderDate
             </td>
             <td>
-                <form id="form" asp-controller="ManageOrder" asp-action="Edit" asp-route-id="@item.OrderId">
-                    <input asp-for="@ManageOrderService.GetOrderByOrderId(item.OrderId).Delivered" type="checkbox" onchange="$('#form').submit();"/>
-                </form>
+                    <input asp-for="@ManageOrderService.GetOrderByOrderId(item.OrderId).Delivered" type="checkbox" disabled/>
+               
             </td>
             <td>
                 @item.TotalPrice

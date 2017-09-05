@@ -1,4 +1,8 @@
 ﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.Extensions.DependencyInjection;
+using Moq;
 using PizzAkuten.Data;
 using PizzAkuten.Models;
 using System;
@@ -8,38 +12,16 @@ using System.Text;
 
 namespace XUnitTestPizzAkuten.MockData
 {
-    static class MockInMemoryDataBase
+     public static class DatabaseSetupTests
     {
-        public static void Initialize(ApplicationDbContext context, UserManager<ApplicationUser> userManager, RoleManager<IdentityRole> roleManager)
-        {
-            var aUser = new ApplicationUser();
-            aUser.UserName = "student@test.se";
-            aUser.Email = "student@test.se";
-            aUser.City = "Ankeborg";
-            aUser.ZipCode = "11313";
-            aUser.Street = "Ankgatan 1";
-            aUser.FirstName = "Kalle";
-            aUser.LastName = "Anka";
-            var result = userManager.CreateAsync(aUser, "Passw0rd").Result;
 
-            if (result.Succeeded)
-            {
-                var adminRole = new IdentityRole("member");
-                var roleResult = roleManager.CreateAsync(adminRole).Result;
-                userManager.AddToRoleAsync(aUser, adminRole.Name);
-            }
+    public static ApplicationDbContext MockDataDbContext()
+    {
 
-            var adminUser = new ApplicationUser();
-            adminUser.UserName = "admin@test.se";
-            adminUser.Email = "admin@test.se";
-            var adminResult = userManager.CreateAsync(adminUser, "Admin0").Result;
-
-            if (adminResult.Succeeded)
-            {
-                var adminRole = new IdentityRole("admin");
-                var roleResult = roleManager.CreateAsync(adminRole).Result;
-                userManager.AddToRoleAsync(adminUser, adminRole.Name);
-            }
+            var options = new DbContextOptionsBuilder<ApplicationDbContext>()
+                .UseInMemoryDatabase(Guid.NewGuid().ToString())
+                .Options;
+            var context = new ApplicationDbContext(options);
 
             var cheese = new Ingredient { Name = "Cheese", Price = 5 };
             var ham = new Ingredient { Name = "Ham", Price = 5 };
@@ -177,19 +159,6 @@ namespace XUnitTestPizzAkuten.MockData
                 context.AddRange(capricciosa, margueritha, vesuvio, pastaBeef, pastaPork, kebabSalad, kebabDish, chickenSalad, hamburger);
                 context.SaveChanges();
 
-                var payment = new Payment { CardNumber = "123", ApplicationUser = aUser, Cvv = 123, Month = 10, Year = 2019, PayMethod = "Visa" };
-                var order = new Order();
-                order.ApplicationUser = aUser;
-                order.Cart = new Cart { CartItems = new List<CartItem> { new CartItem { Dish = capricciosa, Quantity = 1 } }, TotalPrice = capricciosa.Price };
-                order.TotalPrice = capricciosa.Price;
-                order.Payment = payment;
-                order.OrderDate = DateTime.Now;
-                payment.Order = order;
-                order.Payment = payment;
-
-
-                context.Orders.Add(order);
-                context.SaveChanges();
             };
             if (context.ExtraIngredients.ToList().Count == 0)
             {
@@ -219,8 +188,8 @@ namespace XUnitTestPizzAkuten.MockData
 
 
             };
+        return context;
+    }
 
-
-        }
     }
 }

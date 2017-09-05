@@ -47,9 +47,9 @@ namespace PizzAkuten.Controllers
     
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Edit(int id, Order order)
+        public IActionResult Edit(Order order)
         {
-            var updated = _context.Orders.Find(id);
+            var updated = _context.Orders.Find(order.OrderId);
             updated.Delivered = order.Delivered;
 
             _context.Update(updated);

@@ -1,7 +1,6 @@
 ﻿@model IEnumerable<PizzAkuten.Models.Order>
 @inject ManageOrderService ManagerOrderService
 @inject PaymentService PaymentService
-@inject ManageOrderService ManageOrderService
 
 @{
     ViewData["Title"] = "Index";
@@ -42,7 +41,7 @@
                 @item.OrderDate
             </td>
             <td>
-                    <input asp-for="@ManageOrderService.GetOrderByOrderId(item.OrderId).Delivered" type="checkbox" disabled/>
+                    <input asp-for="@ManagerOrderService.GetOrderByOrderId(item.OrderId).Delivered" type="checkbox" disabled/>
                
             </td>
             <td>

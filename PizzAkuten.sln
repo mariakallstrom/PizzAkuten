@@ -5,20 +5,25 @@ VisualStudioVersion = 15.0.26730.8
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PizzAkuten", "PizzAkuten\PizzAkuten.csproj", "{10DC812B-3F1D-4FC5-9259-6371F66F131D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "XUnitTestPizzAkuten", "XUnitTestPizzAkuten\XUnitTestPizzAkuten.csproj", "{1DD42316-B07E-4F09-8411-1E7CE8DB2043}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "XUnitTestPizzAkuten", "XUnitTestPizzAkuten\XUnitTestPizzAkuten.csproj", "{1DD42316-B07E-4F09-8411-1E7CE8DB2043}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
+		LocalIIS|Any CPU = LocalIIS|Any CPU
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{10DC812B-3F1D-4FC5-9259-6371F66F131D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{10DC812B-3F1D-4FC5-9259-6371F66F131D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{10DC812B-3F1D-4FC5-9259-6371F66F131D}.LocalIIS|Any CPU.ActiveCfg = LocalIIS|Any CPU
+		{10DC812B-3F1D-4FC5-9259-6371F66F131D}.LocalIIS|Any CPU.Build.0 = LocalIIS|Any CPU
 		{10DC812B-3F1D-4FC5-9259-6371F66F131D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{10DC812B-3F1D-4FC5-9259-6371F66F131D}.Release|Any CPU.Build.0 = Release|Any CPU
 		{1DD42316-B07E-4F09-8411-1E7CE8DB2043}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{1DD42316-B07E-4F09-8411-1E7CE8DB2043}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1DD42316-B07E-4F09-8411-1E7CE8DB2043}.LocalIIS|Any CPU.ActiveCfg = LocalIIS|Any CPU
+		{1DD42316-B07E-4F09-8411-1E7CE8DB2043}.LocalIIS|Any CPU.Build.0 = LocalIIS|Any CPU
 		{1DD42316-B07E-4F09-8411-1E7CE8DB2043}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{1DD42316-B07E-4F09-8411-1E7CE8DB2043}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection

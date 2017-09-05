@@ -61,8 +61,8 @@ namespace PizzAkuten
             services.AddSession(options =>
             {
                 // Set a short timeout for easy testing.
-                options.IdleTimeout = TimeSpan.FromSeconds(3000);
-                options.CookieHttpOnly = true;
+                options.IdleTimeout = TimeSpan.FromMinutes(30);
+                options.Cookie.HttpOnly = true;
             });
             services.AddMvc();
         }

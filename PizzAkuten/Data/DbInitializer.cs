@@ -188,8 +188,18 @@ namespace PizzAkuten.Data
                 payment.Order = order;
                 order.Payment = payment;
 
-                
-                context.Orders.Add(order);
+                var payment2 = new Payment { CardNumber = "123", ApplicationUser = aUser, Cvv = 123, Month = 10, Year = 2019, PayMethod = "Visa" };
+                var order2 = new Order();
+                order2.ApplicationUser = aUser;
+                order2.Cart = new Cart { CartItems = new List<CartItem> { new CartItem { Dish = kebabDish, Quantity = 1 } }, TotalPrice = kebabDish.Price };
+                order2.TotalPrice = kebabDish.Price;
+                order2.Payment = payment;
+                order2.OrderDate = DateTime.Now;
+                payment2.Order = order2;
+                order2.Payment = payment2;
+
+
+                context.Orders.AddRange(order, order2);
                 context.SaveChanges();
             };
             if (context.ExtraIngredients.ToList().Count == 0)

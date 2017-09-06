@@ -1,27 +1,45 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.Extensions.DependencyInjection;
-using Moq;
+using PizzAkuten.Controllers;
 using PizzAkuten.Data;
 using PizzAkuten.Models;
+using PizzAkuten.Services;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
+using XUnitTestPizzAkuten.Fakes;
 
-namespace XUnitTestPizzAkuten.MockData
+namespace XUnitTestPizzAkuten.FakeData
 {
-     public static class DatabaseSetupTests
+    public class BaseClassFakeData
     {
 
-    public static ApplicationDbContext MockDataDbContext()
-    {
+        public readonly IServiceProvider _serviceProvider;
 
-            var options = new DbContextOptionsBuilder<ApplicationDbContext>()
-                .UseInMemoryDatabase(Guid.NewGuid().ToString())
-                .Options;
-            var context = new ApplicationDbContext(options);
+        public BaseClassFakeData()
+        {
+            var serviceProvider = new ServiceCollection().AddEntityFrameworkInMemoryDatabase().BuildServiceProvider();
+
+            var services = new ServiceCollection();
+
+            services.AddDbContext<ApplicationDbContext>(x => x.UseInMemoryDatabase("PizzAkutenDb").UseInternalServiceProvider(serviceProvider));
+            services.AddTransient<DishService>();
+            services.AddTransient<OrderService>();
+            services.AddTransient<CategoryService>();
+            services.AddTransient<DishController>();
+            services.AddTransient<HomeController>();
+            services.AddTransient<OrderController>();
+            services.AddTransient<IHostingEnvironment, FakeHostingEnviroment>();
+            //services.AddTransient<ISession, TestSession>();
+            //services.AddTransient<IEmailSender, TestEmaiLSender>();
+
+            _serviceProvider = services.BuildServiceProvider();
+        }
+
+        public virtual void FakeDataInitializer()
+        {
+            var context = _serviceProvider.GetService<ApplicationDbContext>();
 
             var cheese = new Ingredient { Name = "Cheese", Price = 5 };
             var ham = new Ingredient { Name = "Ham", Price = 5 };
@@ -188,8 +206,6 @@ namespace XUnitTestPizzAkuten.MockData
 
 
             };
-        return context;
-    }
-
+        }
     }
 }

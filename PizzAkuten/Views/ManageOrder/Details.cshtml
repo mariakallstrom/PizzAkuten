@@ -38,6 +38,7 @@
         </dt>
         <dd>
             <form id="form" asp-controller="ManageOrder" asp-action="Edit" asp-route-id="@Model.OrderId">
+                <input type="hidden" value="@Model.OrderId"/>
                 <input asp-for="@Model.Delivered" type="checkbox" onchange="$('#form').submit();"/>
             </form>
         </dd>

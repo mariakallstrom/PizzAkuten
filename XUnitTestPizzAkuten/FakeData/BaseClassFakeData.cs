@@ -8,6 +8,8 @@ using PizzAkuten.Services;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 using XUnitTestPizzAkuten.Fakes;
 
 namespace XUnitTestPizzAkuten.FakeData
@@ -31,7 +33,13 @@ namespace XUnitTestPizzAkuten.FakeData
             services.AddTransient<HomeController>();
             services.AddTransient<OrderController>();
             services.AddTransient<IHostingEnvironment, FakeHostingEnviroment>();
-            //services.AddTransient<ISession, TestSession>();
+            services.AddTransient<ISession, FakeSession>();
+            services.AddTransient<IUserStore<ApplicationUser>, FakeUserStore>();
+            services.AddTransient<IPasswordHasher<ApplicationUser>, FakePasswordHasher>();
+            services.AddTransient<ILookupNormalizer, FakeLookupNormailizer>();
+            services.AddTransient<IdentityErrorDescriber>();
+            services.AddTransient<UserManager<ApplicationUser>, FakeUserManager>();
+            services.AddTransient<IHttpContextAccessor, FakeContextAccessor>();
             //services.AddTransient<IEmailSender, TestEmaiLSender>();
 
             _serviceProvider = services.BuildServiceProvider();

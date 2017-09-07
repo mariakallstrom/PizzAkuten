@@ -132,15 +132,15 @@ namespace PizzAkuten.Controllers
             {
                 var currentUser = User;
                 order.ApplicationUser = await _userManager.FindByNameAsync(User.Identity.Name);
-                _service.SaveOrderToDataBase(order);
+                var newOrder = _service.SaveOrderToDataBase(order);
               
 
-                return RedirectToAction("Create", "Payment");
+                return RedirectToAction("Create", "Payment", new {id = newOrder.OrderId});
             }
             order.NonAccountUser = _context.NonAccountUsers.Last();
             var savedOrder = _service.SaveOrderToDataBase(order);
            
-            return RedirectToAction("Create", "Payment");
+            return RedirectToAction("Create", "Payment", new { id = savedOrder.OrderId });
 
         }
  

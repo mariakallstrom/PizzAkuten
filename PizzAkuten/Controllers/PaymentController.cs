@@ -55,11 +55,18 @@ namespace PizzAkuten.Controllers
         }
 
         // GET: Payment/Create
-        public IActionResult Create()
+        public IActionResult Create(int id)
         {
-            var order = _context.Orders.Include(x=>x.ApplicationUser).Include(x=>x.NonAccountUser).LastOrDefault();
-            ViewBag.OrderId = order.OrderId;
-            ViewBag.NonAccountUserId = order.NonAccountUser.NonAccountUserId;
+            if (id != 0)
+            {
+                var order = _context.Orders.FirstOrDefault(x => x.OrderId == id);
+                ViewBag.OrderId = order.OrderId;
+                if (order.NonAccountUserId != 0)
+                {
+                    ViewBag.NonAccountUserId = order.NonAccountUser.NonAccountUserId;
+                }
+            }
+
             ViewData["Month"] = new SelectList(Enumerable.Range(1, 12));
             ViewData["Year"] = new SelectList(Enumerable.Range(DateTime.Now.Year, 2037));
             return View();

@@ -43,6 +43,7 @@
         </dt>
         <dd>
             <form id="form" asp-controller="Payment" asp-action="Edit" asp-route-id="@Model.PaymentId">
+                <input type="hidden" value="@Model.PaymentId"/>
                 <input asp-for="@Model.IsPaid" type="checkbox" onchange="$('#form').submit();"/>
             </form>
         </dd>

@@ -3,11 +3,11 @@
 @inject OrderService OrderServive
 
 @{
-    ViewData["Title"] = "Edit";
+    ViewData["Title"] = "Ändra order";
     var extraIngredients = DishService.GetAllExtraIngredients();
 }
 
-<h2>Edit</h2>
+<h2>Ändra order</h2>
 
 <h4>Dish</h4>
 <form asp-action="Edit" asp-controller="Order" method="post">
@@ -35,18 +35,20 @@
 
         @for (int i = 0; i < extraIngredients.Count; i++)
         {
+            <div>
             <label asp-for="@extraIngredients[i].Name" class="control-label">@extraIngredients[i].Name</label>
             <label asp-for="@extraIngredients[i].Price" class="control-label">@extraIngredients[i].Price kr</label>
-            <input asp-for="@extraIngredients[i].IsChecked" name ="ExtraChecked-@extraIngredients[i].ExtraIngredientId" type="checkbox" value="" />
+                <input asp-for="@extraIngredients[i].IsChecked" name ="ExtraChecked-@extraIngredients[i].ExtraIngredientId" type="checkbox" value="" />
+            </div>
         }
     </div>
         <div class="form-group">
-            <input type="submit" value="Save" class="btn btn-default" />
+            <input type="submit" value="Spara" class="btn btn-default" />
         </div>
 </form>
 
 <div>
-    <a asp-controller="Home" asp-action="Index">Back to List</a>
+    <a asp-controller="Home" asp-action="Index">Tillbaka</a>
 </div>
 
 

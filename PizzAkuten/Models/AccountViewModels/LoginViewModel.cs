@@ -13,9 +13,11 @@ namespace PizzAkuten.Models.AccountViewModels
 
         [Required]
         [DataType(DataType.Password)]
+
+        [Display(Name = "Lösenord")]
         public string Password { get; set; }
 
-        [Display(Name = "Remember me?")]
+        [Display(Name = "Kom ihåg mig?")]
         public bool RememberMe { get; set; }
     }
 }

@@ -3,9 +3,9 @@
 @{
     ViewData["Title"] = "Index";
 }
-<h2>Index</h2>
+<h2>Betalningar</h2>
 <p>
-    <a asp-action="Create">Create New</a>
+    <a asp-action="Create">Skapa ny</a>
 </p>
 <table class="table">
     <thead>
@@ -61,8 +61,8 @@
                     <a asp-controller="ManageOrder" asp-action="Details" asp-route-id="@item.OrderId">@item.OrderId</a>
                 </td>
                 <td>
-                    <a asp-action="Details" asp-route-id="@item.PaymentId">Details</a> |
-                    <a asp-action="Delete" asp-route-id="@item.PaymentId">Delete</a>
+                    <a asp-action="Details" asp-route-id="@item.PaymentId">Detaljer</a> |
+                    <a asp-action="Delete" asp-route-id="@item.PaymentId">Ta bort</a>
                 </td>
             </tr>
         }

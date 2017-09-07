@@ -10,7 +10,7 @@ namespace PizzAkuten.Models.AccountViewModels
     {
         [Required]
         
-        [Display(Name = "AnvändarNamn")]
+        [Display(Name = "Email")]
         public string UserName { get; set; }
         [Display(Name = "Förnamn")]
         [Required]
@@ -34,14 +34,14 @@ namespace PizzAkuten.Models.AccountViewModels
         public string Email { get; set; }
 
         [Required]
-        [StringLength(100, ErrorMessage = "The {0} must be at least {2} and at max {1} characters long.", MinimumLength = 6)]
         [DataType(DataType.Password)]
         [Display(Name = "Lösenord")]
+        [StringLength(100, ErrorMessage = "{0}et måste vara minst {2} och max {1} tecken långt.", MinimumLength = 6)]
         public string Password { get; set; }
 
         [DataType(DataType.Password)]
-        [Display(Name = "Bekräfta Lösenord")]
-        [Compare("Password", ErrorMessage = "The password and confirmation password do not match.")]
+        [Display(Name = "Bekräfta lösenord")]
+        [Compare("Lösenord", ErrorMessage = "Lösenordet och det bekräftande lösenordet matchar inte!")]
         public string ConfirmPassword { get; set; }
     }
 }

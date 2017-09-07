@@ -1,11 +1,11 @@
 ﻿@model PizzAkuten.Models.Payment
 @inject UserService UserService
 @{
-    ViewData["Title"] = "Details";
+    ViewData["Title"] = "Detaljer";
 }
-<h2>Details</h2>
+<h2>Detaljer</h2>
 <div>
-    <h4>Payment</h4>
+    <h4>Betalning</h4>
     <hr />
     <dl class="dl-horizontal">
         <dt>
@@ -43,7 +43,6 @@
         </dt>
         <dd>
             <form id="form" asp-controller="Payment" asp-action="Edit" asp-route-id="@Model.PaymentId">
-                <input type="hidden" value="@Model.PaymentId"/>
                 <input asp-for="@Model.IsPaid" type="checkbox" onchange="$('#form').submit();"/>
             </form>
         </dd>
@@ -75,5 +74,5 @@
     </dl>
 </div>
 <div>
-    <a asp-action="Index">Back to List</a>
+    <a asp-action="Index">Tillbaka</a>
 </div>

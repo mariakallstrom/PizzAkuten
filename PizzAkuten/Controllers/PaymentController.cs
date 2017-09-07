@@ -20,13 +20,15 @@ namespace PizzAkuten.Controllers
         private readonly OrderService _orderservice;
         private readonly IEmailSender _emailservice;
         private readonly UserService _userService;
+        private readonly PaymentService _service;
 
-        public PaymentController(ApplicationDbContext context, OrderService orderservice, IEmailSender emailservice, UserService userService)
+        public PaymentController(ApplicationDbContext context, OrderService orderservice, IEmailSender emailservice, UserService userService, PaymentService service)
         {
             _context = context;
             _orderservice = orderservice;
             _emailservice = emailservice;
             _userService = userService;
+            _service = service;
         }
 
         [Authorize(Roles ="admin")]
@@ -63,7 +65,7 @@ namespace PizzAkuten.Controllers
                 ViewBag.OrderId = order.OrderId;
                 if (order.NonAccountUserId != 0)
                 {
-                    ViewBag.NonAccountUserId = order.NonAccountUser.NonAccountUserId;
+                    ViewBag.NonAccountUserId = order.NonAccountUserId;
                 }
             }
 
@@ -79,46 +81,8 @@ namespace PizzAkuten.Controllers
         [ValidateAntiForgeryToken]
         public IActionResult Create(IFormCollection form)
         {
-
-            var paymentChoize = Convert.ToInt32(form["creditCardRadio"]);
-
-            var model = new Payment();
-
-            if (String.IsNullOrEmpty(form["NonAccountUserId"]))
-            {
-                model.ApplicationUserId = form["UserId"];
-            }
-            else
-            {
-                model.NonAccountUserId = Convert.ToInt32(form["NonAccountUserId"]);
-            }
-            if (paymentChoize != 3)
-            {
-                model.Month = Convert.ToInt32(form["Month"]);
-                model.CardNumber = form["CardNumber"];
-                model.Cvv = Convert.ToInt32(form["Cvv"]);
-                model.Year = Convert.ToInt32(form["Year"]);
-            }
-
-            if (paymentChoize == 1)
-            {
-                model.PayMethod = "Visa";
-            }
-            else if (paymentChoize == 2)
-            {
-                model.PayMethod = "MasterCard";
-            }
-            else
-            {
-                model.PayMethod = "Swish";
-            }
-
-            model.OrderId = Convert.ToInt32(form["OrderId"]);
-
-            _context.Payments.Add(model);
-            _context.SaveChanges();
-
-            var order = _context.Orders.Include(i => i.Cart).ThenInclude(p => p.CartItems).ThenInclude(d => d.Dish).FirstOrDefault(x => x.OrderId == model.OrderId);
+            var payment = _service.CreatePayment(form);
+            var order = _context.Orders.Include(i => i.Cart).ThenInclude(p => p.CartItems).ThenInclude(d => d.Dish).FirstOrDefault(x => x.OrderId == payment.OrderId);
 
             if (order.ApplicationUserId != null)
             {
@@ -127,9 +91,9 @@ namespace PizzAkuten.Controllers
                 return RedirectToAction("ThankForOrdering");
             }
 
-            if (model.NonAccountUserId != 0)
+            if (payment.NonAccountUserId != 0)
             {
-                var user = _userService.GetNonAccountUserById(model.NonAccountUserId);
+                var user = _userService.GetNonAccountUserById(payment.NonAccountUserId);
                 _emailservice.SendOrderConfirmToUser(order, user);
                 return RedirectToAction("ThankForOrdering");
             }

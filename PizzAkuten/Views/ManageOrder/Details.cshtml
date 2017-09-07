@@ -4,12 +4,12 @@
 @inject UserService UserService
 
 @{
-    ViewData["Title"] = "Details";
+    ViewData["Title"] = "Detaljer";
     var order = ManagerOrderService.GetOrderByOrderId(Model.OrderId);
     var cart = ManagerOrderService.GetCartFromOrderId(Model.OrderId);
 }
 
-<h2>Details</h2>
+<h2>Detaljer</h2>
 
 <div>
     <h4>Order</h4>
@@ -38,7 +38,6 @@
         </dt>
         <dd>
             <form id="form" asp-controller="ManageOrder" asp-action="Edit" asp-route-id="@Model.OrderId">
-                <input type="hidden" value="@Model.OrderId"/>
                 <input asp-for="@Model.Delivered" type="checkbox" onchange="$('#form').submit();"/>
             </form>
         </dd>
@@ -68,9 +67,9 @@
     <table class="table table-bordered">
         <thead>
         <tr>
-            <td>Dish</td>
-            <td>Price</td>
-            <td>Quantity</td>
+            <td>Rätt</td>
+            <td>Pris</td>
+            <td>Antal</td>
         </tr>
         </thead>
      <tbody>
@@ -90,5 +89,5 @@
   
 </div>
 <div>
-    <a asp-action="Index">Back to List</a>
+    <a asp-action="Index">Tillbakat</a>
 </div>

@@ -54,8 +54,8 @@
 
 @if (!SignInManager.IsSignedIn(User))
 {
-    <form asp-controller="Order" asp-action="ConfirmOrder" method="post">
 
+    <form asp-controller="Order" asp-action="ConfirmOrder" method="post">
         <h4>Leveransadress</h4>
         <hr />
         <input name="OrderId" value="@Model.OrderId" type="hidden" />
@@ -65,28 +65,34 @@
             <input name="FirstName" class="form-control" required />
         </div>
         <div class="form-group">
-            <label>LastName</label>
-            <input name="LastName" class="form-control" required />
+            <label>Efternamn</label>
+            <input  name="LastName" class="form-control" required />
+            <span asp-validation-for="NonAccountUser.LastName" class="text-danger"></span>
         </div>
         <div class="form-group">
             <label>Gata</label>
-            <input name="Street" class="form-control" required />
+            <input  name="Street" class="form-control" required />
+            <span asp-validation-for="NonAccountUser.Street" class="text-danger"></span>
         </div>
         <div class="form-group">
             <label>Postnummer</label>
-            <input name="ZipCode" class="form-control" required />
+            <input  name="ZipCode" class="form-control" required />
+            <span asp-validation-for="NonAccountUser.ZipCode" class="text-danger"></span>
         </div>
         <div class="form-group">
-            <label>Stad</label>
-            <input name="City" class="form-control" required />
+            <label>Postort</label>
+            <input  name="City" class="form-control" required />
+            <span asp-validation-for="NonAccountUser.City" class="text-danger"></span>
         </div>
         <div class="form-group">
             <label>Email</label>
             <input name="Email" class="form-control" required />
+            <span asp-validation-for="NonAccountUser.Email" class="text-danger"></span>
         </div>
         <div class="form-group">
             <label>Telefonnummer</label>
             <input name="Phone" class="form-control" required />
+            <span asp-validation-for="NonAccountUser.Phone" class="text-danger"></span>
         </div>
         <button type="submit" class="btn btn-default">Spara</button>
     </form>

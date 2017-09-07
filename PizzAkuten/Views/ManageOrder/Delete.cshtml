@@ -1,12 +1,12 @@
 ﻿@model PizzAkuten.Models.Order
 @inject UserService UserService
 @{
-    ViewData["Title"] = "Delete";
+    ViewData["Title"] = "Ta bort";
 }
 
-<h2>Delete</h2>
+<h2>Ta bort</h2>
 
-<h3>Are you sure you want to delete this?</h3>
+<h3>Är du säker på att du vill ta bort ordern</h3>
 <div>
     <h4>Order</h4>
     <hr />
@@ -52,7 +52,7 @@
     
     <form asp-action="Delete">
         <input type="hidden" asp-for="OrderId" />
-        <input type="submit" value="Delete" class="btn btn-default" /> |
-        <a asp-action="Index">Back to List</a>
+        <input type="submit" value="Ta bort" class="btn btn-default" /> |
+        <a asp-action="Index">Tillbaka</a>
     </form>
 </div>

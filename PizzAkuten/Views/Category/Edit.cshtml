@@ -1,12 +1,12 @@
 ﻿@model PizzAkuten.Models.Category
 
 @{
-    ViewData["Title"] = "Edit";
+    ViewData["Title"] = "Ändra";
 }
 
-<h2>Edit</h2>
+<h2>Ändra</h2>
 
-<h4>Category</h4>
+<h4>Kategori</h4>
 <hr />
 <div class="row">
     <div class="col-md-4">
@@ -19,14 +19,14 @@
                 <span asp-validation-for="Name" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <input type="submit" value="Save" class="btn btn-default" />
+                <input type="submit" value="Spara" class="btn btn-default" />
             </div>
         </form>
     </div>
 </div>
 
 <div>
-    <a asp-action="Index">Back to List</a>
+    <a asp-action="Index">Tillbaka</a>
 </div>
 
 @section Scripts {

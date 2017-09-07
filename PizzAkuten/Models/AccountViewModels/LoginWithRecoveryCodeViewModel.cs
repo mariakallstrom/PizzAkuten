@@ -10,7 +10,7 @@ namespace PizzAkuten.Models.AccountViewModels
     {
             [Required]
             [DataType(DataType.Text)]
-            [Display(Name = "Recovery Code")]
+            [Display(Name = "Verifieringskod")]
             public string RecoveryCode { get; set; }
     }
 }

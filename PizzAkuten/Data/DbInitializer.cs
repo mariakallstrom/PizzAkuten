@@ -42,21 +42,21 @@ namespace PizzAkuten.Data
                 userManager.AddToRoleAsync(adminUser, adminRole.Name);
             }
          
-                var cheese = new Ingredient { Name = "Cheese", Price = 5 };
-                var ham = new Ingredient { Name = "Ham", Price = 5 };
-                var tomato = new Ingredient { Name = "Tomato", Price = 5 };
-                var mushroom = new Ingredient { Name = "Mushroom", Price = 5 };
+                var cheese = new Ingredient { Name = "Ost", Price = 5 };
+                var ham = new Ingredient { Name = "Skinka", Price = 5 };
+                var tomato = new Ingredient { Name = "Tomater", Price = 5 };
+                var mushroom = new Ingredient { Name = "Svamp", Price = 5 };
                 var kebab = new Ingredient { Name = "Kebab", Price = 10 };
                 var pasta = new Ingredient { Name = "Pasta", Price = 5 };
                 var tuna = new Ingredient { Name = "Tonfisk", Price = 5 };
                 var salad = new Ingredient { Name = "Sallad", Price = 5 };
-                var chicken = new Ingredient { Name = "Chicken", Price = 10 };
+                var chicken = new Ingredient { Name = "Kyckling", Price = 10 };
                 var pork = new Ingredient { Name = "Fläskfilé", Price = 10 };
                 var beef = new Ingredient { Name = "Oxfilé", Price = 10 };
                 var cucumber = new Ingredient { Name = "Gurka", Price = 5 };
                 var paprika = new Ingredient { Name = "Paprika", Price = 5 };
                 var ananas = new Ingredient { Name = "Ananas", Price = 5 };
-                var banana = new Ingredient { Name = "Banana", Price = 5 };
+                var banana = new Ingredient { Name = "Banan", Price = 5 };
                 var bread = new Ingredient { Name = "Bröd", Price = 5 };
                 var potatoe = new Ingredient { Name = "Potatis", Price = 15 };
                 var dressing = new Ingredient { Name = "Dressing", Price = 10 };
@@ -204,21 +204,21 @@ namespace PizzAkuten.Data
             };
             if (context.ExtraIngredients.ToList().Count == 0)
             {
-                var xcheese = new ExtraIngredient { Name = "Cheese", Price = 5 };
-                var xham = new ExtraIngredient { Name = "Ham", Price = 5 };
-                var xtomato = new ExtraIngredient { Name = "Tomato", Price = 5 };
-                var xmushroom = new ExtraIngredient { Name = "Mushroom", Price = 5 };
+                var xcheese = new ExtraIngredient { Name = "Ost", Price = 5 };
+                var xham = new ExtraIngredient { Name = "Skinka", Price = 5 };
+                var xtomato = new ExtraIngredient { Name = "Tomater", Price = 5 };
+                var xmushroom = new ExtraIngredient { Name = "Svamp", Price = 5 };
                 var xkebab = new ExtraIngredient { Name = "Kebab", Price = 10 };
                 var xpasta = new ExtraIngredient { Name = "Pasta", Price = 5 };
                 var xtuna = new ExtraIngredient { Name = "Tonfisk", Price = 5 };
                 var xsalad = new ExtraIngredient { Name = "Sallad", Price = 5 };
-                var xchicken = new ExtraIngredient { Name = "Chicken", Price = 10 };
+                var xchicken = new ExtraIngredient { Name = "Kyckling", Price = 10 };
                 var xpork = new ExtraIngredient { Name = "Fläskfilé", Price = 10 };
                 var xbeef = new ExtraIngredient { Name = "Oxfilé", Price = 10 };
                 var xcucumber = new ExtraIngredient { Name = "Gurka", Price = 5 };
                 var xpaprika = new ExtraIngredient { Name = "Paprika", Price = 5 };
                 var xananas = new ExtraIngredient { Name = "Ananas", Price = 5 };
-                var xbanana = new ExtraIngredient { Name = "Banana", Price = 5 };
+                var xbanana = new ExtraIngredient { Name = "Banan", Price = 5 };
                 var xbread = new ExtraIngredient { Name = "Bröd", Price = 5 };
                 var xpotatoe = new ExtraIngredient { Name = "Potatis", Price = 15 };
                 var xdressing = new ExtraIngredient { Name = "Dressing", Price = 10 };

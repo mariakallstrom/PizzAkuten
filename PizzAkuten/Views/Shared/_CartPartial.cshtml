@@ -12,7 +12,7 @@
                 <div class="col-md-12">
                     @if (cart != null)
             {
-                        @foreach (var dish in cart.CartItems)
+                        foreach (var dish in cart.CartItems)
                 {
                             <div>
                                 <a asp-controller="Order" asp-action="Details" asp-route-dishId="@dish.Dish.DishId">@dish.Dish.Name, @dish.Quantity st, @dish.Dish.Price kr </a>

@@ -1,4 +1,5 @@
-﻿html, body{
+﻿
+html, body{
     height:100%;
 }
 
@@ -22,6 +23,16 @@ body {
     width: 1080px;
 
 }
+
+.input-group {
+    flex-wrap: wrap !important;
+}
+
+    .input-group .invalid-feedback {
+        flex-basis: 100% !important;
+    }
+
+
 
 .navbar, .navbar-default{
     margin:0;

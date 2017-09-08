@@ -126,6 +126,10 @@ namespace PizzAkuten.Services
         public Order GetOrder()
         {
             var orderList = GetOrderForCurrentSession(_session);
+            if (orderList == null)
+            {
+                return null;
+            }
             var order = new Order();
             var Cart = new Cart();
             var orderItemlist = new List<CartItem>();

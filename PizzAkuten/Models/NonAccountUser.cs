@@ -12,16 +12,16 @@ namespace PizzAkuten.Models
     {
         public int NonAccountUserId { get; set; }
         [Required]
-        [MaxLength(100 ,ErrorMessage = "{0} får max ha {2} tecken"), MinLength(2, ErrorMessage = "{0} får minst ha {2} tecken")]
+        [MaxLength(100 ,ErrorMessage = "Förnamn får max ha 100 tecken"), MinLength(2, ErrorMessage = "Förnamn får minst ha 2 tecken")]
         [DisplayName("Förnamn")]
         public string FirstName { get; set; }
         [Required]
-        [MaxLength(100, ErrorMessage = "{0} får max ha {2} tecken"), MinLength(2, ErrorMessage = "{0} får minst ha {2} tecken")]
+        [MaxLength(100, ErrorMessage = "Efternamn får max ha 100 tecken"), MinLength(2, ErrorMessage = "Efternamn får minst ha 2 tecken")]
         [DisplayName("Efternamn")]
         public string LastName { get; set; }
         [Required]
-        [MaxLength(100, ErrorMessage = "{0} får max ha {2} tecken"), MinLength(2, ErrorMessage = "{0} får minst ha {2} tecken")]
-        [DisplayName("Gata")]
+        [MaxLength(100, ErrorMessage = "Postadress får max ha 100 tecken"), MinLength(2, ErrorMessage = "Postadressfår minst ha 2 tecken")]
+        [DisplayName("Postadress")]
         public string Street { get; set; }
         [Required]
         [MaxLength(10, ErrorMessage = "Postkoden får max ha 10 nummer"), MinLength(6,ErrorMessage = "Postkoden får minst ha 6 nummer")]
@@ -29,7 +29,7 @@ namespace PizzAkuten.Models
         [DisplayName("Postkod")]
         public int ZipCode { get; set; }
         [Required]
-        [MaxLength(100, ErrorMessage = "{0} får max ha {2} tecken"), MinLength(2, ErrorMessage = "{0} får minst ha {2} tecken")]
+        [MaxLength(100, ErrorMessage = "Postort får max ha 100 tecken"), MinLength(2, ErrorMessage = "Postort får minst ha 2 tecken")]
         [DisplayName("Postort")]
         public string City { get; set; }
         [Required]

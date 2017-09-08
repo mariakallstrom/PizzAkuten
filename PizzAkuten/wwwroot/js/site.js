@@ -12,4 +12,3 @@ $(".paymentMethod").click(function () {
 });
 
 
-

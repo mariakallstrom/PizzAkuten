@@ -60,7 +60,6 @@ namespace PizzAkuten
             services.AddTransient<UserService>();
             services.AddTransient<ManageOrderService>();
             services.AddTransient<PaymentService>();
-            services.AddTransient<NonAccountUser>();
 
             services.AddDistributedMemoryCache();
 

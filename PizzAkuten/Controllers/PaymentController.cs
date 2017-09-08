@@ -47,7 +47,7 @@ namespace PizzAkuten.Controllers
                 return NotFound();
             }
 
-            var payment = await _context.Payments.SingleOrDefaultAsync(m => m.PaymentId == id);
+            var payment = await _context.Payments.Include(p => p.Order).SingleOrDefaultAsync(m => m.PaymentId == id);
             if (payment == null)
             {
                 return NotFound();
@@ -87,14 +87,14 @@ namespace PizzAkuten.Controllers
             if (order.ApplicationUserId != null)
             {
                 var user = _userService.GetApplicationUserById(order.ApplicationUserId);
-                _emailservice.SendOrderConfirmToUser(order, user);
+                //_emailservice.SendOrderConfirmToUser(order, user);
                 return RedirectToAction("ThankForOrdering");
             }
 
             if (payment.NonAccountUserId != 0)
             {
                 var user = _userService.GetNonAccountUserById(payment.NonAccountUserId);
-                _emailservice.SendOrderConfirmToUser(order, user);
+                //_emailservice.SendOrderConfirmToUser(order, user);
                 return RedirectToAction("ThankForOrdering");
             }
 

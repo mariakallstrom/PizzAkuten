@@ -38,7 +38,9 @@ namespace PizzAkuten.Controllers
             {
                 RedirectToAction("Index", "Home");
             }
-            _service.SetOrderForCurrentSession(dishId);
+          
+            _service.SetOrderForCurrentSession(dishId); 
+         
 
             return RedirectToAction("Index", "Home");
         }
@@ -104,11 +106,12 @@ namespace PizzAkuten.Controllers
             return View();
         }
 
-        public IActionResult ViewOrder()
+        [HttpGet]
+        [AllowAnonymous]
+        public IActionResult ViewOrder(string returnUrl = null)
         {
-           var order =  _service.GetOrder();
-
-            return View(order);
+            ViewData["ReturnUrl"] = returnUrl;
+            return View();
         }
         public async Task<IActionResult> ConfirmOrder(IFormCollection form)
         {

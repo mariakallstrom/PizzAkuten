@@ -52,7 +52,7 @@
         <dd>
             @if (Model.ApplicationUserId != null)
             {
-                @UserService.GetApplicationUserById(Model.ApplicationUserId).Email
+                @UserService.GetApplicationUserEmailByOrderId(Model.OrderId)
             }
            
         </dd>
@@ -62,7 +62,7 @@
         <dd>
             @if (Model.NonAccountUserId != 0)
             {
-                @UserService.GetNonAccountUserById(Model.NonAccountUserId).Email
+                @UserService.GetNonAccountUserEmailByOrderId(Model.OrderId)
             }
         </dd>
         <dt>

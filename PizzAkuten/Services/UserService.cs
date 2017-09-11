@@ -55,13 +55,25 @@ namespace PizzAkuten.Services
 
         public string GetApplicationUserEmailByOrderId(int orderId)
         {
-            return _context.Orders.Where(x => x.OrderId == orderId).Select(p => p.ApplicationUser.Email).ToString();
+            var userId = _context.Orders.FirstOrDefault(x => x.OrderId == orderId).ApplicationUserId;
+
+            return _context.Users.Find(userId).Email;
         }
 
         public string GetNonAccountUserEmailByOrderId(int orderId)
         {
-            return _context.Orders.Where(x => x.OrderId == orderId).Select(p => p.NonAccountUser.Email).ToString(); 
-          
+            var userId = _context.Orders.FirstOrDefault(x => x.OrderId == orderId).NonAccountUserId;
+
+            return _context.NonAccountUsers.Find(userId).Email;
+
+        }
+
+        public string GetApplicationUserRole(String aUserid)
+        {
+            var roleId = _context.UserRoles.FirstOrDefault(x => x.UserId == aUserid).RoleId;
+
+            return _context.Roles.Find(roleId).Name;
+
         }
     }
 }

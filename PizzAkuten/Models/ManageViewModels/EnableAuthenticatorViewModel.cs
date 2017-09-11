@@ -10,7 +10,7 @@ namespace PizzAkuten.Models.ManageViewModels
     public class EnableAuthenticatorViewModel
     {
             [Required]
-            [StringLength(7, ErrorMessage = "{0}et måste vara minst {2} och max {1} tecken långt.", MinimumLength = 6)]
+            [StringLength(7, ErrorMessage = "Verifieringskoden måste vara minst 6 och max 100 tecken långt.", MinimumLength = 6)]
             [DataType(DataType.Text)]
             [Display(Name = "Verifieringskod")]
             public string Code { get; set; }

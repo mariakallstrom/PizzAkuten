@@ -9,7 +9,7 @@ namespace PizzAkuten.Models.AccountViewModels
     public class LoginWith2faViewModel
     {
         [Required]
-        [StringLength(7, ErrorMessage = "{0}en måste vara minst {2} och max {1} tecken långt.", MinimumLength = 6)]
+        [StringLength(7, ErrorMessage = "Autentiseringskoden måste vara minst 6 och max 100 tecken långt.", MinimumLength = 6)]
         [DataType(DataType.Text)]
         [Display(Name = "Autentiseringskod")]
         public string TwoFactorCode { get; set; }

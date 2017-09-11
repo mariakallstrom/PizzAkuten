@@ -25,14 +25,18 @@ namespace PizzAkuten.Models
         [DisplayName("Postadress")]
         public string Street { get; set; }
         [Required]
-        [MaxLength(10), MinLength(6)]
+        [MaxLength(10, ErrorMessage = "Postkoden får max ha 10 nummer"), MinLength(5, ErrorMessage = "Postkoden får minst ha 5 nummer")]
         [RegularExpression("^[0-9]*$", ErrorMessage = "Postkoden måste vara nummer")]
         [DisplayName("Postkod")]
         public string ZipCode { get; set; }
         [Required]
-        [MaxLength(100, ErrorMessage = "Postadress får max ha 100 tecken"), MinLength(2, ErrorMessage = "Postadress får minst ha 2 tecken")]
+        [MaxLength(100, ErrorMessage = "Postort får max ha 100 tecken"), MinLength(2, ErrorMessage = "Postort får minst ha 2 tecken")]
         [DisplayName("Postort")]
         public string City { get; set; }
-       
+        [Phone]
+        [Required]
+        [DisplayName("Telefonnummer")]
+        [RegularExpression("^[0-9]*$", ErrorMessage = "Telefonnummer måste vara nummer")]
+        public string Phone { get; set; }
     }
 }

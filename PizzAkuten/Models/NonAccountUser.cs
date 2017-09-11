@@ -24,7 +24,7 @@ namespace PizzAkuten.Models
         [DisplayName("Postadress")]
         public string Street { get; set; }
         [Required]
-        [MaxLength(10, ErrorMessage = "Postkoden får max ha 10 nummer"), MinLength(6,ErrorMessage = "Postkoden får minst ha 6 nummer")]
+        [MaxLength(10, ErrorMessage = "Postkoden får max ha 10 nummer"), MinLength(5,ErrorMessage = "Postkoden får minst ha 5 nummer")]
         [RegularExpression("^[0-9]*$", ErrorMessage = "Postkoden måste vara nummer")]
         [DisplayName("Postkod")]
         public int ZipCode { get; set; }
@@ -36,6 +36,7 @@ namespace PizzAkuten.Models
         [EmailAddress]
         public string Email { get; set; }
         [Phone]
+        [Required]
         [DisplayName("Telefonnummer")]
         [RegularExpression("^[0-9]*$", ErrorMessage = "Telefonnummer måste vara nummer")]
         public string Phone { get; set; }

@@ -58,7 +58,7 @@ namespace PizzAkuten.Services
             cart.CartItems = itemList;
 
             _session.SetObjectAsJson("Cart", cart);
-            return GetOrderForCurrentSession(_session);
+            return GetOrderForCurrentSession();
         }
         public Cart AddDishToCart(Cart cartFromSession, Dish dish)
         {
@@ -69,7 +69,7 @@ namespace PizzAkuten.Services
             cartFromSession.CartItems.Add(item);
             cartFromSession.TotalPrice = cartFromSession.TotalPrice + item.Dish.Price;
             _session.SetObjectAsJson("Cart", cartFromSession);
-            return GetOrderForCurrentSession(_session);
+            return GetOrderForCurrentSession();
         }
         public Cart AddQuantityToDish(Cart cartFromSession, Dish dish)
         {
@@ -86,12 +86,12 @@ namespace PizzAkuten.Services
                 cartFromSession.CartItems[index] = tempDish;
 
                 _session.SetObjectAsJson("Cart", cartFromSession);
-                return GetOrderForCurrentSession(_session);
+                return GetOrderForCurrentSession();
             }
 
             return null;
         }
-        public Cart GetOrderForCurrentSession(ISession session)
+        public Cart GetOrderForCurrentSession()
         {
             var Cart = _session.GetObjectFromJson<Cart>("Cart");
             if(Cart != null)
@@ -114,18 +114,18 @@ namespace PizzAkuten.Services
                     cartFromSession.CartItems.Where(x => x.Dish.DishId == dishId).First().Quantity -=1;
                     cartFromSession.TotalPrice = cartFromSession.TotalPrice -= dish.Price;
                     _session.SetObjectAsJson("Cart", cartFromSession);
-                    return GetOrderForCurrentSession(_session);
+                    return GetOrderForCurrentSession();
                 }
                 cartFromSession.CartItems.Remove(orderItem);
                 cartFromSession.TotalPrice = cartFromSession.TotalPrice -= dish.Price;
                 _session.SetObjectAsJson("Cart", cartFromSession);
-                return GetOrderForCurrentSession(_session);
+                return GetOrderForCurrentSession();
             }
-            return GetOrderForCurrentSession(_session);
+            return GetOrderForCurrentSession();
         }
         public Order GetOrder()
         {
-            var orderList = GetOrderForCurrentSession(_session);
+            var orderList = GetOrderForCurrentSession();
             if (orderList == null)
             {
                 return null;

@@ -91,6 +91,12 @@ namespace PizzAkuten.Services
 
             return null;
         }
+
+        internal object AddPaymentToOrder(int paymentId)
+        {
+            throw new NotImplementedException();
+        }
+
         public Cart GetCurrentOrder()
         {
             var Cart = _session.GetObjectFromJson<Cart>("Cart");
@@ -168,18 +174,17 @@ namespace PizzAkuten.Services
 
             return thisOrder;
         }
-        public void DeleteSpecialDishes(Order order)
+        public void DeleteSpecialDishes()
         {
-            foreach (var item in order.Cart.CartItems)
+            var dishes = _context.Dishes.ToList();
+            foreach (var item in dishes)
             {
-                if(item.Dish.Name.Contains("special"))
+                if(item.Name.Contains("special"))
                 {
-                    var dishes = _context.Dishes.Where(x => x.DishId == item.Dish.DishId);
-                    foreach (var dish in dishes)
-                    {
-                        _context.Dishes.Remove(dish);
+                   
+                        _context.Dishes.Remove(item);
                         _context.SaveChangesAsync();
-                    }
+                    
                 }
             }
         }
@@ -208,7 +213,6 @@ namespace PizzAkuten.Services
             specialDish.Price = dish.Price + xtraIngPrice;
             specialDish.Name = dish.Name + " special";
             specialDish.SpecialDish = true;
-
             _context.Add(specialDish);
             _context.SaveChanges();
 
@@ -264,9 +268,16 @@ namespace PizzAkuten.Services
             _session.Remove("Cart");
         }
 
-        public int GetOrderByPaymentId(int paymentId)
+        public int? GetOrderByPaymentId(int? paymentId)
         {
-            return _context.Orders.FirstOrDefault(x => x.PaymentId == paymentId).OrderId;
+            if(paymentId != null)
+            {
+                var orderId = _context.Orders.SingleOrDefault(x => x.PaymentId == paymentId).OrderId;
+                return orderId;
+            }
+            return null;
         }
+
+     
     }
 }

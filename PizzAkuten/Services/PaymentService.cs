@@ -59,7 +59,8 @@ namespace PizzAkuten.Services
         public  Payment CreatePayment(IFormCollection form)
         {
             var paymentChoize = Convert.ToInt32(form["creditCardRadio"]);
-
+            var orderId = Convert.ToInt32(form["OrderId"]);
+            var order = _context.Orders.FirstOrDefault(x=>x.OrderId == orderId);
             var model = new Payment();
 
             if (paymentChoize != 3)
@@ -82,11 +83,16 @@ namespace PizzAkuten.Services
             {
                 model.PayMethod = "Swish";
             }
-
+            
 
             _context.Payments.Add(model);
             _context.SaveChanges();
-            return model;
+            var lastPayment = _context.Payments.Last();
+            order.PaymentId = lastPayment.PaymentId;
+            _context.Orders.Update(order);
+            return lastPayment;
         }
+
+     
     }
 }

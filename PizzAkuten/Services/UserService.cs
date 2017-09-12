@@ -40,12 +40,12 @@ namespace PizzAkuten.Services
 
         public ApplicationUser GetApplicationUserById(string applicationuserId)
         {
-            return _context.Users.Find(applicationuserId);
+            return _context.Users.FirstOrDefault(x=>x.Id == applicationuserId);
         }
 
-        public NonAccountUser GetNonAccountUserById(int nonAccountUserId)
+        public NonAccountUser GetNonAccountUserById(int? nonAccountUserId)
         {
-            return _context.NonAccountUsers.Find(nonAccountUserId);
+            return _context.NonAccountUsers.FirstOrDefault(x=>x.NonAccountUserId == nonAccountUserId);
         }
 
         public List<NonAccountUser> GetAllNonAccountUsers()
@@ -53,17 +53,23 @@ namespace PizzAkuten.Services
             return _context.NonAccountUsers.ToList();
         }
 
-        public string GetApplicationUserEmailByOrderId(int orderId)
+        public string GetApplicationUserEmailByOrderId(int? orderId)
         {
             var userId = _context.Orders.FirstOrDefault(x => x.OrderId == orderId).ApplicationUserId;
-
+            if (userId == null)
+            {
+                return "NonAccountUser";
+            }
             return _context.Users.Find(userId).Email;
         }
 
-        public string GetNonAccountUserEmailByOrderId(int orderId)
+        public string GetNonAccountUserEmailByOrderId(int? orderId)
         {
-            var userId = _context.Orders.FirstOrDefault(x => x.OrderId == orderId).NonAccountUserId;
-
+            var userId = _context.Orders.FirstOrDefault(x => x.OrderId == orderId);
+            if (userId.NonAccountUserId == null)
+            {
+                return "AccountUser";
+            }
             return _context.NonAccountUsers.Find(userId).Email;
 
         }

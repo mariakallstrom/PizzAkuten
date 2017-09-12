@@ -3,11 +3,10 @@
 @inject OrderService OrderService
 @{
     ViewData["Title"] = "Index";
+  
 }
 <h2>Betalningar</h2>
-<p>
-    <a asp-action="Create">Skapa ny</a>
-</p>
+
 <table class="table">
     <thead>
         <tr>
@@ -38,6 +37,7 @@
     <tbody>
         @foreach (var item in Model)
         {
+            var orderId = OrderService.GetOrderByPaymentId(item.PaymentId);
             <tr>
                 <td>
                     @Html.DisplayFor(modelItem => item.PayMethod)
@@ -59,7 +59,7 @@
                    
                 </td>
                 <td>
-                    <a asp-controller="ManageOrder" asp-action="Details" asp-route-id="@OrderService.GetOrderByPaymentId(item.PaymentId)">@OrderService.GetOrderByPaymentId(item.PaymentId)</a>
+                    <a asp-controller="ManageOrder" asp-action="Details" asp-route-id="@orderId">@orderId</a>
                 </td>
                 <td>
                     <a asp-action="Details" asp-route-id="@item.PaymentId">Detaljer</a> |

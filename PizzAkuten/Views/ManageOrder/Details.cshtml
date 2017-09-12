@@ -5,7 +5,6 @@
 
 @{
     ViewData["Title"] = "Detaljer";
-    var order = ManagerOrderService.GetOrderByOrderId(Model.OrderId);
     var cart = ManagerOrderService.GetCartFromOrderId(Model.OrderId);
 }
 
@@ -19,19 +18,19 @@
             OrderId
         </dt>
         <dd>
-            @order.OrderId
+            @Model.OrderId
         </dd>
         <dt>
             OrderDate
         </dt>
         <dd>
-            @order.OrderDate
+            @Model.OrderDate
         </dd>
         <dt>
             TotalPrice
         </dt>
         <dd>
-            @order.TotalPrice
+            @Model.TotalPrice
         </dd>
         <dt>
             Delivered
@@ -45,9 +44,9 @@
             ApplicationUser
         </dt>
         <dd>
-            @if (order.ApplicationUserId != null)
+            @if (Model.ApplicationUserId != null)
             {
-                @UserService.GetApplicationUserById(order.ApplicationUserId).Email
+                @UserService.GetApplicationUserEmailByOrderId(Model.OrderId);
             }
           
         </dd>
@@ -55,9 +54,9 @@
             NonAccountUser
         </dt>
         <dd>
-            @if (order.NonAccountUserId != 0)
+            @if (Model.NonAccountUserId != 0)
             {
-                @UserService.GetNonAccountUserById(order.NonAccountUserId).Email
+                @UserService.GetNonAccountUserEmailByOrderId(Model.OrderId);
             }
         </dd>
         <dt>
@@ -89,5 +88,5 @@
   
 </div>
 <div>
-    <a asp-action="Index">Tillbakat</a>
+    <a asp-action="Index">Tillbaka</a>
 </div>

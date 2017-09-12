@@ -81,12 +81,13 @@ namespace PizzAkuten.Controllers
         public IActionResult Create(IFormCollection form)
         {
             var payment = _service.CreatePayment(form);
-            var order = _context.Orders.Include(i => i.Cart).ThenInclude(p => p.CartItems).ThenInclude(d => d.Dish).FirstOrDefault(x => x.PaymentId == payment.PaymentId);
+            var order = _context.Orders.Include(i => i.Cart).ThenInclude(p => p.CartItems).ThenInclude(d => d.Dish).FirstOrDefault(x => x.OrderId == Convert.ToInt32(form["OrderId"]));
 
             if (order.ApplicationUserId != null)
             {
                 var user = _userService.GetApplicationUserById(order.ApplicationUserId);
                 //_emailservice.SendOrderConfirmToUser(order, user);
+                _orderservice.DeleteSpecialDishes();
                 return RedirectToAction("ThankForOrdering");
             }
 
@@ -94,6 +95,7 @@ namespace PizzAkuten.Controllers
             {
                 var user = _userService.GetNonAccountUserById(order.NonAccountUserId);
                 //_emailservice.SendOrderConfirmToUser(order, user);
+                _orderservice.DeleteSpecialDishes();
                 return RedirectToAction("ThankForOrdering");
             }
 

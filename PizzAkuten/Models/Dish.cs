@@ -21,7 +21,7 @@ namespace PizzAkuten.Models
         [DisplayName("Specialrätt")]
         public bool SpecialDish { get; set; }
 
-        public int CategoryId { get; set; }
+        public int? CategoryId { get; set; }
         [DisplayName("Kategori")]
         public Category Category { get; set; }
 

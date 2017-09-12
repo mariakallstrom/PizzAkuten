@@ -48,8 +48,7 @@
                 @item.TotalPrice
             </td>
             <td>
-                @{var payment = PaymentService.GetPaymentByOrderId(item.OrderId);}
-                <a asp-action="Details" asp-controller="Payment" asp-route-id ="@payment.PaymentId">@payment.PaymentId</a>
+                <a asp-action="Details" asp-controller="Payment" asp-route-id ="@item.PaymentId">@item.PaymentId</a>
             </td>
             <td>
                 <a asp-action="Details" asp-route-id="@item.OrderId">Detaljer</a> |

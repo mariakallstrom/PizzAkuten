@@ -1,7 +1,10 @@
 ﻿@model PizzAkuten.Models.Payment
 @inject UserService UserService
+@inject OrderService OrderService
+@inject PaymentService PaymentService
 @{
     ViewData["Title"] = "Detaljer";
+    var orderId = OrderService.GetOrderByPaymentId(Model.PaymentId);
 }
 <h2>Detaljer</h2>
 <div>
@@ -47,29 +50,29 @@
             </form>
         </dd>
         <dt>
-            @Html.DisplayNameFor(model => model.ApplicationUser)
+            Användare
         </dt>
         <dd>
-            @if (Model.ApplicationUserId != null)
+            @if (orderId != 0)
             {
-                @UserService.GetApplicationUserEmailByOrderId(Model.OrderId)
+                @UserService.GetApplicationUserEmailByOrderId(orderId)
             }
            
         </dd>
         <dt>
-            @Html.DisplayNameFor(model => model.NonAccountUser)
+            Användare utan konto
         </dt>
         <dd>
-            @if (Model.NonAccountUserId != 0)
+            @if (orderId != 0)
             {
-                @UserService.GetNonAccountUserEmailByOrderId(Model.OrderId)
+                @UserService.GetNonAccountUserEmailByOrderId(orderId)
             }
         </dd>
         <dt>
-            @Html.DisplayNameFor(model => model.Order)
+            Order
         </dt>
         <dd>
-            <a asp-controller="ManageOrder" asp-action="Details" asp-route-id="@Model.OrderId">@Model.OrderId</a>
+            <a asp-controller="ManageOrder" asp-action="Details" asp-route-id="@orderId">@orderId</a>
         </dd>
     </dl>
 </div>

@@ -26,11 +26,11 @@ namespace PizzAkuten
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            //services.AddDbContext<ApplicationDbContext>(options =>
-            //    options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
-
             services.AddDbContext<ApplicationDbContext>(options =>
-                options.UseInMemoryDatabase("DefaultConnection"));
+                options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
+
+            //services.AddDbContext<ApplicationDbContext>(options =>
+            //    options.UseInMemoryDatabase("DefaultConnection"));
 
             services.Configure<IISOptions>(options =>
             {
@@ -97,6 +97,8 @@ namespace PizzAkuten
                     template: "{controller=Home}/{action=Index}/{id?}");
             });
 
+           
+            context.Database.Migrate();
             DbInitializer.Initialize(context, userManager, roleManager);
 
 

@@ -35,8 +35,7 @@ namespace PizzAkuten.Controllers
         // GET: Payment
         public async Task<IActionResult> Index()
         {
-            var applicationDbContext = _context.Payments.Include(p => p.Order);
-            return View(await applicationDbContext.ToListAsync());
+            return View(await _context.Payments.ToListAsync());
         }
         [Authorize(Roles = "admin")]
         // GET: Payment/Details/5
@@ -47,7 +46,7 @@ namespace PizzAkuten.Controllers
                 return NotFound();
             }
 
-            var payment = await _context.Payments.Include(p => p.Order).SingleOrDefaultAsync(m => m.PaymentId == id);
+            var payment = await _context.Payments.SingleOrDefaultAsync(m => m.PaymentId == id);
             if (payment == null)
             {
                 return NotFound();
@@ -82,7 +81,7 @@ namespace PizzAkuten.Controllers
         public IActionResult Create(IFormCollection form)
         {
             var payment = _service.CreatePayment(form);
-            var order = _context.Orders.Include(i => i.Cart).ThenInclude(p => p.CartItems).ThenInclude(d => d.Dish).FirstOrDefault(x => x.OrderId == payment.OrderId);
+            var order = _context.Orders.Include(i => i.Cart).ThenInclude(p => p.CartItems).ThenInclude(d => d.Dish).FirstOrDefault(x => x.PaymentId == payment.PaymentId);
 
             if (order.ApplicationUserId != null)
             {
@@ -91,9 +90,9 @@ namespace PizzAkuten.Controllers
                 return RedirectToAction("ThankForOrdering");
             }
 
-            if (payment.NonAccountUserId != 0)
+            if (order.NonAccountUserId != 0)
             {
-                var user = _userService.GetNonAccountUserById(payment.NonAccountUserId);
+                var user = _userService.GetNonAccountUserById(order.NonAccountUserId);
                 //_emailservice.SendOrderConfirmToUser(order, user);
                 return RedirectToAction("ThankForOrdering");
             }
@@ -135,9 +134,6 @@ namespace PizzAkuten.Controllers
             }
 
             var payment = await _context.Payments
-                .Include(p => p.ApplicationUser)
-                .Include(p => p.NonAccountUser)
-                .Include(p => p.Order)
                 .SingleOrDefaultAsync(m => m.PaymentId == id);
             if (payment == null)
             {

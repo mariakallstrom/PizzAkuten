@@ -27,20 +27,10 @@ namespace PizzAkuten.Models
         public int Year { get; set; }
         [DisplayName("Månad")]
         public int Month { get; set; }
-        [ForeignKey("Order")]
-        public int OrderId { get; set; }
-        public Order Order { get; set; }
         [DisplayName("Betalad")]
         public bool IsPaid { get; set; }
-        [ForeignKey("ApplicationUser")]
-        public string ApplicationUserId { get; set; }
-        [DisplayName("Användare")]
-        public ApplicationUser ApplicationUser { get; set; }
-
-        [ForeignKey("NonAccountUser")]
-        public int NonAccountUserId { get; set; }
-        [DisplayName("Användare utan konto")]
-        public NonAccountUser NonAccountUser { get; set; }
+ 
+ 
 
 
 

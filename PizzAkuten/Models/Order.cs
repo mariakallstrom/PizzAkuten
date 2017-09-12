@@ -16,13 +16,14 @@ namespace PizzAkuten.Models
         public int TotalPrice { get; set; }
         [DisplayName("Levererad")]
         public bool Delivered { get; set; }
+        [ForeignKey("ApplicationUser")]
         public string ApplicationUserId { get; set; }
         [DisplayName("Användare")]
-        public virtual ApplicationUser ApplicationUser { get; set; }
+        public  ApplicationUser ApplicationUser { get; set; }
         [ForeignKey("NonAccountUser")]
         public int NonAccountUserId { get; set; }
         [DisplayName("Användare utan konto")]
-        public virtual NonAccountUser NonAccountUser { get; set; }
+        public  NonAccountUser NonAccountUser { get; set; }
         [DisplayName("Kundvagn")]
         public Cart Cart { get; set; }
         [ForeignKey("Payment")]

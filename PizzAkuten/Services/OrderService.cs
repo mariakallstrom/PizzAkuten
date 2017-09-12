@@ -156,11 +156,11 @@ namespace PizzAkuten.Services
                 OrderDate = DateTime.Now,
                 TotalPrice = order.TotalPrice,
             };
-            if(order.ApplicationUser != null)
+            if(order.ApplicationUserId != null)
             {
-                newOrder.ApplicationUser = order.ApplicationUser;
+                newOrder.ApplicationUserId = order.ApplicationUserId;
             }
-            else { newOrder.NonAccountUser = order.NonAccountUser; }
+            else { newOrder.NonAccountUserId = order.NonAccountUserId; }
 
             _context.Add(order);
             _context.SaveChanges();
@@ -262,6 +262,11 @@ namespace PizzAkuten.Services
         public void DeleteSession()
         {
             _session.Remove("Cart");
+        }
+
+        public int GetOrderByPaymentId(int paymentId)
+        {
+            return _context.Orders.FirstOrDefault(x => x.PaymentId == paymentId).OrderId;
         }
     }
 }

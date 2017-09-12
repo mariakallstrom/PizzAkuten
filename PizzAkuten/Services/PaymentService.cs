@@ -28,17 +28,32 @@ namespace PizzAkuten.Services
 
         public Payment GetPaymentByOrderId(int orderId)
         {
-            return _context.Payments.FirstOrDefault(x => x.OrderId == orderId);
+            var paymentid = _context.Orders.Find(orderId).PaymentId;
+            return _context.Payments.FirstOrDefault(x => x.PaymentId == paymentid);
         }
 
         public List<Payment> GetPaymentsByApplicationUserId(string applicationUserId)
         {
-            return _context.Payments.Where(x => x.ApplicationUserId == applicationUserId).ToList();
+            var paymentIds = _context.Orders.Where(x=>x.ApplicationUserId == applicationUserId).Select(p=>p.PaymentId);
+            var list = new List<Payment>();
+
+            foreach (var item in paymentIds)
+            {
+                list.Add(_context.Payments.Find(item));
+            }
+            return list;
         }
 
         public List<Payment> GetPaymentsByNonAccountUserId(int nonAccountUserId)
         {
-            return _context.Payments.Where(x => x.NonAccountUserId == nonAccountUserId).ToList();
+            var paymentIds = _context.Orders.Where(x => x.NonAccountUserId == nonAccountUserId).Select(p => p.PaymentId);
+            var list = new List<Payment>();
+
+            foreach (var item in paymentIds)
+            {
+                list.Add(_context.Payments.Find(item));
+            }
+            return list;
         }
 
         public  Payment CreatePayment(IFormCollection form)
@@ -47,14 +62,6 @@ namespace PizzAkuten.Services
 
             var model = new Payment();
 
-            if (String.IsNullOrEmpty(form["NonAccountUserId"]))
-            {
-                model.ApplicationUserId = form["UserId"];
-            }
-            else
-            {
-                model.NonAccountUserId = Convert.ToInt32(form["NonAccountUserId"]);
-            }
             if (paymentChoize != 3)
             {
                 model.Month = Convert.ToInt32(form["Month"]);
@@ -76,7 +83,6 @@ namespace PizzAkuten.Services
                 model.PayMethod = "Swish";
             }
 
-            model.OrderId = Convert.ToInt32(form["OrderId"]);
 
             _context.Payments.Add(model);
             _context.SaveChanges();

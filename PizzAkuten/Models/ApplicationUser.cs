@@ -33,10 +33,6 @@ namespace PizzAkuten.Models
         [MaxLength(100, ErrorMessage = "Postort får max ha 100 tecken"), MinLength(2, ErrorMessage = "Postort får minst ha 2 tecken")]
         [DisplayName("Postort")]
         public string City { get; set; }
-        [Phone]
-        [Required]
-        [DisplayName("Telefonnummer")]
-        [RegularExpression("^[0-9]*$", ErrorMessage = "Telefonnummer måste vara nummer")]
-        public string Phone { get; set; }
+      
     }
 }

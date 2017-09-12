@@ -1,5 +1,6 @@
 ﻿@model IEnumerable<PizzAkuten.Models.Payment>
 @inject PaymentService PaymentService
+@inject OrderService OrderService
 @{
     ViewData["Title"] = "Index";
 }
@@ -29,7 +30,7 @@
                 @Html.DisplayNameFor(model => model.IsPaid)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Order)
+               Order
             </th>
             <th></th>
         </tr>
@@ -58,7 +59,7 @@
                    
                 </td>
                 <td>
-                    <a asp-controller="ManageOrder" asp-action="Details" asp-route-id="@item.OrderId">@item.OrderId</a>
+                    <a asp-controller="ManageOrder" asp-action="Details" asp-route-id="@OrderService.GetOrderByPaymentId(item.PaymentId)">@OrderService.GetOrderByPaymentId(item.PaymentId)</a>
                 </td>
                 <td>
                     <a asp-action="Details" asp-route-id="@item.PaymentId">Detaljer</a> |

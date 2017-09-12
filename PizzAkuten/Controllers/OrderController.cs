@@ -140,10 +140,15 @@ namespace PizzAkuten.Controllers
 
                 return RedirectToAction("Create", "Payment", new {id = newOrder.OrderId});
             }
-            order.NonAccountUser = _context.NonAccountUsers.Last();
-            var savedOrder = _service.SaveOrderToDataBase(order);
-           
-            return RedirectToAction("Create", "Payment", new { id = savedOrder.OrderId });
+            else if(!_signInManager.IsSignedIn(User))
+            {
+                order.NonAccountUser = _context.NonAccountUsers.Last();
+                var savedOrder = _service.SaveOrderToDataBase(order);
+                return RedirectToAction("Create", "Payment", new { id = savedOrder.OrderId });
+            }
+
+            return RedirectToAction("Create", "Payment");
+
 
         }
  

@@ -3,7 +3,7 @@
   <PropertyGroup>
     <TargetFramework>netcoreapp2.0</TargetFramework>
     <UserSecretsId>aspnet-PizzAkuten-9886378A-4BAF-4CC1-A3DB-9D36018413FA</UserSecretsId>
-    <Configurations>Debug;Release;LocalIIS</Configurations>
+    <Configurations>Debug;Release;LocalIIS;Production</Configurations>
   </PropertyGroup>
 
   <ItemGroup>

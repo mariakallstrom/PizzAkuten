@@ -13,17 +13,19 @@ namespace PizzAkuten.Data
      
         public static void Initialize(ApplicationDbContext context, UserManager<ApplicationUser> userManager, RoleManager<IdentityRole> roleManager)
         {
-            if (context.Database != null)
+            if (!context.Users.Any())
             {
-                var aUser = new ApplicationUser();
-                aUser.UserName = "student@test.se";
-                aUser.Email = "student@test.se";
-                aUser.City = "Ankeborg";
-                aUser.ZipCode = "11313";
-                aUser.Street = "Ankgatan 1";
-                aUser.FirstName = "Kalle";
-                aUser.LastName = "Anka";
-                aUser.PhoneNumber = "12345678";
+                var aUser = new ApplicationUser
+                {
+                    UserName = "student",
+                    Email = "student@test.se",
+                    City = "Ankeborg",
+                    ZipCode = "11313",
+                    Street = "Ankgatan 1",
+                    FirstName = "Kalle",
+                    LastName = "Anka",
+                    PhoneNumber = "12345678"
+                };
                 var result = userManager.CreateAsync(aUser, "Passw0rd").Result;
 
                 if (result.Succeeded)
@@ -33,15 +35,17 @@ namespace PizzAkuten.Data
                     userManager.AddToRoleAsync(aUser, adminRole.Name);
                 }
 
-                var adminUser = new ApplicationUser();
-                adminUser.UserName = "admin@test.se";
-                adminUser.Email = "admin@test.se";
-                adminUser.City = "admin";
-                adminUser.ZipCode = "11313";
-                adminUser.Street = "admin";
-                adminUser.FirstName = "admin";
-                adminUser.LastName = "admin";
-                adminUser.PhoneNumber = "12345678";
+                var adminUser = new ApplicationUser
+                {
+                    UserName = "admin",
+                    Email = "admin@test.se",
+                    City = "admin",
+                    ZipCode = "11313",
+                    Street = "admin",
+                    FirstName = "admin",
+                    LastName = "admin",
+                    PhoneNumber = "12345678"
+                };
                 var adminResult = userManager.CreateAsync(adminUser, "Admin0").Result;
 
                 if (adminResult.Succeeded)
@@ -50,33 +54,36 @@ namespace PizzAkuten.Data
                     var roleResult = roleManager.CreateAsync(adminRole).Result;
                     userManager.AddToRoleAsync(adminUser, adminRole.Name);
                 }
-            
 
-                var cheese = new Ingredient { Name = "Ost", Price = 5 };
-                var ham = new Ingredient { Name = "Skinka", Price = 5 };
-                var tomato = new Ingredient { Name = "Tomater", Price = 5 };
-                var mushroom = new Ingredient { Name = "Svamp", Price = 5 };
-                var kebab = new Ingredient { Name = "Kebab", Price = 10 };
-                var pasta = new Ingredient { Name = "Pasta", Price = 5 };
-                var tuna = new Ingredient { Name = "Tonfisk", Price = 5 };
-                var salad = new Ingredient { Name = "Sallad", Price = 5 };
-                var chicken = new Ingredient { Name = "Kyckling", Price = 10 };
-                var pork = new Ingredient { Name = "Fläskfilé", Price = 10 };
-                var beef = new Ingredient { Name = "Oxfilé", Price = 10 };
-                var cucumber = new Ingredient { Name = "Gurka", Price = 5 };
-                var paprika = new Ingredient { Name = "Paprika", Price = 5 };
-                var ananas = new Ingredient { Name = "Ananas", Price = 5 };
-                var banana = new Ingredient { Name = "Banan", Price = 5 };
-                var bread = new Ingredient { Name = "Bröd", Price = 5 };
-                var potatoe = new Ingredient { Name = "Potatis", Price = 15 };
-                var dressing = new Ingredient { Name = "Dressing", Price = 10 };
-                var onion = new Ingredient { Name = "Lök", Price = 5 };
-                context.AddRange(cheese, ham, tomato, mushroom, kebab, pasta, tuna, salad, chicken, pork, beef, cucumber, paprika, ananas, banana, bread, potatoe, dressing, onion);
-                context.SaveChanges();
-            
-            if (context.Dishes.ToList().Count == 0)
+            }
+
+            if (!context.Dishes.Any())
             {
-                var capricciosa = new Dish { Name = "Cappricciosa", Price = 89, ImagePath = "/images/pizza.jpg"};
+                var cheese = new Ingredient {Name = "Ost", Price = 5};
+                var ham = new Ingredient {Name = "Skinka", Price = 5};
+                var tomato = new Ingredient {Name = "Tomater", Price = 5};
+                var mushroom = new Ingredient {Name = "Svamp", Price = 5};
+                var kebab = new Ingredient {Name = "Kebab", Price = 10};
+                var pasta = new Ingredient {Name = "Pasta", Price = 5};
+                var tuna = new Ingredient {Name = "Tonfisk", Price = 5};
+                var salad = new Ingredient {Name = "Sallad", Price = 5};
+                var chicken = new Ingredient {Name = "Kyckling", Price = 10};
+                var pork = new Ingredient {Name = "Fläskfilé", Price = 10};
+                var beef = new Ingredient {Name = "Oxfilé", Price = 10};
+                var cucumber = new Ingredient {Name = "Gurka", Price = 5};
+                var paprika = new Ingredient {Name = "Paprika", Price = 5};
+                var ananas = new Ingredient {Name = "Ananas", Price = 5};
+                var banana = new Ingredient {Name = "Banan", Price = 5};
+                var bread = new Ingredient {Name = "Bröd", Price = 5};
+                var potatoe = new Ingredient {Name = "Potatis", Price = 15};
+                var dressing = new Ingredient {Name = "Dressing", Price = 10};
+                var onion = new Ingredient {Name = "Lök", Price = 5};
+                context.AddRange(cheese, ham, tomato, mushroom, kebab, pasta, tuna, salad, chicken, pork, beef,
+                    cucumber, paprika, ananas, banana, bread, potatoe, dressing, onion);
+                context.SaveChanges();
+
+            
+            var capricciosa = new Dish { Name = "Cappricciosa", Price = 89, ImagePath = "/images/pizza.jpg"};
                 var margueritha = new Dish { Name = "Margaritha", Price = 79, ImagePath = "/images/pizza.jpg" };
                 var vesuvio = new Dish { Name = "Vesuvio", Price = 79, ImagePath = "/images/pizza.jpg" };
                 var pastaPork = new Dish { Name = "Pasta med Fläskfilé", Price = 89, ImagePath = "/images/pasta.jpg" };
@@ -187,30 +194,10 @@ namespace PizzAkuten.Data
 
                 context.AddRange(capricciosa, margueritha, vesuvio, pastaBeef, pastaPork, kebabSalad, kebabDish, chickenSalad, hamburger);
                 context.SaveChanges();
-
-                var payment = new Payment { CardNumber = "123", Cvv = 123, Month = 10, Year = 2019, PayMethod = "Visa" };
-                var order = new Order();
-                order.ApplicationUser = aUser;
-                order.Cart = new Cart { CartItems = new List<CartItem> { new CartItem { Dish = capricciosa, Quantity = 1 } }, TotalPrice = capricciosa.Price };
-                order.TotalPrice = capricciosa.Price;
-                order.Payment = payment;
-                order.OrderDate = DateTime.Now;
                
-
-                var payment2 = new Payment { CardNumber = "123", Cvv = 123, Month = 10, Year = 2019, PayMethod = "Visa" };
-                var order2 = new Order();
-                order2.ApplicationUser = aUser;
-                order2.Cart = new Cart { CartItems = new List<CartItem> { new CartItem { Dish = kebabDish, Quantity = 1 } }, TotalPrice = kebabDish.Price };
-                order2.TotalPrice = kebabDish.Price;
-                order2.OrderDate = DateTime.Now;
-              
-                order2.Payment = payment2;
-
-
-                context.Orders.AddRange(order, order2);
-                context.SaveChanges();
-            };
-            if (context.ExtraIngredients.ToList().Count == 0)
+            }
+            
+            if (!context.ExtraIngredients.Any())
             {
                 var xcheese = new ExtraIngredient { Name = "Ost", Price = 5 };
                 var xham = new ExtraIngredient { Name = "Skinka", Price = 5 };
@@ -235,12 +222,8 @@ namespace PizzAkuten.Data
                 context.AddRange(xcheese, xham, xtomato, xmushroom, xkebab, xpasta, xtuna, xsalad, xchicken, xpork, xbeef, xcucumber, xpaprika, xananas, xbanana, xbread, xpotatoe, xdressing, xonion);
                 context.SaveChanges();
 
-
-
-            };
-
-        
+            }
         }
     }
-    }
 }
+

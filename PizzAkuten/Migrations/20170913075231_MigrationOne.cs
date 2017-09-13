@@ -5,7 +5,7 @@ using System.Collections.Generic;
 
 namespace PizzAkuten.Migrations
 {
-    public partial class MyMigration : Migration
+    public partial class MigrationOne : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -106,7 +106,6 @@ namespace PizzAkuten.Migrations
                     Email = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     FirstName = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
                     LastName = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
-                    OrderId = table.Column<int>(type: "int", nullable: false),
                     Phone = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Street = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
                     ZipCode = table.Column<int>(type: "int", maxLength: 10, nullable: false)
@@ -246,7 +245,7 @@ namespace PizzAkuten.Migrations
                 {
                     DishId = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
-                    CategoryId = table.Column<int>(type: "int", nullable: false),
+                    CategoryId = table.Column<int>(type: "int", nullable: true),
                     ImagePath = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Price = table.Column<int>(type: "int", nullable: false),
@@ -260,7 +259,7 @@ namespace PizzAkuten.Migrations
                         column: x => x.CategoryId,
                         principalTable: "Categories",
                         principalColumn: "CategoryId",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
@@ -271,9 +270,9 @@ namespace PizzAkuten.Migrations
                         .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
                     ApplicationUserId = table.Column<string>(type: "nvarchar(450)", nullable: true),
                     Delivered = table.Column<bool>(type: "bit", nullable: false),
-                    NonAccountUserId = table.Column<int>(type: "int", nullable: false),
+                    NonAccountUserId = table.Column<int>(type: "int", nullable: true),
                     OrderDate = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    PaymentId = table.Column<int>(type: "int", nullable: false),
+                    PaymentId = table.Column<int>(type: "int", nullable: true),
                     TotalPrice = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
@@ -290,13 +289,13 @@ namespace PizzAkuten.Migrations
                         column: x => x.NonAccountUserId,
                         principalTable: "NonAccountUsers",
                         principalColumn: "NonAccountUserId",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_Orders_Payments_PaymentId",
                         column: x => x.PaymentId,
                         principalTable: "Payments",
                         principalColumn: "PaymentId",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
@@ -464,8 +463,7 @@ namespace PizzAkuten.Migrations
             migrationBuilder.CreateIndex(
                 name: "IX_Orders_NonAccountUserId",
                 table: "Orders",
-                column: "NonAccountUserId",
-                unique: true);
+                column: "NonAccountUserId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Orders_PaymentId",

@@ -11,8 +11,8 @@ using System;
 namespace PizzAkuten.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20170912114008_MymigrationAllownull")]
-    partial class MymigrationAllownull
+    [Migration("20170913075231_MigrationOne")]
+    partial class MigrationOne
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -345,8 +345,6 @@ namespace PizzAkuten.Migrations
                         .IsRequired()
                         .HasMaxLength(100);
 
-                    b.Property<int>("OrderId");
-
                     b.Property<string>("Phone")
                         .IsRequired();
 
@@ -383,9 +381,7 @@ namespace PizzAkuten.Migrations
 
                     b.HasIndex("ApplicationUserId");
 
-                    b.HasIndex("NonAccountUserId")
-                        .IsUnique()
-                        .HasFilter("[NonAccountUserId] IS NOT NULL");
+                    b.HasIndex("NonAccountUserId");
 
                     b.HasIndex("PaymentId");
 
@@ -520,8 +516,8 @@ namespace PizzAkuten.Migrations
                         .HasForeignKey("ApplicationUserId");
 
                     b.HasOne("PizzAkuten.Models.NonAccountUser", "NonAccountUser")
-                        .WithOne("Order")
-                        .HasForeignKey("PizzAkuten.Models.Order", "NonAccountUserId");
+                        .WithMany()
+                        .HasForeignKey("NonAccountUserId");
 
                     b.HasOne("PizzAkuten.Models.Payment", "Payment")
                         .WithMany()

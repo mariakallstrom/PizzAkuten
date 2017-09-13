@@ -4,30 +4,29 @@
         var cart = OrderService.GetCurrentOrder();
     }
 
-        <div class="col-md-4 cartDiv">
-            <div class="col-md-12">
-                <div class="col-lg-6"><h4 class="float-left">Kundkorg</h4></div>
-                <div class="col-lg-6 padding-top"><a class="button" asp-controller="Order" asp-action="ViewOrder">Till Kassa</a></div>
-                </div>
-                <div class="col-md-12">
+        <div class="col-md-4">
+            <div class="panel panel-default">
+                <div class="panel-heading text-center"><h4>Kundkorg</h4></div>
+                <div class="col-md-12 panel panel-body">
                     @if (cart != null)
             {
                         foreach (var dish in cart.CartItems)
-                {
-                            <div>
+                         {
+                            <div class="pull-left">
                                 <a asp-controller="Order" asp-action="Details" asp-route-dishId="@dish.Dish.DishId">@dish.Dish.Name, @dish.Quantity st, @dish.Dish.Price kr </a>
                                 <a asp-controller="Order" asp-action="RemoveFromCart" asp-route-dishId="@dish.Dish.DishId" class="glyphicon glyphicon-minus"></a>
                                 <a asp-controller="Order" asp-action="AddToCart" asp-route-dishId="@dish.Dish.DishId" class="glyphicon glyphicon-plus"></a>
                             </div>
                         }
-
-                        <div>
-                            <h5>Summa: @cart.TotalPrice</h5>
+                        <div class="col-md-6 padding-top">
+                            <strong class="pull-left padding-top">Summa: @cart.TotalPrice</strong>
                         </div>
+                    <div class="col-md-6 padding-top pull-right"><a class="button" asp-controller="Order" asp-action="ViewOrder">Till Kassa</a></div>
+               
 
                     }
                 </div>
-
+            </div>
             </div>
     
   

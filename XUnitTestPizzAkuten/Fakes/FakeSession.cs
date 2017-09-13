@@ -4,12 +4,14 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
+using Newtonsoft.Json;
 
 namespace XUnitTestPizzAkuten.Fakes
 {
     class FakeSession : ISession
     {
-        private Dictionary<string, byte[]> _store = new Dictionary<string, byte[]>(StringComparer.OrdinalIgnoreCase);
+        private Dictionary<string, byte[]> _store
+            = new Dictionary<string, byte[]>(StringComparer.OrdinalIgnoreCase);
 
         public IEnumerable<string> Keys { get { return _store.Keys; } }
 

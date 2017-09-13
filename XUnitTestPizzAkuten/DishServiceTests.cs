@@ -62,5 +62,13 @@ namespace XUnitTestPizzAkuten
             var expectedList = xingredients.OrderBy(x => x.Name);
             Assert.True(expectedList.SequenceEqual(xingredients));
         }
+
+        [Fact]
+        public void No_Special_Dish_In_Menu()
+        {
+            var service = _serviceProvider.GetService<DishService>();
+            var expectedList = service.GetAllDishesForMenu().Where(x=>x.SpecialDish == true);
+            Assert.Empty(expectedList);
+        }
     }
 }

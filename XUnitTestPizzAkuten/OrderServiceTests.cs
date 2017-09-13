@@ -43,6 +43,24 @@ namespace XUnitTestPizzAkuten
             Assert.Equal(cart, result);
         }
 
-      
+        public void Update_Session_And_Add_Dish_To_Cart_Quantity_2()
+        {
+
+            //arrange
+            var service = _serviceProvider.GetService<OrderService>();
+            var dService = _serviceProvider.GetService<DishService>();
+
+            //act
+            var dish = dService.GetAllDishes().FirstOrDefault(x => x.DishId == 1);
+            service.SetOrderForCurrentSession(1);
+            var result = service.SetOrderForCurrentSession(1);
+            var cart = new Cart();
+            cart.CartItems = new List<CartItem> { new CartItem { Dish = dish, Quantity = 2 } };
+
+            //assert
+            Assert.Equal(cart, result);
+        }
+
+
     }
 }

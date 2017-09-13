@@ -15,6 +15,7 @@ using Microsoft.AspNetCore.Hosting;
 using System.Net.Http.Headers;
 using PizzAkuten.Services;
 using System.Collections.Generic;
+using Microsoft.Extensions.Logging;
 
 namespace PizzAkuten.Controllers
 {
@@ -24,13 +25,15 @@ namespace PizzAkuten.Controllers
         private readonly ApplicationDbContext _context;
         private readonly IHostingEnvironment _hostingEnvironment;
         private readonly DishService _service;
-    
+        private readonly ILogger _logger;
 
-        public DishController(IHostingEnvironment environment, DishService service, ApplicationDbContext context)
+
+        public DishController(IHostingEnvironment environment, DishService service, ApplicationDbContext context, ILogger<DishController> logger)
         {
             _hostingEnvironment = environment;
             _service = service;
             _context = context;
+            _logger = logger;
         }
 
    
@@ -38,16 +41,20 @@ namespace PizzAkuten.Controllers
         // GET: Dish
         public async Task<IActionResult> Index()
         {
-           
-            return View(await _context.Dishes.Include(c=>c.Category).Include(d=>d.DishIngredients).ToListAsync());
+            var dishes = await _context.Dishes.Include(c => c.Category).Include(d => d.DishIngredients).ToListAsync();
+            if (dishes == null)
+            {
+                _logger.LogWarning("No dishes Found");
+            }
+            return View(dishes);
         }
 
         // GET: Dish/Details/5
         public async Task<IActionResult> Details(int? id)
         {
-
             if (id == null)
             {
+              
                 return NotFound();
             }
 
@@ -55,6 +62,7 @@ namespace PizzAkuten.Controllers
                 .SingleOrDefaultAsync(m => m.DishId == id);
             if (dish == null)
             {
+                _logger.LogWarning("No dish was found with id =" + id);
                 return NotFound();
             }
 

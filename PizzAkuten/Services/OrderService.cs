@@ -194,32 +194,40 @@ namespace PizzAkuten.Services
                 var diList = CheckOrdinaryIngredientsForSpecialDish(form, new List<DishIngredient>());
                 var xDiList = CheckExtraIngredientsForSpecialDish(form, new List<DishExtraIngredient>());
 
+           
 
             if (diList != null)
             {
-                if (diList.Count != dish.DishIngredients.Count && xDiList != null)
+                if (diList.Count == dish.DishIngredients.Count && xDiList == null)
+                {
+                    SetOrderForCurrentSession(dish.DishId);
+                }
+                else
                 {
                     specialDish.DishIngredients = diList;
-              
-                    foreach (var item in xDiList)
+
+                    if (xDiList != null)
                     {
-                        var price = _context.ExtraIngredients.Find(item.ExtraIngredientId).Price;
-                        xtraIngPrice = xtraIngPrice + price;
+                        foreach (var item in xDiList)
+                        {
+                            var price = _context.ExtraIngredients.Find(item.ExtraIngredientId).Price;
+                            xtraIngPrice = xtraIngPrice + price;
+                        }
+                        specialDish.DishExtraIngredients = xDiList;
                     }
-                    specialDish.DishExtraIngredients = xDiList;
-              
 
-                specialDish.Price = dish.Price + xtraIngPrice;
-                specialDish.Name = dish.Name + " special";
-                specialDish.SpecialDish = true;
-                _context.Add(specialDish);
-                _context.SaveChanges();
+                    specialDish.Price = dish.Price + xtraIngPrice;
+                    specialDish.Name = dish.Name + " special";
+                    specialDish.SpecialDish = true;
+                    _context.Add(specialDish);
+                    _context.SaveChanges();
 
-                SetOrderForCurrentSession(specialDish.DishId);
+                    SetOrderForCurrentSession(specialDish.DishId);
+
                 }
-            }
-            SetOrderForCurrentSession(dish.DishId);
 
+
+            }
         }
         public List<DishIngredient> CheckOrdinaryIngredientsForSpecialDish(IFormCollection form, List<DishIngredient> diList)
         {

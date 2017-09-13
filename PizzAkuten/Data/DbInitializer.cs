@@ -13,11 +13,12 @@ namespace PizzAkuten.Data
      
         public static void Initialize(ApplicationDbContext context, UserManager<ApplicationUser> userManager, RoleManager<IdentityRole> roleManager)
         {
+
             if (!context.Users.Any())
             {
                 var aUser = new ApplicationUser
                 {
-                    UserName = "student",
+                    UserName = "student@test.se",
                     Email = "student@test.se",
                     City = "Ankeborg",
                     ZipCode = "11313",
@@ -37,7 +38,7 @@ namespace PizzAkuten.Data
 
                 var adminUser = new ApplicationUser
                 {
-                    UserName = "admin",
+                    UserName = "admin@test.se",
                     Email = "admin@test.se",
                     City = "admin",
                     ZipCode = "11313",

@@ -11,8 +11,8 @@ using System;
 namespace PizzAkuten.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20170913075231_MigrationOne")]
-    partial class MigrationOne
+    [Migration("20170913082425_FirstMigration")]
+    partial class FirstMigration
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {

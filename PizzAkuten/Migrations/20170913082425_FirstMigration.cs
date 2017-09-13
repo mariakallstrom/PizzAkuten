@@ -5,7 +5,7 @@ using System.Collections.Generic;
 
 namespace PizzAkuten.Migrations
 {
-    public partial class MigrationOne : Migration
+    public partial class FirstMigration : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {

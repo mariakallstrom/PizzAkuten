@@ -31,6 +31,10 @@ namespace PizzAkuten.Services
             return _context.ExtraIngredients.OrderBy(x => x.Name).ToList();
         }
 
+        public List<Dish> GetAllDishesForMenu()
+        {
+            return _context.Dishes.Where(n=>n.SpecialDish == false).Include(x => x.DishIngredients).ThenInclude(i => i.Ingredient).Include(c => c.Category).ToList();
+        }
         public List<Dish> GetAllDishes()
         {
             return _context.Dishes.Include(x => x.DishIngredients).ThenInclude(i => i.Ingredient).Include(c => c.Category).ToList();

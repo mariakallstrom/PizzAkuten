@@ -40,10 +40,5 @@ namespace PizzAkuten.Models
         [DisplayName("Telefonnummer")]
         [RegularExpression("^[0-9]*$", ErrorMessage = "Telefonnummer måste vara nummer")]
         public string Phone { get; set; }
-
-        public int OrderId { get; set; }
-
-        public Order Order { get; set; }
-
     }
 }

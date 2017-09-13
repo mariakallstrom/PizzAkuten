@@ -87,7 +87,6 @@ namespace PizzAkuten.Controllers
             {
                 var user = _userService.GetApplicationUserById(order.ApplicationUserId);
                 //_emailservice.SendOrderConfirmToUser(order, user);
-                _orderservice.DeleteSpecialDishes();
                 return RedirectToAction("ThankForOrdering");
             }
 
@@ -95,7 +94,6 @@ namespace PizzAkuten.Controllers
             {
                 var user = _userService.GetNonAccountUserById(order.NonAccountUserId);
                 //_emailservice.SendOrderConfirmToUser(order, user);
-                _orderservice.DeleteSpecialDishes();
                 return RedirectToAction("ThankForOrdering");
             }
 

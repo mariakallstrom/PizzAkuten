@@ -1,7 +1,8 @@
 ﻿@model IEnumerable<PizzAkuten.Models.NonAccountUser>
-
+@inject OrderService OrderService
 @{
     ViewData["Title"] = "Användare utan konto";
+
 }
 
 <h2>Användare utan konto</h2>
@@ -31,13 +32,14 @@
                     @Html.DisplayNameFor(model => model.Phone)
                 </th>
                 <th>
-                    @Html.DisplayNameFor(model => model.OrderId)
+                   Order
                 </th>
             <th></th>
         </tr>
     </thead>
     <tbody>
 @foreach (var item in Model) {
+    var orderid = OrderService.GetOrderByNonApplicationUser(item.NonAccountUserId);
         <tr>
             <td>
                 @Html.DisplayFor(modelItem => item.FirstName)
@@ -61,7 +63,10 @@
                 @Html.DisplayFor(modelItem => item.Phone)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.OrderId)
+               @if (orderid != null)
+               {
+                   <a asp-controller="ManageOrder" asp-action="Details" asp-route-id="@orderid">@orderid</a>
+               }
             </td>
             <td>
                 <a asp-action="Details" asp-route-id="@item.NonAccountUserId">Detaljer</a> |

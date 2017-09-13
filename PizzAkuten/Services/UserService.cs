@@ -65,8 +65,8 @@ namespace PizzAkuten.Services
 
         public string GetNonAccountUserEmailByOrderId(int? orderId)
         {
-            var userId = _context.Orders.FirstOrDefault(x => x.OrderId == orderId);
-            if (userId.NonAccountUserId == null)
+            var userId = _context.Orders.FirstOrDefault(x => x.OrderId == orderId).NonAccountUserId;
+            if (userId == null)
             {
                 return "AccountUser";
             }

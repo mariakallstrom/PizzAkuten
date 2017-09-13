@@ -90,6 +90,7 @@ namespace PizzAkuten.Services
             var lastPayment = _context.Payments.Last();
             order.PaymentId = lastPayment.PaymentId;
             _context.Orders.Update(order);
+            _context.SaveChanges();
             return lastPayment;
         }
 

@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Identity;
 using PizzAkuten.Extensions;
 using System;
 using System.Security.Claims;
+using Microsoft.EntityFrameworkCore;
 
 namespace PizzAkuten.Services
 {
@@ -62,7 +63,6 @@ namespace PizzAkuten.Services
         }
         public Cart AddDishToCart(Cart cartFromSession, Dish dish)
         {
-            var cart = new Cart();
             var item = new CartItem();
             item.Dish = dish;
             item.Quantity = 1;
@@ -92,10 +92,6 @@ namespace PizzAkuten.Services
             return null;
         }
 
-        internal object AddPaymentToOrder(int paymentId)
-        {
-            throw new NotImplementedException();
-        }
 
         public Cart GetCurrentOrder()
         {
@@ -117,7 +113,7 @@ namespace PizzAkuten.Services
             {
                 if(orderItem.Quantity > 1)
                 {
-                    cartFromSession.CartItems.Where(x => x.Dish.DishId == dishId).First().Quantity -=1;
+                    cartFromSession.CartItems.First(x => x.Dish.DishId == dishId).Quantity -=1;
                     cartFromSession.TotalPrice = cartFromSession.TotalPrice -= dish.Price;
                     _session.SetObjectAsJson("Cart", cartFromSession);
                     return GetCurrentOrder();
@@ -190,33 +186,40 @@ namespace PizzAkuten.Services
         }
         public void AddSpecialDishToCart(IFormCollection form)
         {
-            var dish = _context.Dishes.Find(Convert.ToInt32(form["DishId"]));
-            //Skapa en ny Special Dish
-            var specialDish = new Dish();
-            var xtraIngPrice = 0;
-            var diList = CheckOrdinaryIngredientsForSpecialDish(form, new List<DishIngredient>());
-            var xDiList = CheckExtraIngredientsForSpecialDish(form, new List<DishExtraIngredient>());
+          
+                var dish = _context.Dishes.Include(di=>di.DishIngredients).FirstOrDefault(i=>i.DishId == Convert.ToInt32(form["DishId"]));
+                //Skapa en ny Special Dish
+                var specialDish = new Dish();
+                var xtraIngPrice = 0;
+                var diList = CheckOrdinaryIngredientsForSpecialDish(form, new List<DishIngredient>());
+                var xDiList = CheckExtraIngredientsForSpecialDish(form, new List<DishExtraIngredient>());
 
-            if(xDiList != null)
+
+            if (diList != null)
             {
-                foreach (var item in xDiList)
+                if (diList.Count != dish.DishIngredients.Count && xDiList != null)
                 {
-                    var price = _context.ExtraIngredients.Find(item.ExtraIngredientId).Price;
-                    xtraIngPrice = xtraIngPrice + price;
-                }
-                specialDish.DishExtraIngredients = xDiList;
-            }
-            if(diList != null)
-            {
-                specialDish.DishIngredients = diList;
-            }
-            specialDish.Price = dish.Price + xtraIngPrice;
-            specialDish.Name = dish.Name + " special";
-            specialDish.SpecialDish = true;
-            _context.Add(specialDish);
-            _context.SaveChanges();
+                    specialDish.DishIngredients = diList;
+              
+                    foreach (var item in xDiList)
+                    {
+                        var price = _context.ExtraIngredients.Find(item.ExtraIngredientId).Price;
+                        xtraIngPrice = xtraIngPrice + price;
+                    }
+                    specialDish.DishExtraIngredients = xDiList;
+              
 
-            SetOrderForCurrentSession(specialDish.DishId);
+                specialDish.Price = dish.Price + xtraIngPrice;
+                specialDish.Name = dish.Name + " special";
+                specialDish.SpecialDish = true;
+                _context.Add(specialDish);
+                _context.SaveChanges();
+
+                SetOrderForCurrentSession(specialDish.DishId);
+                }
+            }
+            SetOrderForCurrentSession(dish.DishId);
+
         }
         public List<DishIngredient> CheckOrdinaryIngredientsForSpecialDish(IFormCollection form, List<DishIngredient> diList)
         {
@@ -278,6 +281,13 @@ namespace PizzAkuten.Services
             return null;
         }
 
-     
+        public int? GetOrderByNonApplicationUser(int? nUserId)
+        {
+            var orderId = _context.Orders.FirstOrDefault(x => x.NonAccountUserId == nUserId).OrderId;
+            return orderId;
+        }
+
+
+
     }
 }

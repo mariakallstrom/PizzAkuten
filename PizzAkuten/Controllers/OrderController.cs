@@ -98,7 +98,7 @@ namespace PizzAkuten.Controllers
         [HttpPost]
         public IActionResult Edit(IFormCollection form)
         {
-            if (form != null)
+            if (form.Keys.Count != 0)
             {
                 _service.AddSpecialDishToCart(form);
                 return RedirectToAction("Index", "Home");
@@ -125,7 +125,6 @@ namespace PizzAkuten.Controllers
                 model.Phone = form["Phone"];
                 model.Email = form["Email"];
                 model.City = form["City"];
-                model.OrderId = Convert.ToInt32(form["OrderId"]);
                 _context.NonAccountUsers.Add(model);
                 _context.SaveChanges();
             };

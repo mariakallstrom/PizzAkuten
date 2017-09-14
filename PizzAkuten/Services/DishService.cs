@@ -70,9 +70,6 @@ namespace PizzAkuten.Services
 
             dish.Category = _context.Categories.SingleOrDefault(x => x.CategoryId == Convert.ToInt32(form["CategoryId"]));
 
-
-            var allIngredients = _context.Ingredients.ToList();
-
             var keys = form.Keys.FirstOrDefault(k => k.Contains("Checked-"));
             var dashPosition = keys.IndexOf("-");
             var checkedIngredients = form.Keys.Where(k => k.Contains("Checked-"));
@@ -106,30 +103,20 @@ namespace PizzAkuten.Services
                 dish.ImagePath = form["ImagePath"];
             }
 
-
             dish.Name = form["Name"];
             dish.Price = Convert.ToInt32(form["Price"]);
+            dish.Category = _context.Categories.FirstOrDefault(x => x.CategoryId == Convert.ToInt32(form["CategoryId"]));
 
-            dish.Category = _context.Categories.SingleOrDefault(x => x.CategoryId == Convert.ToInt32(form["CategoryId"]));
-
-
-            var allIngredients = _context.Ingredients.ToList();
-
-            var keys = form.Keys.FirstOrDefault(k => k.Contains("Checked-"));
-            var dashPosition = keys.IndexOf("-");
-            var checkedIngredients = form.Keys.Where(k => k.Contains("Checked-"));
-
-            var newDishIngredientsList = new List<int>();
-
-            foreach (var ingredient in checkedIngredients)
-            {
-                var id = int.Parse(ingredient.Substring(dashPosition + 1));
-                newDishIngredientsList.Add(id);
-            }
+            var newDishIngredientsList = CheckForNewIngredients(form);
 
             var newIngredients = newDishIngredientsList.Except(dishToUpdateDishIngredients).ToList();
             var oldIngredients = dishToUpdateDishIngredients.Except(newDishIngredientsList).ToList();
 
+            return UpdateIngredientsToDish(newIngredients, oldIngredients, dish);
+        }
+
+        public Dish UpdateIngredientsToDish(List<int> newIngredients, List<int> oldIngredients, Dish dish)
+        {
             foreach (var number in newIngredients)
             {
                 var dishIng = new DishIngredient { Ingredient = _context.Ingredients.FirstOrDefault(x => x.IngredientId == number), Dish = dish };
@@ -143,17 +130,27 @@ namespace PizzAkuten.Services
                 _context.DishIngredients.Remove(dishIng);
             }
 
-            dish.Price = Convert.ToInt32(form["Price"]);
-            dish.Name = form["Name"];
-
-            dish.Category = _context.Categories.FirstOrDefault(x => x.CategoryId == Convert.ToInt32(form["CategoryId"]));
-
             _context.Update(dish);
             _context.SaveChanges();
             return dish;
-
         }
 
+        public List<int> CheckForNewIngredients(IFormCollection form)
+        {
+            var keys = form.Keys.FirstOrDefault(k => k.Contains("Checked-"));
+            var dashPosition = keys.IndexOf("-");
+            var checkedIngredients = form.Keys.Where(k => k.Contains("Checked-"));
+
+            var newDishIngredientsList = new List<int>();
+
+            foreach (var ingredient in checkedIngredients)
+            {
+                var id = int.Parse(ingredient.Substring(dashPosition + 1));
+                newDishIngredientsList.Add(id);
+            }
+
+            return newDishIngredientsList;
+        }
         public string GetImagePath(IFormFile file)
         {
 

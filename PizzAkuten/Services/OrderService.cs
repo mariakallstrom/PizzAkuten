@@ -14,12 +14,13 @@ namespace PizzAkuten.Services
     public class OrderService
     {
         private readonly ApplicationDbContext _context;
-        private readonly ISession _session;
+        private readonly IHttpContextAccessor _httpContextAccessor;
+        private ISession _session => _httpContextAccessor.HttpContext.Session;
 
         public OrderService(ApplicationDbContext context, IHttpContextAccessor httpContextAccessor)
         {
+            _httpContextAccessor = httpContextAccessor;
             _context = context;
-            _session = httpContextAccessor.HttpContext.Session;
         }
         public Cart SetOrderForCurrentSession(int dishId)
         {

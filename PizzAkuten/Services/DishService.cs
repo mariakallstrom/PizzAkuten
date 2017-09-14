@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.Extensions.FileProviders;
 
 namespace PizzAkuten.Services
 {
@@ -96,8 +97,15 @@ namespace PizzAkuten.Services
             var dishToUpdateDishIngredients = _context.DishIngredients.Where(x => x.DishId == dish.DishId).Select(i=>i.IngredientId).ToList();
 
             var file = form.Files[0];
+            if (file.Length != 0)
+            {
+                dish.ImagePath = GetImagePath(file);
+            }
+            else
+            {
+                dish.ImagePath = form["ImagePath"];
+            }
 
-            dish.ImagePath = GetImagePath(file);
 
             dish.Name = form["Name"];
             dish.Price = Convert.ToInt32(form["Price"]);
@@ -162,9 +170,9 @@ namespace PizzAkuten.Services
                     }
                 }
 
-               return "/images/" + file.FileName;
+                return "/images/" + file.FileName;
             }
-            return "Finns inte";
+            return "Finns inte!";
         }
 
     }

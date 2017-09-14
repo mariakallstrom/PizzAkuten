@@ -28,7 +28,10 @@ namespace PizzAkuten.Services
             // kolla om det finns en session, om det inte finns skapa en.
             if (_session.GetObjectFromJson<Cart>("Cart") == null)
             {
-                return CreateSession(dish);
+
+                var result = CreateSession(dish);
+                _session.SetObjectAsJson("Cart", result);
+                return GetCurrentOrder();
             }
             else
             {
@@ -38,12 +41,16 @@ namespace PizzAkuten.Services
                 if (dishExists)
                 {
                     //om den finns addera antalet
-                    return AddQuantityToDish(cartFromSession, dish);
+                    var result = AddQuantityToDish(cartFromSession, dish);
+                    _session.SetObjectAsJson("Cart", result);
+                    return GetCurrentOrder();
                 }
                 else
                 {
                     //om den inte finns lägg till den i cart
-                    return AddDishToCart(cartFromSession, dish);
+                    var result = AddDishToCart(cartFromSession, dish);
+                    _session.SetObjectAsJson("Cart", result);
+                    return GetCurrentOrder();
                 }
             }
         }
@@ -57,9 +64,8 @@ namespace PizzAkuten.Services
             itemList.Add(item);
             cart.TotalPrice = item.Dish.Price;
             cart.CartItems = itemList;
+            return cart;
 
-            _session.SetObjectAsJson("Cart", cart);
-            return GetCurrentOrder();
         }
         public Cart AddDishToCart(Cart cartFromSession, Dish dish)
         {
@@ -68,8 +74,7 @@ namespace PizzAkuten.Services
             item.Quantity = 1;
             cartFromSession.CartItems.Add(item);
             cartFromSession.TotalPrice = cartFromSession.TotalPrice + item.Dish.Price;
-            _session.SetObjectAsJson("Cart", cartFromSession);
-            return GetCurrentOrder();
+            return cartFromSession;
         }
         public Cart AddQuantityToDish(Cart cartFromSession, Dish dish)
         {
@@ -84,9 +89,7 @@ namespace PizzAkuten.Services
             if (index != -1)
             {
                 cartFromSession.CartItems[index] = tempDish;
-
-                _session.SetObjectAsJson("Cart", cartFromSession);
-                return GetCurrentOrder();
+                return cartFromSession;
             }
 
             return null;
@@ -95,13 +98,8 @@ namespace PizzAkuten.Services
 
         public Cart GetCurrentOrder()
         {
-            var Cart = _session.GetObjectFromJson<Cart>("Cart");
-            if(Cart != null)
-            {
-                return Cart;
-            }
-            return null;
-          
+            var cart = _session.GetObjectFromJson<Cart>("Cart");
+            return cart;
         }
         public Cart RemoveItemFromSession(int dishId)
         {
@@ -133,7 +131,7 @@ namespace PizzAkuten.Services
                 return null;
             }
             var order = new Order();
-            var Cart = new Cart();
+            var cart = new Cart();
             var orderItemlist = new List<CartItem>();
 
             foreach (var item in orderList.CartItems)
@@ -145,8 +143,8 @@ namespace PizzAkuten.Services
                 orderItemlist.Add(orderItem);
             }
           
-            Cart.CartItems = orderItemlist;
-            order.Cart = Cart;
+            cart.CartItems = orderItemlist;
+            order.Cart = cart;
             order.OrderDate = DateTime.Today;
             order.TotalPrice = orderList.TotalPrice;
             return order;

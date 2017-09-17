@@ -8,6 +8,8 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Logging.AzureAppServices;
 using PizzAkuten.Data;
 using PizzAkuten.Models;
 using PizzAkuten.Services;
@@ -16,9 +18,13 @@ namespace PizzAkuten
 {
     public class Startup
     {
-        public Startup(IConfiguration configuration)
+        private IHostingEnvironment _environment;
+        private ILoggerFactory _logger;
+        public Startup(IConfiguration configuration, IHostingEnvironment environment, ILoggerFactory logger)
         {
             Configuration = configuration;
+            _environment = environment;
+            _logger = logger;
         }
 
         public IConfiguration Configuration { get; }
@@ -26,11 +32,22 @@ namespace PizzAkuten
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddDbContext<ApplicationDbContext>(options =>
-                options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
-
-            //services.AddDbContext<ApplicationDbContext>(options =>
-            //    options.UseInMemoryDatabase("DefaultConnection"));
+            if (_environment.IsProduction() || _environment.IsStaging())
+            {
+                services.AddDbContext<ApplicationDbContext>(options =>
+                    options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
+            }
+            else
+            {
+                services.AddDbContext<ApplicationDbContext>(options =>
+                    options.UseInMemoryDatabase("LocalDb"));
+            }
+            if (_environment.IsProduction())
+                _logger.AddAzureWebAppDiagnostics(
+                    new AzureAppServicesDiagnosticsSettings
+                    {
+                        OutputTemplate = "{Timestamp:yyyy-MM-dd HH:mm:ss zzz} [{Level}] {RequestId}-{SourceContext}: {Message}{NewLine}{Exception}"
+                    });
 
             services.Configure<IISOptions>(options =>
             {
@@ -73,7 +90,7 @@ namespace PizzAkuten
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env, UserManager<ApplicationUser> userManager, ApplicationDbContext context, RoleManager<IdentityRole> roleManager)
+        public async void Configure(IApplicationBuilder app, IHostingEnvironment env, UserManager<ApplicationUser> userManager, ApplicationDbContext context, RoleManager<IdentityRole> roleManager)
         {
             if (env.IsDevelopment())
             {
@@ -97,10 +114,11 @@ namespace PizzAkuten
                     template: "{controller=Home}/{action=Index}/{id?}");
             });
 
-           
-            context.Database.Migrate();
-            DbInitializer.Initialize(context, userManager, roleManager);
-
+            if (_environment.IsProduction() || _environment.IsStaging())
+            {
+                context.Database.Migrate();
+            }
+            await DbInitializer.Initialize(context, userManager, roleManager);
 
         }
     }

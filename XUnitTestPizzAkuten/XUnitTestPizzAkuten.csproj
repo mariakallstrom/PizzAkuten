@@ -5,7 +5,7 @@
 
     <IsPackable>false</IsPackable>
 
-    <Configurations>Debug;Release;LocalIIS;Production</Configurations>
+    <Configurations>Debug;Release;LocalIIS;Production;Staging</Configurations>
   </PropertyGroup>
 
   <ItemGroup>

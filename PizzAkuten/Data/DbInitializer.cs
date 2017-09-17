@@ -11,7 +11,7 @@ namespace PizzAkuten.Data
     public class DbInitializer
     {
      
-        public static void Initialize(ApplicationDbContext context, UserManager<ApplicationUser> userManager, RoleManager<IdentityRole> roleManager)
+        public static async Task Initialize(ApplicationDbContext context, UserManager<ApplicationUser> userManager, RoleManager<IdentityRole> roleManager)
         {
 
             if (!context.Users.Any())
@@ -33,7 +33,10 @@ namespace PizzAkuten.Data
                 {
                     var adminRole = new IdentityRole("member");
                     var roleResult = roleManager.CreateAsync(adminRole).Result;
-                    userManager.AddToRoleAsync(aUser, adminRole.Name);
+                    if (roleResult.Succeeded)
+                    {
+                        await userManager.AddToRoleAsync(aUser, adminRole.Name);
+                    }
                 }
 
                 var adminUser = new ApplicationUser
@@ -53,7 +56,10 @@ namespace PizzAkuten.Data
                 {
                     var adminRole = new IdentityRole("admin");
                     var roleResult = roleManager.CreateAsync(adminRole).Result;
-                    userManager.AddToRoleAsync(adminUser, adminRole.Name);
+                    if (roleResult.Succeeded)
+                    {
+                        await userManager.AddToRoleAsync(adminUser, adminRole.Name);
+                    }
                 }
 
             }
@@ -79,9 +85,14 @@ namespace PizzAkuten.Data
                 var potatoe = new Ingredient {Name = "Potatis", Price = 15};
                 var dressing = new Ingredient {Name = "Dressing", Price = 10};
                 var onion = new Ingredient {Name = "Lök", Price = 5};
-                context.AddRange(cheese, ham, tomato, mushroom, kebab, pasta, tuna, salad, chicken, pork, beef,
+
+                await context.AddRangeAsync(cheese, ham, tomato, mushroom, kebab, pasta, tuna, salad, chicken,
+                    pork, beef,
                     cucumber, paprika, ananas, banana, bread, potatoe, dressing, onion);
-                context.SaveChanges();
+                
+                    await context.SaveChangesAsync();
+                
+            
 
             
             var capricciosa = new Dish { Name = "Cappricciosa", Price = 89, ImagePath = "/images/pizza.jpg"};
@@ -193,8 +204,8 @@ namespace PizzAkuten.Data
                 hamburger.Category = cother;
                 kebabDish.Category = cother;
 
-                context.AddRange(capricciosa, margueritha, vesuvio, pastaBeef, pastaPork, kebabSalad, kebabDish, chickenSalad, hamburger);
-                context.SaveChanges();
+                await context.AddRangeAsync(capricciosa, margueritha, vesuvio, pastaBeef, pastaPork, kebabSalad, kebabDish, chickenSalad, hamburger);
+                await context.SaveChangesAsync();
                
             }
             
@@ -220,8 +231,8 @@ namespace PizzAkuten.Data
                 var xdressing = new ExtraIngredient { Name = "Dressing", Price = 10 };
                 var xonion = new ExtraIngredient { Name = "Lök", Price = 5 };
 
-                context.AddRange(xcheese, xham, xtomato, xmushroom, xkebab, xpasta, xtuna, xsalad, xchicken, xpork, xbeef, xcucumber, xpaprika, xananas, xbanana, xbread, xpotatoe, xdressing, xonion);
-                context.SaveChanges();
+                await context.AddRangeAsync(xcheese, xham, xtomato, xmushroom, xkebab, xpasta, xtuna, xsalad, xchicken, xpork, xbeef, xcucumber, xpaprika, xananas, xbanana, xbread, xpotatoe, xdressing, xonion);
+                await context.SaveChangesAsync();
 
             }
         }

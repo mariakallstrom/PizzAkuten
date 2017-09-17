@@ -3,7 +3,7 @@
   <PropertyGroup>
     <TargetFramework>netcoreapp2.0</TargetFramework>
     <UserSecretsId>aspnet-PizzAkuten-9886378A-4BAF-4CC1-A3DB-9D36018413FA</UserSecretsId>
-    <Configurations>Debug;Release;LocalIIS;Production</Configurations>
+    <Configurations>Debug;Release;LocalIIS;Production;Staging</Configurations>
   </PropertyGroup>
 
   <ItemGroup>
@@ -21,6 +21,7 @@
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.All" Version="2.0.0" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="2.0.0" PrivateAssets="All" />
+    <PackageReference Include="Microsoft.Extensions.Logging.AzureAppServices" Version="2.0.0" />
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="2.0.0" PrivateAssets="All" />
   </ItemGroup>
 

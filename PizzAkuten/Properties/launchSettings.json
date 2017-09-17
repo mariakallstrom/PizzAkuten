@@ -23,8 +23,7 @@
         "ASPNETCORE_ENVIRONMENT": "Development"
       },
       "applicationUrl": "http://localhost:9809/"
-    }
-  },
+    },
     "PizzAkuten(Production)": {
       "commandName": "Project",
       "launchBrowser": true,
@@ -32,6 +31,16 @@
         "ASPNETCORE_ENVIRONMENT": "Production"
       },
       "applicationUrl": "http://localhost:9809/"
+
+    },
+    "PizzAkuten(Staging)": {
+      "commandName": "Project",
+      "launchBrowser": true,
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Staging"
+      },
+      "applicationUrl": "http://localhost:9809/"
     }
   }
+}
 

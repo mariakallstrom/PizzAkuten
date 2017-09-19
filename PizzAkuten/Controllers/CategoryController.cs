@@ -7,9 +7,11 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using PizzAkuten.Data;
 using PizzAkuten.Models;
+using Microsoft.AspNetCore.Authorization;
 
 namespace PizzAkuten.Controllers
 {
+    [Authorize(Roles = "admin")]
     public class CategoryController : Controller
     {
         private readonly ApplicationDbContext _context;

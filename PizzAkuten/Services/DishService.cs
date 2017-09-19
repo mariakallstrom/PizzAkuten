@@ -123,13 +123,11 @@ namespace PizzAkuten.Services
                 _context.DishIngredients.Add(dishIng);
                 _context.SaveChanges();
             }
-
             foreach (var number in oldIngredients)
             {
                 var dishIng = _context.DishIngredients.FirstOrDefault(x => x.IngredientId == number);
                 _context.DishIngredients.Remove(dishIng);
             }
-
             _context.Update(dish);
             _context.SaveChanges();
             return dish;
@@ -148,12 +146,10 @@ namespace PizzAkuten.Services
                 var id = int.Parse(ingredient.Substring(dashPosition + 1));
                 newDishIngredientsList.Add(id);
             }
-
             return newDishIngredientsList;
         }
         public string GetImagePath(IFormFile file)
         {
-
             if (file != null)
             {
                 var upload = Path.Combine(_hostingEnvironment.WebRootPath, "images");
@@ -166,11 +162,9 @@ namespace PizzAkuten.Services
                         file.CopyToAsync(fileStream);
                     }
                 }
-
                 return "/images/" + file.FileName;
             }
             return "Finns inte!";
         }
-
     }
 }

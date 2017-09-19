@@ -83,17 +83,20 @@ namespace PizzAkuten.Services
             {
                 model.PayMethod = "Swish";
             }
-            
 
             _context.Payments.Add(model);
             _context.SaveChanges();
+
+            return SavePayment(order);
+        }
+
+     public Payment SavePayment(Order order)
+        {
             var lastPayment = _context.Payments.Last();
             order.PaymentId = lastPayment.PaymentId;
             _context.Orders.Update(order);
             _context.SaveChanges();
             return lastPayment;
         }
-
-     
     }
 }

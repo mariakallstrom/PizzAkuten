@@ -1,11 +1,9 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using PizzAkuten.Data;
 using PizzAkuten.Models;
-using System.Security.Claims;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 
 namespace PizzAkuten.Services
@@ -35,8 +33,6 @@ namespace PizzAkuten.Services
             }
             return null;
         }
-
-  
 
         public ApplicationUser GetApplicationUserById(string applicationuserId)
         {
@@ -71,15 +67,12 @@ namespace PizzAkuten.Services
                 return "AccountUser";
             }
             return _context.NonAccountUsers.Find(userId).Email;
-
         }
 
         public string GetApplicationUserRole(String aUserid)
         {
             var roleId = _context.UserRoles.FirstOrDefault(x => x.UserId == aUserid).RoleId;
-
             return _context.Roles.Find(roleId).Name;
-
         }
     }
 }

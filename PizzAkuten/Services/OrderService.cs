@@ -29,7 +29,6 @@ namespace PizzAkuten.Services
             // kolla om det finns en session, om det inte finns skapa en.
             if (_session.GetObjectFromJson<Cart>("Cart") == null)
             {
-
                 var result = CreateSession(dish);
                 _session.SetObjectAsJson("Cart", result);
                 return GetCurrentOrder();
@@ -66,7 +65,6 @@ namespace PizzAkuten.Services
             cart.TotalPrice = item.Dish.Price;
             cart.CartItems = itemList;
             return cart;
-
         }
         public Cart AddDishToCart(Cart cartFromSession, Dish dish)
         {
@@ -185,15 +183,12 @@ namespace PizzAkuten.Services
         }
         public void AddSpecialDishToCart(IFormCollection form)
         {
-          
                 var dish = _context.Dishes.Include(di=>di.DishIngredients).FirstOrDefault(i=>i.DishId == Convert.ToInt32(form["DishId"]));
                 //Skapa en ny Special Dish
                 var specialDish = new Dish();
                 var xtraIngPrice = 0;
                 var diList = CheckOrdinaryIngredientsForSpecialDish(form, new List<DishIngredient>());
                 var xDiList = CheckExtraIngredientsForSpecialDish(form, new List<DishExtraIngredient>());
-
-           
 
             if (diList != null)
             {
@@ -222,10 +217,7 @@ namespace PizzAkuten.Services
                     _context.SaveChanges();
 
                     SetOrderForCurrentSession(specialDish.DishId);
-
                 }
-
-
             }
         }
         public List<DishIngredient> CheckOrdinaryIngredientsForSpecialDish(IFormCollection form, List<DishIngredient> diList)
@@ -245,15 +237,13 @@ namespace PizzAkuten.Services
                     diList.Add(ing);
                     _context.DishIngredients.Add(ing);
                 }
-
                 return diList;
             }
             return null;
         }
         public List<DishExtraIngredient> CheckExtraIngredientsForSpecialDish(IFormCollection form, List<DishExtraIngredient> xDiList)
         {
-            //Kolla vilka extra ingredienser som är bockade 
-
+            //Kolla vilka extra ingredienser som är valda 
             var extraKeys = form.Keys.FirstOrDefault(k => k.Contains("ExtraChecked-"));
             if(extraKeys != null)
             {
@@ -271,7 +261,6 @@ namespace PizzAkuten.Services
                 return xDiList;
             }
             return null;
-     
         }
         public void DeleteSession()
         {
@@ -293,8 +282,5 @@ namespace PizzAkuten.Services
             var orderId = _context.Orders.FirstOrDefault(x => x.NonAccountUserId == nUserId).OrderId;
             return orderId;
         }
-
-
-
     }
 }

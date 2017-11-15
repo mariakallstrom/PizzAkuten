@@ -50,7 +50,7 @@ namespace PizzAkuten.Services
             client.DeliveryMethod = SmtpDeliveryMethod.Network;
             client.UseDefaultCredentials = false;
             System.Net.NetworkCredential credentials =
-                new System.Net.NetworkCredential("mariakallstrom@outlook.com", "Skylight542");
+                new System.Net.NetworkCredential("********", "********");
             client.EnableSsl = true;
             client.Credentials = credentials;
             client.Send(mailMessage);
@@ -88,7 +88,7 @@ namespace PizzAkuten.Services
             client.DeliveryMethod = SmtpDeliveryMethod.Network;
             client.UseDefaultCredentials = false;
             System.Net.NetworkCredential credentials =
-                new System.Net.NetworkCredential("mariakallstrom@outlook.com", "Skylight542");
+                new System.Net.NetworkCredential("********", "********");
             client.EnableSsl = true;
             client.Credentials = credentials;
             client.Send(mailMessage);
